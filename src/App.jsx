@@ -1,5 +1,6 @@
 import "./App.css";
 import SearchBar from "./components/Searchcomponent";
+import CardContainer from "./components/CardContainer";
 
 function App() {
   return (
@@ -9,6 +10,8 @@ function App() {
         <SearchBar></SearchBar>
       </div>
       <hr />
+      <CardContainer header="Library" />
+      <CardContainer header="Wishlist" />
     </>
   );
 }
