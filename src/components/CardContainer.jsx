@@ -7,7 +7,7 @@ function CardContainer({ header }) {
         <h2 className="text-2xl">{header}</h2>
         <button>expand</button>
       </div>
-      <div className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 w-full overflow-x-scroll overflow-y-hidden shadwon-[-10px_0_10px_rgba(0,0,0,0.55)] hover-scroll">
+      <div className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative">
         <GameCard></GameCard>
         <GameCard></GameCard>
         <GameCard></GameCard>

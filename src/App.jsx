@@ -1,17 +1,19 @@
 import "./App.css";
-import SearchBar from "./components/Searchcomponent";
+import Aside from "./components/Aside";
+import NavBar from "./components/NavBar";
 import CardContainer from "./components/CardContainer";
 
 function App() {
   return (
     <>
-      <div className="w-full flex justify-between p-4">
-        <h1 className="text-4xl hover:cursor-pointer">Sharkny</h1>
-        <SearchBar></SearchBar>
+      <NavBar></NavBar>
+      <div className="h-full w-full grid grid-cols-[150px_minmax(200px,_1fr)]">
+        <Aside className=""></Aside>
+        <div>
+          <CardContainer header="library"></CardContainer>
+          <CardContainer header="wishlist"></CardContainer>
+        </div>
       </div>
-      <hr />
-      <CardContainer header="Library" />
-      <CardContainer header="Wishlist" />
     </>
   );
 }

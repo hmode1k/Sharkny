@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+html {
+  background-color: white;
+  color: black;
+}
+
 /* hidden by default */
 .hover-scroll::-webkit-scrollbar {
   width: 0px;
@@ -14,16 +19,22 @@
 
 /* track */
 .hover-scroll::-webkit-scrollbar-track {
-  background: transparent;
+  background: #888;
 }
 
 /* thumb (hidden state) */
 .hover-scroll::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0);
+  background: white;
   border-radius: 10px;
 }
 
 /* thumb on hover */
 .hover-scroll:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.35);
+  background: white;
+}
+
+.card-container-shadow {
+  box-shadow: -8px 0 24px 12px rgba(0, 0, 0, 0.35) inset;
+  z-index: 22;
+  pointer-events: none;
 }

@@ -5,7 +5,7 @@ function GameCard() {
 
   return (
     <div
-      className="p-4 w-50 h-65 border-2 bg-cover bg-center bg-no-repeat flex items-end relative hover:scale-110 hover:cursor-pointer transition-all duration-250 rounded-4xl"
+      className="p-4 w-50 h-65 border-1 bg-cover bg-center bg-no-repeat flex items-end relative hover:scale-110 hover:cursor-pointer transition-all duration-250 rounded-4xl"
       style={{
         backgroundImage: `url('${gameCover}')`,
       }}

@@ -1,6 +1,14 @@
-function SearchBar() {
+function SearchComponent({ width }) {
+  const barStyles = {
+    "--width": `${width}%`,
+  };
+
+  console.log(barStyles);
   return (
-    <div className="flex flex-row bg-sky-400 w-[80vw] items-center p-2 rounded-2xl hover:cursor-pointer">
+    <div
+      className="flex flex-row bg-sky-400 w-[var(--width)] items-center p-2 rounded-2xl hover:cursor-pointer mbs-1"
+      style={barStyles}
+    >
       <input
         type="text"
         id="search"
@@ -11,4 +19,4 @@ function SearchBar() {
   );
 }
 
-export default SearchBar;
+export default SearchComponent;
