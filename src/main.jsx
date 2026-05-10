@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: <WishlistPage />,
   },
   {
-    path: "gamecardpage",
+    path: "games/:id",
     element: <GameInfoPage />,
   },
   {

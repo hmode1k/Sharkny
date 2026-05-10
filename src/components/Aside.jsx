@@ -1,15 +1,13 @@
 import { Link, useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
 
-let navigate;
-
-const logOut = async () => {
-  await supabase.auth.signOut();
-  navigate("/");
-};
-
 function Aside() {
-  navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const logOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   return (
     <div className="flex flex-col gap-4 w-full h-full bg-red-700">

@@ -1,14 +1,22 @@
 import SearchComponent from "./SearchComponent";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
-function NavBar() {
+function NavBar(q) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [query, setQuery] = useState(q.q || "");
+
   function handleSearchClick() {
     if (location.pathname != "/search") {
-      navigate("/search");
+      navigate("/search?q=");
     }
   }
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+  };
 
   const isSearchPage = location.pathname === "/search";
 
@@ -21,6 +29,9 @@ function NavBar() {
         width="80"
         clickhandler={handleSearchClick}
         autofocus={isSearchPage}
+        setQuery={setQuery}
+        query={query}
+        handleClick={handleClick}
       />
     </div>
   );

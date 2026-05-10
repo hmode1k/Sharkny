@@ -9,7 +9,7 @@ function LibraryPage() {
       <div className="h-full w-full grid grid-cols-[150px_minmax(200px,_1fr)]">
         <Aside className=""></Aside>
         <div>
-          <FullCardContainer></FullCardContainer>
+          <FullCardContainer header={"library"}></FullCardContainer>
         </div>
       </div>
     </>
