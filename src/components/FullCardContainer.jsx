@@ -4,16 +4,20 @@ import { supabase } from "../supabase-client";
 import GameCard from "./GameCard";
 import SearchComponent from "./SearchComponent";
 
-function FullCardContainer({ header }) {
+function FullCardContainer({ header, userId }) {
   const [libGames, setLibGames] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [id, setId] = useState(userId);
+  console.log(id);
 
   useEffect(() => {
     const fetchLibrary = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
+      if (id === undefined || id === null) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        setId(user.id);
+      }
       const { data, error } = await supabase
         .from("users_games")
         .select(
@@ -26,7 +30,7 @@ function FullCardContainer({ header }) {
       )
     `,
         )
-        .eq("user_id", user.id)
+        .eq("user_id", id)
         .eq("status", header);
 
       if (error) {
@@ -39,16 +43,19 @@ function FullCardContainer({ header }) {
     };
 
     fetchLibrary();
-  }, [header]);
+  }, [header, id]);
 
   return loading ? (
     <div className="w-full p-2">
       <div className="flex items-center gap-10 p-2">
         <h2>{header}</h2>
         <SearchComponent width="50" />
-        <h2 className="text-black">Filter</h2>
       </div>
-      <div className="flex flex-wrap flex-shrink gap-5 p-2">
+      <div
+        className="grid
+  grid-cols-[repeat(auto-fill,minmax(220px,1fr))]
+  gap-6 gap-5 p-2 border-black border-3"
+      >
         <GameCard></GameCard>
         <GameCard></GameCard>
         <GameCard></GameCard>
@@ -64,13 +71,16 @@ function FullCardContainer({ header }) {
       </div>
     </div>
   ) : (
-    <div className="w-full p-2">
+    <div className="w-full ps-15 pe-15">
       <div className="flex items-center gap-10 p-2">
         <h2>{header}</h2>
         <SearchComponent width="50" />
-        <h2 className="text-black">Filter</h2>
       </div>
-      <div className="flex flex-wrap flex-shrink gap-5 p-2">
+      <div
+        className="grid
+  grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
+  gap-6 gap-5 p-2 border-black border-3 p-2"
+      >
         {libGames.map((game) => {
           return (
             <GameCard
@@ -78,6 +88,8 @@ function FullCardContainer({ header }) {
               name={game.games.name}
               img={game.games.background_img}
               id={game.games.id}
+              platform={game.platform}
+              status={game.status}
             ></GameCard>
           );
         })}

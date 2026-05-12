@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
 
 function GameInfoPage() {
@@ -9,6 +9,8 @@ function GameInfoPage() {
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("library");
   const [platform, setPlatform] = useState("fitgirl");
+  const [gameExists, setGameExists] = useState(false);
+  const navigate = useNavigate();
 
   const searchURL = `https://api.rawg.io/api/games/${id}?key=1806ecb756ee40288b7dbed9e611ab2d`;
 
@@ -37,17 +39,64 @@ function GameInfoPage() {
       console.error(error2);
       return;
     }
+
+    navigate("/");
   };
 
+  async function handleEdit(e) {
+    e.preventDefault();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { error } = await supabase
+      .from("users_games")
+      .update({
+        status: status,
+        platform: platform,
+      })
+      .eq("game_id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+    navigate("/");
+  }
+
   useEffect(() => {
+    const checkDB = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { error, data } = await supabase
+        .from("users_games")
+        .select("*")
+        .eq("game_id", id)
+        .eq("user_id", user.id);
+
+      console.log(data);
+
+      if (error) {
+        console.error(error);
+      }
+
+      if (data.length !== 0) {
+        setGameExists(true);
+        setStatus(data[0].status);
+        setPlatform(data[0].platform);
+      }
+    };
+
     const fetchGameDetails = async () => {
       const res = await fetch(searchURL);
       const data = await res.json();
-      console.log(data);
       setGame(data);
       setLoading(false);
     };
 
+    checkDB();
     fetchGameDetails();
   }, [id, searchURL]);
 
@@ -141,10 +190,19 @@ function GameInfoPage() {
               steamrip
             </label>
           </fieldset>
-
-          <button type="submit" onClick={handleInsertion}>
-            Add
-          </button>
+          {gameExists ? (
+            <>
+              <button type="submit" onClick={handleEdit}>
+                Edit
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="submit" onClick={handleInsertion}>
+                Add
+              </button>
+            </>
+          )}
         </form>
       </div>
     </div>

@@ -12,7 +12,7 @@ function SearchComponent({
 
   return (
     <div
-      className="flex flex-row bg-sky-400 w-[var(--width)] items-center rounded-2xl hover:cursor-pointer mbs-1"
+      className="flex flex-row bg-sky-400 w-[50%] md:w-[var(--width)] items-center rounded-2xl hover:cursor-pointer mbs-1"
       style={barStyles}
       onClick={clickhandler}
     >
@@ -24,7 +24,7 @@ function SearchComponent({
         <input
           type="text"
           id="search"
-          className="w-full h-full rounded-2xl hover:cursor-pointer focus:z-10 bg-green-500 px-2 focus:outline-none"
+          className="w-full h-full rounded-2xl focus:z-10 bg-green-500 px-2 focus:outline-none"
           placeholder="Search..."
           value={query}
           autoFocus={autofocus}

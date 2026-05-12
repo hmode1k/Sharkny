@@ -28,6 +28,12 @@ function Aside() {
         <h1 className="ms-2 p-1">
           <Link to="/search">Search</Link>
         </h1>
+        <h1 className="ms-2 p-1">
+          <Link to="/profile">Profile</Link>
+        </h1>
+        <h1 className="ms-2 p-1">
+          <Link to="/friends">Friends</Link>
+        </h1>
         <h1 className="ms-2 p-1">Free Games</h1>
       </div>
 

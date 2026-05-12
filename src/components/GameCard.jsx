@@ -1,23 +1,82 @@
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
+import Modal from "./Modal";
 
-function GameCard({ name, img, id }) {
+function GameCard({ name, img, id, platform, status }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [type, setType] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleClick() {
     navigate(`/games/${id}`);
   }
 
   return (
-    <div onClick={handleClick}>
+    <div className="relative">
       <div
-        className="p-4 max-w-42 min-w-40  h-60 border-1 bg-cover bg-center bg-no-repeat flex items-end relative hover:scale-110 hover:cursor-pointer transition-all duration-250 rounded-4xl"
+        className="p-4 w-35  h-50 border-1  flex items-end relative hover:scale-110 hover:cursor-pointer transition-all duration-250 rounded-4xl overflow-hidden"
         style={{
           backgroundImage: `url('${img}')`,
         }}
       >
-        <div className="absolute inset-0 bg-black/40 rounded-4xl hover:bg-black/10 transition-all duration-250"></div>
-        <h4 className="text-sky-50 absolute ">{name}</h4>
+        <img
+          src={img}
+          alt=""
+          className="absolute inset-0 z-0 object-cover object-[50%] w-full h-full"
+        />
+        <div
+          className="absolute inset-0 bg-black/40 rounded-4xl hover:bg-black/10 transition-all duration-250 z-2"
+          onClick={handleClick}
+        ></div>
+        <div className="abolute z-4">
+          <h4 className="text-sky-50 w-full bg-black/10">{name}</h4>
+          <h4 className="text-sky-50 w-full ">{status}</h4>
+          <h4 className="text-sky-50 w-full">{platform}</h4>
+          {location.pathname === "/search" ? (
+            <></>
+          ) : (
+            <>
+              <div className="w-full absolute z-10 bottom-1 left-10 p-1 flex flex-col gap-1">
+                <button
+                  className="text-sky-50"
+                  onClick={() => {
+                    setIsEditing(true);
+                    setType("edit");
+                  }}
+                >
+                  EDIT
+                </button>
+                <button
+                  className="text-sky-50"
+                  onClick={() => {
+                    setIsEditing(true);
+                    setType("delete");
+                  }}
+                >
+                  DELETE
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
+
+      {isEditing ? (
+        <>
+          <div className="bg-sky-700">
+            <Modal
+              dbplatform={platform}
+              dbstatus={status}
+              setEditing={setIsEditing}
+              type={type}
+              id={id}
+            ></Modal>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
