@@ -23,10 +23,7 @@ function FullCardContainer({ header, userId }) {
         .select(
           `
       *,
-      games (
-        id,
-        name,
-        background_img
+      games (*
       )
     `,
         )
@@ -86,7 +83,7 @@ function FullCardContainer({ header, userId }) {
             <GameCard
               key={game.id}
               name={game.games.name}
-              img={game.games.background_img}
+              img={game.games.cover}
               id={game.games.id}
               platform={game.platform}
               status={game.status}

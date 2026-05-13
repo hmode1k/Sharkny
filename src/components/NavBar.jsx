@@ -7,15 +7,13 @@ function NavBar(q) {
 
   const [query, setQuery] = useState(q.q || "");
 
-  function handleSearchClick() {
-    if (location.pathname != "/search") {
-      navigate("/search?q=");
-    }
-  }
-
   const handleClick = (e) => {
     e.preventDefault();
-    navigate(`/search?q=${encodeURIComponent(query)}`);
+    if (location.pathname.startsWith("/search")) {
+      navigate(`${location.pathname}?q=${encodeURIComponent(query)}`);
+    } else {
+      navigate(`/search/games?q=${encodeURIComponent(query)}`);
+    }
   };
 
   const isSearchPage = location.pathname === "/search";
@@ -27,7 +25,6 @@ function NavBar(q) {
       </h1>
       <SearchComponent
         width="80"
-        clickhandler={handleSearchClick}
         autofocus={isSearchPage}
         setQuery={setQuery}
         query={query}

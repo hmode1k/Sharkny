@@ -7,12 +7,10 @@ function GameInfoPage() {
   const { id } = useParams();
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [gameExists, setGameExists] = useState(false);
   const [status, setStatus] = useState("library");
   const [platform, setPlatform] = useState("fitgirl");
-  const [gameExists, setGameExists] = useState(false);
   const navigate = useNavigate();
-
-  const searchURL = `https://api.rawg.io/api/games/${id}?key=1806ecb756ee40288b7dbed9e611ab2d`;
 
   const handleInsertion = async (e) => {
     e.preventDefault();
@@ -23,7 +21,14 @@ function GameInfoPage() {
     const { error } = await supabase.from("games").insert({
       id: game.id,
       name: game.name,
-      background_img: game.background_image,
+      cover: game.cover?.url
+        ? game.cover.url.replace("t_thumb", "t_cover_big")
+        : "",
+      summary: game.summary,
+      screenshots:
+        game.screenshots?.map((s) => ({
+          url: s.url.replace("t_thumb", "t_screenshot_big"),
+        })) || [],
     });
     if (error) {
       console.error(error);
@@ -65,7 +70,7 @@ function GameInfoPage() {
   }
 
   useEffect(() => {
-    const checkDB = async () => {
+    const loadGameInfo = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -76,29 +81,35 @@ function GameInfoPage() {
         .eq("game_id", id)
         .eq("user_id", user.id);
 
-      console.log(data);
-
       if (error) {
         console.error(error);
       }
 
       if (data.length !== 0) {
+        const res = await supabase.from("games").select("*").eq("id", id);
+        setGame(res.data[0]);
+
+        setLoading(false);
         setGameExists(true);
         setStatus(data[0].status);
         setPlatform(data[0].platform);
+        console.log("from db");
+        console.log(res.data[0]);
+      } else {
+        const res = await supabase.functions.invoke("game-info", {
+          body: {
+            id: id,
+          },
+        });
+
+        setGame(res.data[0]);
+        setLoading(false);
+        console.log("from api");
       }
     };
 
-    const fetchGameDetails = async () => {
-      const res = await fetch(searchURL);
-      const data = await res.json();
-      setGame(data);
-      setLoading(false);
-    };
-
-    checkDB();
-    fetchGameDetails();
-  }, [id, searchURL]);
+    loadGameInfo();
+  }, [id]);
 
   return loading ? (
     <>
@@ -109,9 +120,25 @@ function GameInfoPage() {
       <NavBar></NavBar>
       <div>
         <h1>{game.name}</h1>
+        <h4>{game.summary}</h4>
         <h1>{game.name}</h1>
-        <h1>{game.name}</h1>
-        <img src={game.background_image_additional} alt="" />
+        <img
+          src={
+            game.cover?.url
+              ? game.cover.url
+              : game.cover
+                ? game.cover
+                : "//images.igdb.com/igdb/image/upload/t_cover_big/cobz58.jpg"
+          }
+          alt=""
+        />
+        <div>
+          {game.screenshots.map((screen) => {
+            return (
+              <img key={screen.id} src={screen.url} className="w-60 h-30"></img>
+            );
+          })}
+        </div>
         <form action="">
           <fieldset>
             <label htmlFor="">

@@ -13,6 +13,57 @@ function Profile() {
   const location = useLocation();
   const path = location.pathname.split("/");
   const { id } = useParams();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const filePath = `${userId}/${Date.now()}-${file.name}`;
+
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, file);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+
+    const imageUrl = data.publicUrl;
+
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({
+        avatar_url: imageUrl,
+      })
+      .eq("user_id", userId);
+
+    if (updateError) {
+      console.error(updateError);
+      return;
+    }
+
+    console.log("profile image updated");
+  };
+
+  const handleNameEdit = async () => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        full_name: name,
+      })
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,6 +87,7 @@ function Profile() {
         setImg(data[0].avatar_url);
         setUserId(data[0].user_id);
         setURLId(data[0].id);
+        setLoading(false);
       } else {
         const { error, data } = await supabase
           .from("profiles")
@@ -51,6 +103,7 @@ function Profile() {
         setImg(data[0].avatar_url);
         setUserId(data[0].user_id);
         setURLId(id);
+        setLoading(false);
       }
     };
 
@@ -71,12 +124,47 @@ function Profile() {
       </div>
     );
   } else {
-    return (
+    return loading ? (
+      <>
+        <h1>loading</h1>
+      </>
+    ) : (
       <>
         <div>
           <NavBar></NavBar>
           <img src={img} alt="" className="w-50 h-50" />
-          <h1>{name}</h1>
+          <input
+            type="file"
+            accept="image/*"
+            placeholder="EDIT IMAGEEEEEE"
+            onChange={handleUpload}
+          />
+          {isEditingName ? (
+            <div>
+              <input
+                placeholder={name}
+                value={name}
+                autoFocus
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              ></input>
+              <button
+                onClick={() => {
+                  setIsEditingName(false);
+                  handleNameEdit();
+                }}
+              >
+                Done
+              </button>
+            </div>
+          ) : (
+            <div>
+              <h1>{name}</h1>
+              <button onClick={() => setIsEditingName(true)}>EDIIIIIIT</button>
+            </div>
+          )}
+
           <CardContainer
             header="library"
             userId={userId}

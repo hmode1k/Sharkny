@@ -25,9 +25,7 @@ function CardContainer({ header, userId, id }) {
           `
     *,
     games (
-      id,
-      name,
-      background_img
+      *
     )
   `,
         )
@@ -64,7 +62,7 @@ function CardContainer({ header, userId, id }) {
               key={game.id}
               id={game.games.id}
               name={game.games.name}
-              img={game.games.background_img}
+              img={game.games.cover}
               platform={game.platform}
               status={game.status}
             ></GameCard>

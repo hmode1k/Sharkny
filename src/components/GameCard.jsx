@@ -2,28 +2,23 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Modal from "./Modal";
 
-function GameCard({ name, img, id, platform, status }) {
+function GameCard({ name, img, id, platform, status, media_type }) {
   const [isEditing, setIsEditing] = useState(false);
   const [type, setType] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   function handleClick() {
-    navigate(`/games/${id}`);
+    navigate(`/${media_type}/${id}`);
   }
 
   return (
     <div className="relative">
-      <div
-        className="p-4 w-35  h-50 border-1  flex items-end relative hover:scale-110 hover:cursor-pointer transition-all duration-250 rounded-4xl overflow-hidden"
-        style={{
-          backgroundImage: `url('${img}')`,
-        }}
-      >
+      <div className="p-4 w-35  h-50 border-1  flex items-end relative hover:scale-110 hover:cursor-pointer transition-all duration-250 rounded-4xl overflow-hidden">
         <img
-          src={img}
+          src={img?.replace("t_thumb", "t_cover_big")}
           alt=""
-          className="absolute inset-0 z-0 object-cover object-[50%] w-full h-full"
+          className="absolute inset-0 z-0 object-cover  w-full h-full"
         />
         <div
           className="absolute inset-0 bg-black/40 rounded-4xl hover:bg-black/10 transition-all duration-250 z-2"
@@ -33,7 +28,7 @@ function GameCard({ name, img, id, platform, status }) {
           <h4 className="text-sky-50 w-full bg-black/10">{name}</h4>
           <h4 className="text-sky-50 w-full ">{status}</h4>
           <h4 className="text-sky-50 w-full">{platform}</h4>
-          {location.pathname === "/search" ? (
+          {location.pathname.startsWith("/search") ? (
             <></>
           ) : (
             <>

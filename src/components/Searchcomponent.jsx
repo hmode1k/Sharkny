@@ -1,11 +1,4 @@
-function SearchComponent({
-  width,
-  clickhandler,
-  autofocus,
-  setQuery,
-  query,
-  handleClick,
-}) {
+function SearchComponent({ width, autofocus, setQuery, query, handleClick }) {
   const barStyles = {
     "--width": `${width}%`,
   };
@@ -14,7 +7,6 @@ function SearchComponent({
     <div
       className="flex flex-row bg-sky-400 w-[50%] md:w-[var(--width)] items-center rounded-2xl hover:cursor-pointer mbs-1"
       style={barStyles}
-      onClick={clickhandler}
     >
       <form
         action=""
