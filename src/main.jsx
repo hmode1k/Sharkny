@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import "./index.css";
 import App from "./App.jsx";
 import SearchPage from "./components/SearchPage.jsx";
@@ -11,6 +11,7 @@ import PlayedPage from "./components/PlayedPage.jsx";
 import LoginPage from "./components/LoginPage.jsx";
 import Profile from "./components/Profile.jsx";
 import FriendsPage from "./components/FriendsPage.jsx";
+import MovieInfoPage from "./components/MovieInfoPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -26,15 +27,27 @@ const router = createBrowserRouter([
     element: <SearchPage />,
   },
   {
-    path: "library",
+    path: "/games/library",
     element: <LibraryPage />,
   },
   {
-    path: "wishlist",
+    path: "/games/wishlist",
     element: <WishlistPage />,
   },
   {
-    path: "played",
+    path: "/games/completed",
+    element: <PlayedPage />,
+  },
+  {
+    path: "/movies/library",
+    element: <LibraryPage />,
+  },
+  {
+    path: "/movies/wishlist",
+    element: <WishlistPage />,
+  },
+  {
+    path: "/movies/completed",
     element: <PlayedPage />,
   },
   {
@@ -42,8 +55,28 @@ const router = createBrowserRouter([
     element: <GameInfoPage />,
   },
   {
+    path: "tv/:id",
+    element: <MovieInfoPage />,
+  },
+  {
+    path: "movie/:id",
+    element: <MovieInfoPage />,
+  },
+  {
     path: "main",
+    element: <Navigate to="/main/games" replcae />,
+  },
+  {
+    path: "main/:category",
     element: <App />,
+  },
+  {
+    path: "profile/games",
+    element: <Profile />,
+  },
+  {
+    path: "profile",
+    element: <Profile />,
   },
   {
     path: "profile",
@@ -54,15 +87,15 @@ const router = createBrowserRouter([
     element: <Profile />,
   },
   {
-    path: "profile/:id/library",
+    path: "profile/:id/games/library",
     element: <Profile />,
   },
   {
-    path: "profile/:id/wishlist",
+    path: "profile/:id/games/wishlist",
     element: <Profile />,
   },
   {
-    path: "profile/:id/played",
+    path: "profile/:id/games/played",
     element: <Profile />,
   },
   {

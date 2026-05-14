@@ -176,7 +176,7 @@ function Profile() {
             id={URLId}
           ></CardContainer>
           <CardContainer
-            header="played"
+            header="completed"
             userId={userId}
             id={URLId}
           ></CardContainer>

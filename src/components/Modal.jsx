@@ -79,13 +79,13 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id }) {
                   <input
                     type="radio"
                     name={status}
-                    value="played"
-                    checked={status === "played"}
+                    value="completed"
+                    checked={status === "completed"}
                     onChange={(e) => {
                       setStatus(e.target.value);
                     }}
                   />
-                  <label htmlFor="">played</label>
+                  <label htmlFor="">Completed</label>
 
                   <input
                     type="radio"

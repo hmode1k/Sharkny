@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
 
-function GameInfoPage() {
+function MovieInfoPage() {
   const { id } = useParams();
-  const [game, setGame] = useState(null);
+  const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [gameExists, setGameExists] = useState(false);
+  const [movieExists, setMovieExists] = useState(false);
   const [status, setStatus] = useState("library");
-  const [platform, setPlatform] = useState("fitgirl");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleInsertion = async (e) => {
     e.preventDefault();
@@ -18,34 +18,30 @@ function GameInfoPage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { error } = await supabase.from("games").insert({
-      id: game.id,
-      name: game.name,
-      cover: game.cover?.url
-        ? game.cover.url.replace("t_thumb", "t_cover_big")
-        : "",
-      summary: game.summary,
-      screenshots:
-        game.screenshots?.map((s) => ({
-          url: s.url.replace("t_thumb", "t_screenshot_big"),
-        })) || [],
+    const { error } = await supabase.from("movies").insert({
+      id: movie.id,
+      title: movie.title,
+      poster: movie.poster,
+      description: movie.description,
+      media_type: movie.media_type,
+      backdrop: movie.backdrop,
+      release_date: movie.release_date,
+      rating: movie.rating,
     });
     if (error) {
       console.error(error);
     }
 
-    const { error2 } = await supabase.from("users_games").insert({
+    const { error2 } = await supabase.from("users_movies").insert({
       user_id: user.id,
-      game_id: game.id,
-      platform: platform,
+      movie_id: movie.id,
       status: status,
     });
     if (error2) {
       console.error(error2);
       return;
     }
-
-    navigate("/");
+    console.log("inserted");
   };
 
   async function handleEdit(e) {
@@ -54,12 +50,11 @@ function GameInfoPage() {
       data: { user },
     } = await supabase.auth.getUser();
     const { error } = await supabase
-      .from("users_games")
+      .from("users_movies")
       .update({
         status: status,
-        platform: platform,
       })
-      .eq("game_id", id)
+      .eq("movie_id", id)
       .eq("user_id", user.id);
 
     if (error) {
@@ -70,15 +65,15 @@ function GameInfoPage() {
   }
 
   useEffect(() => {
-    const loadGameInfo = async () => {
+    const loadMovieInfo = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       const { error, data } = await supabase
-        .from("users_games")
+        .from("users_movies")
         .select("*")
-        .eq("game_id", id)
+        .eq("movie_id", id)
         .eq("user_id", user.id);
 
       if (error) {
@@ -86,30 +81,43 @@ function GameInfoPage() {
       }
 
       if (data.length !== 0) {
-        const res = await supabase.from("games").select("*").eq("id", id);
-        setGame(res.data[0]);
+        const res = await supabase.from("movies").select("*").eq("id", id);
+        setMovie(res.data[0]);
 
         setLoading(false);
-        setGameExists(true);
+        setMovieExists(true);
         setStatus(data[0].status);
-        setPlatform(data[0].platform);
         console.log("from db");
-        console.log(res.data[0]);
-      } else {
-        const res = await supabase.functions.invoke("game-info", {
+        console.log(res.data);
+      } else if (location.pathname.startsWith("/tv")) {
+        const res = await supabase.functions.invoke("movie-info", {
           body: {
             id: id,
+            media_type: "tv",
           },
         });
 
-        setGame(res.data[0]);
+        setMovie(res.data);
+        console.log(res.data);
+        setLoading(false);
+        console.log("from api");
+      } else if (location.pathname.startsWith("/movie")) {
+        const res = await supabase.functions.invoke("game-info", {
+          body: {
+            id: id,
+            media_type: "movie",
+          },
+        });
+
+        setMovie(res.data);
+        console.log(res.data);
         setLoading(false);
         console.log("from api");
       }
     };
 
-    loadGameInfo();
-  }, [id]);
+    loadMovieInfo();
+  }, [id, location.pathname]);
 
   return loading ? (
     <>
@@ -119,26 +127,9 @@ function GameInfoPage() {
     <div>
       <NavBar></NavBar>
       <div>
-        <h1>{game.name}</h1>
-        <h4>{game.summary}</h4>
-        <h1>{game.name}</h1>
-        <img
-          src={
-            game.cover?.url
-              ? game.cover.url
-              : game.cover
-                ? game.cover
-                : "//images.igdb.com/igdb/image/upload/t_cover_big/cobz58.jpg"
-          }
-          alt=""
-        />
-        <div>
-          {game.screenshots.map((screen) => {
-            return (
-              <img key={screen.id} src={screen.url} className="w-60 h-30"></img>
-            );
-          })}
-        </div>
+        <h1>{movie.title}</h1>
+        <h4>{movie.description}</h4>
+        <img src={movie.poster} alt="" />
         <form action="">
           <fieldset>
             <label htmlFor="">
@@ -169,8 +160,8 @@ function GameInfoPage() {
               <input
                 type="radio"
                 name="status"
-                value="completed"
-                checked={status === "completed"}
+                value="played"
+                checked={status === "played"}
                 onChange={(e) => {
                   setStatus(e.target.value);
                 }}
@@ -179,45 +170,7 @@ function GameInfoPage() {
             </label>
           </fieldset>
 
-          <fieldset>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="platform"
-                value="fitgirl"
-                checked={platform === "fitgirl"}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-              />
-              fitgirl
-            </label>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="platform"
-                value="dodi"
-                checked={platform === "dodi"}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-              />
-              dodi
-            </label>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="platform"
-                value="steamrip"
-                checked={platform === "steamrip"}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-              />
-              steamrip
-            </label>
-          </fieldset>
-          {gameExists ? (
+          {movieExists ? (
             <>
               <button type="submit" onClick={handleEdit}>
                 Edit
@@ -235,5 +188,4 @@ function GameInfoPage() {
     </div>
   );
 }
-
-export default GameInfoPage;
+export default MovieInfoPage;

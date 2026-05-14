@@ -12,21 +12,34 @@ function Aside() {
   return (
     <div className="flex flex-col gap-4 w-full h-full bg-red-700">
       <div>
-        <h1 className="ms-2 p-1">My Library</h1>
+        <h1 className="ms-2 p-1">games</h1>
         <div className="ms-6">
           <h2>
-            <Link to="/library">Library</Link>
+            <Link to="/games/library">Library</Link>
           </h2>
           <h2>
-            <Link to="/wishlist">Wishlist</Link>
+            <Link to="/games/wishlist">Wishlist</Link>
           </h2>
           <h2>
-            <Link to="/played">Played</Link>
+            <Link to="/games/completed">completed</Link>
+          </h2>
+        </div>
+        <br />
+        <h1 className="ms-2 p-1">movies</h1>
+        <div className="ms-6">
+          <h2>
+            <Link to="/movies/library">Library</Link>
+          </h2>
+          <h2>
+            <Link to="/movies/wishlist">Wishlist</Link>
+          </h2>
+          <h2>
+            <Link to="/movies/completed">completed</Link>
           </h2>
         </div>
         <br />
         <h1 className="ms-2 p-1">
-          <Link to="/search">Search</Link>
+          <Link to="/search/games">Search</Link>
         </h1>
         <h1 className="ms-2 p-1">
           <Link to="/profile">Profile</Link>
