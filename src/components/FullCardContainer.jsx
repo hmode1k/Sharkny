@@ -3,67 +3,135 @@ import { supabase } from "../supabase-client";
 
 import GameCard from "./GameCard";
 import SearchComponent from "./SearchComponent";
-import { useLocation } from "react-router";
+import { useLocation, useSearchParams } from "react-router";
 
-function FullCardContainer({ header, userId }) {
+function FullCardContainer({ header, userId, media_type }) {
   const [libItems, setLibItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(userId);
+  const [localSearch, setLocalSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
 
   useEffect(() => {
     const fetchLibrary = async () => {
-      if (id === undefined || id === null) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        setId(user.id);
-      }
-      if (location.pathname.startsWith("/games")) {
-        const { data, error } = await supabase
-          .from("users_games")
-          .select(
-            `
+      if (header) {
+        if (id === undefined || id === null) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          setId(user.id);
+        }
+        if (location.pathname.includes("games")) {
+          const { data, error } = await supabase
+            .from("users_games")
+            .select(
+              `
       *,
       games (*
       )
     `,
-          )
-          .eq("user_id", id)
-          .eq("status", header);
+            )
+            .eq("user_id", id)
+            .eq("status", header);
 
-        if (error) {
-          console.error(error);
-          return;
-        }
+          if (error) {
+            console.error(error);
+            return;
+          }
 
-        setLoading(false);
-        setLibItems(data);
-      } else if (location.pathname.startsWith("/movies")) {
-        const { data, error } = await supabase
-          .from("users_movies")
-          .select(
-            `
+          setLoading(false);
+          setLibItems(data);
+        } else if (location.pathname.includes("movies")) {
+          const { data, error } = await supabase
+            .from("users_movies")
+            .select(
+              `
       *,
       movies (*
       )
     `,
-          )
-          .eq("user_id", id)
-          .eq("status", header);
+            )
+            .eq("user_id", id)
+            .eq("status", header);
 
-        if (error) {
-          console.error(error);
-          return;
+          if (error) {
+            console.error(error);
+            return;
+          }
+
+          setLoading(false);
+          setLibItems(data);
         }
+      } else {
+        if (id === undefined || id === null) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          setId(user.id);
+        }
+        if (location.pathname.includes("games")) {
+          const { data, error } = await supabase
+            .from("users_games")
+            .select(
+              `
+      *,
+      games (*
+      )
+    `,
+            )
+            .eq("user_id", id);
 
-        setLoading(false);
-        setLibItems(data);
+          if (error) {
+            console.error(error);
+            return;
+          }
+
+          setLoading(false);
+          setLibItems(data);
+        } else if (location.pathname.includes("movies")) {
+          const { data, error } = await supabase
+            .from("users_movies")
+            .select(
+              `
+      *,
+      movies (*
+      )
+    `,
+            )
+            .eq("user_id", id);
+
+          if (error) {
+            console.error(error);
+            return;
+          }
+
+          setLoading(false);
+          setLibItems(data);
+        }
       }
     };
 
     fetchLibrary();
   }, [header, id, location.pathname]);
+
+  const filteredItems = libItems.filter((item) => {
+    const itemName = item?.games?.name || item?.movies?.title || "";
+
+    return itemName.toLowerCase().includes(localSearch.toLowerCase());
+  });
+
+  const currentPage = Number(searchParams.get("p")) || 1;
+
+  const CARDS_PER_PAGE = 18;
+
+  const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
+
+  const endIndex = startIndex + CARDS_PER_PAGE;
+
+  const visibleGames = filteredItems.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(filteredItems.length / CARDS_PER_PAGE);
 
   if (loading) {
     return (
@@ -93,19 +161,25 @@ function FullCardContainer({ header, userId }) {
       </div>
     );
   }
-  if (location.pathname.startsWith("/games")) {
+  if (location.pathname.includes("games")) {
     return (
       <div className="w-full ps-15 pe-15">
         <div className="flex items-center gap-10 p-2">
-          <h2>{header}</h2>
-          <SearchComponent width="50" />
+          <h2>{header || location.pathname.split("/")[1]}</h2>
+          <input
+            type="text"
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            placeholder="search..."
+            className="bg-green-500"
+          />
         </div>
         <div
           className="grid
   grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
-  gap-6 gap-5 p-2 border-black border-3 p-2"
+  gap-3 border-black border-3 p-4"
         >
-          {libItems.map((game) => {
+          {visibleGames.map((game) => {
             return (
               <GameCard
                 key={game.id}
@@ -114,25 +188,36 @@ function FullCardContainer({ header, userId }) {
                 id={game.games.id}
                 platform={game.platform}
                 status={game.status}
+                media_type={media_type}
               ></GameCard>
             );
           })}
         </div>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button key={i} onClick={() => setSearchParams({ p: i + 1 })}>
+            {i + 1}
+          </button>
+        ))}
       </div>
     );
-  } else if (location.pathname.startsWith("/movies")) {
+  } else if (location.pathname.includes("movies")) {
     return (
       <div className="w-full ps-15 pe-15">
         <div className="flex items-center gap-10 p-2">
-          <h2>{header}</h2>
-          <SearchComponent width="50" />
+          <h2>{header || location.pathname.split("/")[1]}</h2>
+          <input
+            type="text"
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            placeholder="search..."
+          />
         </div>
         <div
           className="grid
   grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
-  gap-6 gap-5 p-2 border-black border-3 p-2"
+  gap-2 border-black border-3 p-4"
         >
-          {libItems.map((item) => {
+          {visibleGames.map((item) => {
             return (
               <GameCard
                 key={item.id}
@@ -140,10 +225,16 @@ function FullCardContainer({ header, userId }) {
                 img={item.movies.poster}
                 id={item.movies.id}
                 status={item.status}
+                media_type={item.movies.media_type}
               ></GameCard>
             );
           })}
         </div>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button key={i} onClick={() => setSearchParams({ p: i + 1 })}>
+            {i + 1}
+          </button>
+        ))}
       </div>
     );
   }

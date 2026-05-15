@@ -2,19 +2,23 @@ import { useEffect, useState } from "react";
 import CardContainer from "./CardContainer";
 import NavBar from "./NavBar";
 import { supabase } from "../supabase-client";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import FullCardContainer from "./FullCardContainer";
+import RequestModal from "./RequestMoal";
 
 function Profile() {
   const [name, setName] = useState("UserName");
   const [img, setImg] = useState(null);
   const [userId, setUserId] = useState(null);
   const [URLId, setURLId] = useState(null);
-  const location = useLocation();
-  const path = location.pathname.split("/");
-  const { id } = useParams();
+  const [authinticatedUserId, setAuthinticatedUserId] = useState(null);
+  const { id, category, media_type } = useParams();
+  console.log("id", id);
   const [isEditingName, setIsEditingName] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -67,60 +71,80 @@ function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (id === undefined) {
+      if (id === undefined || id === null) {
         const {
           data: { user },
         } = await supabase.auth.getUser();
 
-        const { error, data } = await supabase
+        const { data } = await supabase
           .from("profiles")
           .select("*")
           .eq("user_id", user.id);
-        console.log(data);
 
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        setName(data[0].full_name);
-        setImg(data[0].avatar_url);
-        setUserId(data[0].user_id);
-        setURLId(data[0].id);
-        setLoading(false);
-      } else {
-        const { error, data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", id);
-
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        setName(data[0].full_name);
-        setImg(data[0].avatar_url);
-        setUserId(data[0].user_id);
-        setURLId(id);
-        setLoading(false);
+        console.log(data[0]);
+        navigate(`/profile/${data[0].id}/games`);
       }
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setAuthinticatedUserId(user.id);
+
+      const { error, data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", id);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setName(data[0].full_name);
+      setImg(data[0].avatar_url);
+      setUserId(data[0].user_id);
+      setURLId(id);
+      setLoading(false);
     };
 
     fetchUser();
-  }, [id]);
+  }, [id, location.pathname, navigate]);
 
   if (
-    path.includes("library") ||
-    path.includes("wishlist") ||
-    path.includes("played")
+    category === "library" ||
+    category === "wishlist" ||
+    category === "completed" ||
+    category === "full"
   ) {
     return (
       <div>
         <NavBar></NavBar>
+        <div className="w-full flex gap-50  justify-center content-center">
+          <button
+            onClick={() => {
+              navigate(`/${location.pathname.replace("/movies", "/games")}`);
+              setLoading(true);
+            }}
+          >
+            game
+          </button>
+          <button
+            onClick={() => {
+              navigate(`/${location.pathname.replace("/games", "/movies")}`);
+              setLoading(true);
+            }}
+          >
+            movies
+          </button>
+        </div>
         <img src={img} alt="" className="w-50 h-50" />
         <h1>{name}</h1>
-        <FullCardContainer header={path[3]} userId={userId}></FullCardContainer>
+        <FullCardContainer
+          header={category === "full" ? null : category}
+          userId={userId}
+          media_type={media_type}
+        ></FullCardContainer>
       </div>
     );
   } else {
@@ -132,6 +156,54 @@ function Profile() {
       <>
         <div>
           <NavBar></NavBar>
+          <div className="w-full flex gap-50  justify-center content-center">
+            <button
+              onClick={() => {
+                navigate(`/profile/${id}/games`);
+                setLoading(true);
+              }}
+            >
+              game
+            </button>
+            <button
+              onClick={() => {
+                navigate(`/profile/${id}/movies`);
+                setLoading(true);
+              }}
+            >
+              movies
+            </button>
+            <button
+              onClick={() => {
+                navigate(`${location.pathname}/full`);
+                setLoading(true);
+              }}
+            >
+              FULL
+            </button>
+            {userId === authinticatedUserId ? (
+              <></>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setIsModalOpen(true);
+                  }}
+                >
+                  REQUEST
+                </button>
+              </>
+            )}
+          </div>
+          <div>
+            {isModalOpen ? (
+              <RequestModal></RequestModal>
+            ) : (
+              <>
+                <h1>ff</h1>
+              </>
+            )}
+          </div>
           <img src={img} alt="" className="w-50 h-50" />
           <input
             type="file"
@@ -139,6 +211,7 @@ function Profile() {
             placeholder="EDIT IMAGEEEEEE"
             onChange={handleUpload}
           />
+
           {isEditingName ? (
             <div>
               <input
@@ -164,22 +237,26 @@ function Profile() {
               <button onClick={() => setIsEditingName(true)}>EDIIIIIIT</button>
             </div>
           )}
-
-          <CardContainer
-            header="library"
-            userId={userId}
-            id={URLId}
-          ></CardContainer>
-          <CardContainer
-            header="wishlist"
-            userId={userId}
-            id={URLId}
-          ></CardContainer>
-          <CardContainer
-            header="completed"
-            userId={userId}
-            id={URLId}
-          ></CardContainer>
+          <div>
+            <CardContainer
+              header="library"
+              userId={userId}
+              media_type={media_type}
+              id={URLId}
+            ></CardContainer>
+            <CardContainer
+              header="wishlist"
+              userId={userId}
+              media_type={media_type}
+              id={URLId}
+            ></CardContainer>
+            <CardContainer
+              header="completed"
+              userId={userId}
+              id={URLId}
+              media_type={media_type}
+            ></CardContainer>
+          </div>
         </div>
       </>
     );

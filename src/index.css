@@ -42,3 +42,7 @@ html {
 button:hover {
   cursor: pointer;
 }
+
+.selected {
+  color: red;
+}

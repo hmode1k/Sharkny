@@ -12,7 +12,14 @@ function Aside() {
   return (
     <div className="flex flex-col gap-4 w-full h-full bg-red-700">
       <div>
-        <h1 className="ms-2 p-1">games</h1>
+        <h1
+          className="ms-2 p-1"
+          onClick={() => {
+            navigate("/games");
+          }}
+        >
+          games
+        </h1>
         <div className="ms-6">
           <h2>
             <Link to="/games/library">Library</Link>
@@ -25,7 +32,14 @@ function Aside() {
           </h2>
         </div>
         <br />
-        <h1 className="ms-2 p-1">movies</h1>
+        <h1
+          className="ms-2 p-1"
+          onClick={() => {
+            navigate("/movies");
+          }}
+        >
+          movies
+        </h1>
         <div className="ms-6">
           <h2>
             <Link to="/movies/library">Library</Link>
@@ -47,7 +61,9 @@ function Aside() {
         <h1 className="ms-2 p-1">
           <Link to="/friends">Friends</Link>
         </h1>
-        <h1 className="ms-2 p-1">Free Games</h1>
+        <h1 className="ms-2 p-1">
+          <Link to="/requests">Requests</Link>
+        </h1>
       </div>
 
       <button onClick={logOut}>logOut</button>

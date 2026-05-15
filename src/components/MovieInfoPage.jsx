@@ -102,7 +102,7 @@ function MovieInfoPage() {
         setLoading(false);
         console.log("from api");
       } else if (location.pathname.startsWith("/movie")) {
-        const res = await supabase.functions.invoke("game-info", {
+        const res = await supabase.functions.invoke("movie-info", {
           body: {
             id: id,
             media_type: "movie",
@@ -160,13 +160,13 @@ function MovieInfoPage() {
               <input
                 type="radio"
                 name="status"
-                value="played"
-                checked={status === "played"}
+                value="completed"
+                checked={status === "completed"}
                 onChange={(e) => {
                   setStatus(e.target.value);
                 }}
               />
-              played
+              completed
             </label>
           </fieldset>
 

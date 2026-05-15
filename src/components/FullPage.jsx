@@ -3,7 +3,7 @@ import Aside from "./Aside";
 import FullCardContainer from "./FullCardContainer";
 import { useLocation } from "react-router";
 
-function WishlistPage() {
+function FullPage() {
   const location = useLocation();
   const path = location.pathname.split("/");
   return (
@@ -12,13 +12,11 @@ function WishlistPage() {
       <div className="h-full w-full grid grid-cols-[150px_minmax(200px,_1fr)]">
         <Aside className=""></Aside>
         <div>
-          <FullCardContainer
-            header={"wishlist"}
-            media_type={path[1]}
-          ></FullCardContainer>
+          <FullCardContainer media_type={path[1]}></FullCardContainer>
         </div>
       </div>
     </>
   );
 }
-export default WishlistPage;
+
+export default FullPage;

@@ -81,7 +81,7 @@ function SearchPage() {
                     : "https://images.igdb.com/igdb/image/upload/t_original/coaarl.jpg"
                 }
                 id={game.id}
-                media_type={"game"}
+                media_type={"games"}
               ></GameCard>
             );
           })}

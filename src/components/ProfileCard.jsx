@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 function ProfileCard({ name, img, id }) {
   const navigate = useNavigate();
   function goToProfile() {
-    navigate(`/profile/${id}`);
+    navigate(`/profile/${id}/games`);
   }
 
   console.log("mapped", name, id, img);

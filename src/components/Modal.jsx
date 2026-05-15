@@ -1,29 +1,47 @@
 import { useState } from "react";
 import { supabase } from "../supabase-client";
+import { useParams } from "react-router";
 
 function Modal({ dbstatus, dbplatform, setEditing, type, id }) {
   const [status, setStatus] = useState(dbstatus);
   const [platform, setPlatform] = useState(dbplatform);
+  const { category } = useParams();
+  console.log(category);
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    console.log("editing");
-    console.log(status, platform);
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const { error } = await supabase
-      .from("users_games")
-      .update({
-        platform: platform,
-        status: status,
-      })
-      .eq("game_id", id)
-      .eq("user_id", user.id);
+    if (category === "games") {
+      const { error } = await supabase
+        .from("users_games")
+        .update({
+          platform: platform,
+          status: status,
+        })
+        .eq("game_id", id)
+        .eq("user_id", user.id);
 
-    if (error) {
-      console.error(error);
-      return;
+      if (error) {
+        console.error(error);
+        return;
+      }
+    } else {
+      const { error } = await supabase
+        .from("users_movies")
+        .update({
+          platform: platform,
+          status: status,
+        })
+        .eq("movie_id", id)
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
     }
     window.location.reload();
   };
@@ -33,15 +51,28 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id }) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const { error } = await supabase
-      .from("users_games")
-      .delete("")
-      .eq("game_id", id)
-      .eq("user_id", user.id);
+    if (category === "games") {
+      const { error } = await supabase
+        .from("users_games")
+        .delete("")
+        .eq("game_id", id)
+        .eq("user_id", user.id);
 
-    if (error) {
-      console.error(error);
-      return;
+      if (error) {
+        console.error(error);
+        return;
+      }
+    } else {
+      const { error } = await supabase
+        .from("users_movies")
+        .delete("")
+        .eq("movie_id", id)
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
     }
 
     window.location.reload();
@@ -86,39 +117,47 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id }) {
                     }}
                   />
                   <label htmlFor="">Completed</label>
+                  {category === "games" ? (
+                    <>
+                      <fieldset>
+                        <input
+                          type="radio"
+                          name={platform}
+                          value="fitgirl"
+                          checked={platform === "fitgirl"}
+                          onChange={(e) => {
+                            setPlatform(e.target.value);
+                          }}
+                        />
+                        <label htmlFor="">fitgirl</label>
 
-                  <input
-                    type="radio"
-                    name={platform}
-                    value="fitgirl"
-                    checked={platform === "fitgirl"}
-                    onChange={(e) => {
-                      setPlatform(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">fitgirl</label>
+                        <input
+                          type="radio"
+                          name={platform}
+                          value="dodi"
+                          checked={platform === "dodi"}
+                          onChange={(e) => {
+                            setPlatform(e.target.value);
+                          }}
+                        />
+                        <label htmlFor="">dodi</label>
 
-                  <input
-                    type="radio"
-                    name={platform}
-                    value="dodi"
-                    checked={platform === "dodi"}
-                    onChange={(e) => {
-                      setPlatform(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">dodi</label>
+                        <input
+                          type="radio"
+                          name={platform}
+                          value="steamrip"
+                          checked={platform === "steamrip"}
+                          onChange={(e) => {
+                            setPlatform(e.target.value);
+                          }}
+                        />
+                        <label htmlFor="">steamrip</label>
+                      </fieldset>
+                    </>
+                  ) : (
+                    <></>
+                  )}
 
-                  <input
-                    type="radio"
-                    name={platform}
-                    value="steamrip"
-                    checked={platform === "steamrip"}
-                    onChange={(e) => {
-                      setPlatform(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">steamrip</label>
                   <button type="submit" onClick={handleEdit}>
                     Edit
                   </button>
