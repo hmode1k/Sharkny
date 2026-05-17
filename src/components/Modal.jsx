@@ -5,8 +5,15 @@ import { useParams } from "react-router";
 function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
   const [status, setStatus] = useState(dbstatus);
   const [platform, setPlatform] = useState(dbplatform);
+  const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("");
   const { category } = useParams();
   console.log(category);
+
+  function handleClose() {
+    setEditing(false);
+    window.location.reload();
+  }
 
   const handleEdit = async (e) => {
     e.preventDefault();
@@ -26,8 +33,14 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
 
       if (error) {
         console.error(error);
+        setToastType("error");
+        setToast("Error");
         return;
       }
+
+      setToastType("Success");
+      setToast("Editied Game");
+      console.log("edited");
     } else {
       const { error } = await supabase
         .from("users_movies")
@@ -40,10 +53,13 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
 
       if (error) {
         console.error(error);
+        setToastType("error");
+        setToast("Error");
         return;
       }
+      setToastType("Success");
+      setToast("Edited Movie");
     }
-    window.location.reload();
   };
 
   const handleDelete = async () => {
@@ -60,8 +76,12 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
 
       if (error) {
         console.error(error);
+        setToastType("error");
+        setToast("Error");
         return;
       }
+      setToastType("Success");
+      setToast("Deleted Game");
     } else {
       const { error } = await supabase
         .from("users_movies")
@@ -71,11 +91,13 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
 
       if (error) {
         console.error(error);
+        setToastType("error");
+        setToast("Error");
         return;
       }
+      setToastType("Success");
+      setToast("Deleted Movie");
     }
-
-    window.location.reload();
   };
 
   return (
@@ -85,140 +107,155 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
           <div
             className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
             onClick={(e) => {
-              setEditing(false);
+              handleClose();
               e.stopPropagation();
             }}
           >
-            <div
-              className=" bg-nav p-4 rounded-lg"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <div className="w-full flex justify-between items-center pbe-4">
-                <h1>{name}</h1>
-                <button
-                  onClick={() => {
-                    setEditing(false);
-                  }}
-                >
-                  X
-                </button>
-              </div>
-              <div className="">
-                <form action="">
-                  <h1 className="p-2">Status:</h1>
-
-                  <fieldset className="flex gap-2">
-                    <label className="cursor-pointer inline-flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name={status}
-                        value="library"
-                        className="peer sr-only"
-                        checked={status === "library"}
-                        onChange={(e) => setStatus(e.target.value)}
-                      />
-
-                      <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
-                        Library
-                      </span>
-                    </label>
-                    <label className="cursor-pointer inline-flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name={status}
-                        value="wishlist"
-                        className="peer sr-only"
-                        checked={status === "wishlist"}
-                        onChange={(e) => setStatus(e.target.value)}
-                      />
-
-                      <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
-                        Wishlist
-                      </span>
-                    </label>
-
-                    <label className="cursor-pointer inline-flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name={status}
-                        value="completed"
-                        className="peer sr-only"
-                        checked={status === "completed"}
-                        onChange={(e) => setStatus(e.target.value)}
-                      />
-
-                      <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
-                        Completed
-                      </span>
-                    </label>
-                  </fieldset>
-                  {category === "games" ? (
-                    <>
-                      <h1 className="p-2">Platform:</h1>
-                      <fieldset className="flex gap-2">
-                        <label className="cursor-pointer inline-flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name={platform}
-                            value="fitgirl"
-                            checked={platform === "fitgirl"}
-                            className="peer sr-only"
-                            onChange={(e) => {
-                              setPlatform(e.target.value);
-                            }}
-                          />
-
-                          <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
-                            Fitgirl
-                          </span>
-                        </label>
-                        <label className="cursor-pointer inline-flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name={platform}
-                            value="dodi"
-                            checked={platform === "dodi"}
-                            className="peer sr-only"
-                            onChange={(e) => {
-                              setPlatform(e.target.value);
-                            }}
-                          />
-
-                          <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
-                            Dodi
-                          </span>
-                        </label>
-                        <label className="cursor-pointer inline-flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name={platform}
-                            value="steamrip"
-                            checked={platform === "steamrip"}
-                            className="peer sr-only"
-                            onChange={(e) => {
-                              setPlatform(e.target.value);
-                            }}
-                          />
-                          <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
-                            Steamrip
-                          </span>
-                        </label>
-                      </fieldset>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-
+            <div className="flex flex-col gap-5">
+              <div
+                className=" bg-nav p-4 rounded-lg"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <div className="w-full flex justify-between items-center pbe-4">
+                  <h1>{name}</h1>
                   <button
-                    type="submit"
-                    onClick={handleEdit}
-                    className="w-full p-2 mbs-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-100"
+                    onClick={() => {
+                      handleClose();
+                    }}
                   >
-                    Edit
+                    X
                   </button>
-                </form>
+                </div>
+                <div className="">
+                  <form action="">
+                    <h1 className="p-2">Status:</h1>
+
+                    <fieldset className="flex gap-2">
+                      <label className="cursor-pointer inline-flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name={status}
+                          value="library"
+                          className="peer sr-only"
+                          checked={status === "library"}
+                          onChange={(e) => setStatus(e.target.value)}
+                        />
+
+                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                          Library
+                        </span>
+                      </label>
+                      <label className="cursor-pointer inline-flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name={status}
+                          value="wishlist"
+                          className="peer sr-only"
+                          checked={status === "wishlist"}
+                          onChange={(e) => setStatus(e.target.value)}
+                        />
+
+                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                          Wishlist
+                        </span>
+                      </label>
+
+                      <label className="cursor-pointer inline-flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name={status}
+                          value="completed"
+                          className="peer sr-only"
+                          checked={status === "completed"}
+                          onChange={(e) => setStatus(e.target.value)}
+                        />
+
+                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                          Completed
+                        </span>
+                      </label>
+                    </fieldset>
+                    {category === "games" ? (
+                      <>
+                        <h1 className="p-2">Platform:</h1>
+                        <fieldset className="flex gap-2">
+                          <label className="cursor-pointer inline-flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name={platform}
+                              value="fitgirl"
+                              checked={platform === "fitgirl"}
+                              className="peer sr-only"
+                              onChange={(e) => {
+                                setPlatform(e.target.value);
+                              }}
+                            />
+
+                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                              Fitgirl
+                            </span>
+                          </label>
+                          <label className="cursor-pointer inline-flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name={platform}
+                              value="dodi"
+                              checked={platform === "dodi"}
+                              className="peer sr-only"
+                              onChange={(e) => {
+                                setPlatform(e.target.value);
+                              }}
+                            />
+
+                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                              Dodi
+                            </span>
+                          </label>
+                          <label className="cursor-pointer inline-flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name={platform}
+                              value="steamrip"
+                              checked={platform === "steamrip"}
+                              className="peer sr-only"
+                              onChange={(e) => {
+                                setPlatform(e.target.value);
+                              }}
+                            />
+                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                              Steamrip
+                            </span>
+                          </label>
+                        </fieldset>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+
+                    <button
+                      type="submit"
+                      onClick={handleEdit}
+                      className="w-full p-2 mbs-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-100"
+                    >
+                      Edit
+                    </button>
+                  </form>
+                </div>
+              </div>
+              <div>
+                {toast.length === 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    <h1
+                      className={` border-1 px-4 rounded-xl z-40 text-text-primary text-center ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+                    >
+                      {toast}
+                    </h1>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -227,36 +264,51 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
         <>
           <div
             className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white"
-            onClick={() => setEditing(false)}
+            onClick={() => handleClose()}
           >
-            <div
-              className="bg-nav p-4 rounded-lg"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <div className="flex justify-between items-center w-full ">
-                <h1>Delete</h1>
-                <h1
-                  onClick={() => {
-                    setEditing(false);
-                  }}
-                  className="cursor-pointer"
-                >
-                  X
-                </h1>
+            <div className="flex flex-col gap-5">
+              <div
+                className="bg-nav p-4 rounded-lg"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <div className="flex justify-between items-center w-full ">
+                  <h1>Delete</h1>
+                  <h1
+                    onClick={() => {
+                      handleClose();
+                    }}
+                    className="cursor-pointer"
+                  >
+                    X
+                  </h1>
+                </div>
+                <div>
+                  <h1 className="mbs-2 py-2">
+                    Are You Sure You Want To Delete{" "}
+                    <span className="bold text-red-400">{name}</span>
+                  </h1>
+                  <button
+                    onClick={handleDelete}
+                    className="mbs-2 p-2 w-full bg-red-500 rounded-2xl tranisiton-all duration-200 hover:opacity-[0.7]"
+                  >
+                    DELETE
+                  </button>
+                </div>
               </div>
               <div>
-                <h1 className="mbs-2 py-2">
-                  Are You Sure You Want To Delete{" "}
-                  <span className="bold text-red-400">{name}</span>
-                </h1>
-                <button
-                  onClick={handleDelete}
-                  className="mbs-2 p-2 w-full bg-red-500 rounded-2xl tranisiton-all duration-200 hover:opacity-[0.7]"
-                >
-                  DELETE
-                </button>
+                {toast.length === 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    <h1
+                      className={` border-1 px-4 rounded-xl z-40 text-text-primary text-center ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+                    >
+                      {toast}
+                    </h1>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -8,6 +8,8 @@ function RequestModal({ setModalOpen }) {
   const [media, setMedia] = useState(null);
   const [games, setGames] = useState(null);
   const [tab, setTab] = useState("games");
+  const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("");
   const [selectedGames, setSelectedGames] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +34,13 @@ function RequestModal({ setModalOpen }) {
 
     if (error) {
       console.error(error);
+      setToastType("error");
+      setToast("Error Requseting");
+      return;
     }
+
+    setToastType("success");
+    setToast("Request Made Successfully");
   };
 
   const toggleGame = (id, name) => {
@@ -102,6 +110,19 @@ function RequestModal({ setModalOpen }) {
         className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
         onClick={() => setModalOpen(false)}
       >
+        <div>
+          {toast.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <h1
+                className={`absolute left-[40%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+              >
+                {toast}
+              </h1>
+            </>
+          )}
+        </div>
         <div
           className=" p-2 rounded-2xl bg-main w-[30%] h-[80%]"
           onClick={(e) => {

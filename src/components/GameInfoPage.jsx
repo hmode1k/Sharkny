@@ -8,6 +8,8 @@ function GameInfoPage() {
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [gameExists, setGameExists] = useState(false);
+  const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("");
   const [status, setStatus] = useState("library");
   const [platform, setPlatform] = useState("fitgirl");
   const ref = useRef();
@@ -34,8 +36,13 @@ function GameInfoPage() {
 
     if (error) {
       console.error(error);
+      setToastType("error");
+      setToast("Error");
       return;
     }
+
+    setToastType("Success");
+    setToast("Deleted Game");
   };
 
   const handleInsertion = async (e) => {
@@ -68,10 +75,13 @@ function GameInfoPage() {
     });
     if (error2) {
       console.error(error2);
+      setToastType("error");
+      setToast("Error Adding Game");
       return;
     }
 
-    navigate("/");
+    setToastType("success");
+    setToast(`Game Added To ${status}`);
   };
 
   async function handleEdit(e) {
@@ -90,9 +100,13 @@ function GameInfoPage() {
 
     if (error) {
       console.error(error);
+      setToastType("error");
+      setToast("Error Editing Game Info");
       return;
     }
-    navigate("/");
+
+    setToastType("success");
+    setToast("Game Info Edited ");
   }
 
   useEffect(() => {
@@ -482,6 +496,19 @@ function GameInfoPage() {
             )}
           </div>
         </form>
+        <div>
+          {toast.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <h1
+                className={`absolute left-[50%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+              >
+                {toast}
+              </h1>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

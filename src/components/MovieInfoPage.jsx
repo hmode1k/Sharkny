@@ -8,6 +8,8 @@ function MovieInfoPage() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [movieExists, setMovieExists] = useState(false);
+  const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("");
   const [status, setStatus] = useState("library");
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,8 +29,12 @@ function MovieInfoPage() {
 
     if (error) {
       console.error(error);
+      setToastType("error");
+      setToast("Error");
       return;
     }
+    setToastType("Success");
+    setToast("Deleted Movie");
   };
 
   const handleback = (e) => {
@@ -63,9 +69,12 @@ function MovieInfoPage() {
     });
     if (error2) {
       console.error(error2);
+      setToastType("error");
+      setToast("Error Adding Game");
       return;
     }
-    console.log("inserted");
+    setToastType("success");
+    setToast(`Movie Added To ${status}`);
   };
 
   async function handleEdit(e) {
@@ -83,9 +92,12 @@ function MovieInfoPage() {
 
     if (error) {
       console.error(error);
+      setToastType("error");
+      setToast("Error Editing Game Info");
       return;
     }
-    navigate("/");
+    setToastType("success");
+    setToast("Movie Info Edited ");
   }
 
   useEffect(() => {
@@ -345,6 +357,19 @@ function MovieInfoPage() {
             )}
           </div>
         </form>
+        <div>
+          {toast.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <h1
+                className={`absolute left-[50%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+              >
+                {toast}
+              </h1>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

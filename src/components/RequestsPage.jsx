@@ -10,7 +10,8 @@ function RequestsPage() {
   const [modalRequest, setModalRequest] = useState(null);
   const [openSection, setOpenSection] = useState(null);
   const [requester, setRequester] = useState(null);
-
+  const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -28,9 +29,13 @@ function RequestsPage() {
 
     if (error) {
       console.error(error);
-    } else {
-      console.log("success");
+      setToastType("error");
+      setToast("Error Deleting");
+      return;
     }
+
+    setToastType("success");
+    setToast("Request Deleted");
   };
 
   const handleUpdate = async (status, id) => {
@@ -42,7 +47,12 @@ function RequestsPage() {
       .eq("id", id);
     if (error) {
       console.error(error);
+      setToastType("error");
+      setToast("Error Deleting");
+      return;
     }
+    setToastType("success");
+    setToast(`Request ${status}`);
   };
 
   useEffect(() => {
@@ -89,7 +99,10 @@ function RequestsPage() {
             <div className="text-text-primary">
               <div className="flex gap-10">
                 <h1 className="pbe-4"> Pending Requests</h1>
-                <h1 onClick={() => toggleSection("pending")}>
+                <h1
+                  onClick={() => toggleSection("pending")}
+                  className="cursor-pointer"
+                >
                   {openSection === "pending" ? <>↑</> : <>↓</>}
                 </h1>
               </div>
@@ -187,7 +200,10 @@ function RequestsPage() {
             <div>
               <div className="flex gap-10">
                 <h1 className="pbe-4">Requests</h1>
-                <h1 onClick={() => toggleSection("requests")}>
+                <h1
+                  onClick={() => toggleSection("requests")}
+                  className="cursor-pointer"
+                >
                   {openSection === "requests" ? <>↑</> : <>↓</>}
                 </h1>
               </div>
@@ -280,8 +296,11 @@ function RequestsPage() {
             </div>
             <div>
               <div className="flex gap-10">
-                <h1 className="pbe-4"> Your Requests</h1>
-                <h1 onClick={() => toggleSection("your-requests")}>
+                <h1 className="pbe-4 "> Your Requests</h1>
+                <h1
+                  onClick={() => toggleSection("your-requests")}
+                  className="cursor-pointer"
+                >
                   {openSection === "your-requests" ? <>↑</> : <>↓</>}
                 </h1>
               </div>
@@ -364,6 +383,19 @@ function RequestsPage() {
                 </ul>
               </div>
             </div>
+          </div>
+          <div>
+            {toast.length === 0 ? (
+              <></>
+            ) : (
+              <>
+                <h1
+                  className={`absolute left-[50%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+                >
+                  {toast}
+                </h1>
+              </>
+            )}
           </div>
         </div>
       </div>
