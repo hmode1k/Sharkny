@@ -146,7 +146,7 @@ function RouterWrapper() {
     },
     {
       path: "/main",
-      element: <Navigate to="/main/games" replcae />,
+      element: <Navigate to="/main/games" replace />,
     },
     {
       path: "/main/:category",

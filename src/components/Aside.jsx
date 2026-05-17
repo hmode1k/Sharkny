@@ -70,7 +70,9 @@ function Aside() {
       <div className="max-sm:w-full max-sm:flex max-sm:flex-col max-sm:items-center max-sm:justify-center">
         <div className="flex gap-5 p-2">
           <h1 className="cursor-pointer">
-            <Link to="/movies">Movies</Link>
+            <Link to="/movies" replace>
+              Movies
+            </Link>
           </h1>
           <button onClick={() => toggleSection("movies")}>
             {openSection === "movies" ? <>↑</> : <>↓</>}
