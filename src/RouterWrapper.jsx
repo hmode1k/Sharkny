@@ -60,7 +60,7 @@ function RouterWrapper() {
       path: "/games",
       element: (
         <ProtectedRoute user={user}>
-          <FullPage />
+          <FullPage key="games" />
         </ProtectedRoute>
       ),
     },
@@ -68,7 +68,7 @@ function RouterWrapper() {
       path: "/games/library",
       element: (
         <ProtectedRoute user={user}>
-          <LibraryPage />
+          <LibraryPage key="games-library" />
         </ProtectedRoute>
       ),
     },
@@ -92,7 +92,7 @@ function RouterWrapper() {
       path: "/movies",
       element: (
         <ProtectedRoute user={user}>
-          <FullPage />
+          <FullPage key="movies" />
         </ProtectedRoute>
       ),
     },
@@ -100,7 +100,7 @@ function RouterWrapper() {
       path: "/movies/library",
       element: (
         <ProtectedRoute user={user}>
-          <LibraryPage />
+          <LibraryPage key="movies-library" />
         </ProtectedRoute>
       ),
     },
