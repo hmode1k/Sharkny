@@ -7,6 +7,10 @@ function Aside() {
   const [openSection, setOpenSection] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  function handleNavigate(path, cat) {
+    navigate(`/${path}/${cat}`);
+  }
+
   const toggleSection = (name) => {
     setOpenSection((prev) => (prev === name ? null : name));
   };
@@ -44,8 +48,11 @@ function Aside() {
           ☰
         </button>
         <div className="flex gap-5 sm:p-2">
-          <h1 className="cursor-pointer">
-            <Link to="/games">Games</Link>
+          <h1
+            className="cursor-pointer"
+            onClick={() => handleNavigate("games", "")}
+          >
+            Games
           </h1>
           <button onClick={() => toggleSection("games")}>
             {openSection === "games" ? <>↑</> : <>↓</>}
@@ -83,10 +90,14 @@ function Aside() {
         >
           <ul className="p-2 ps-6">
             <li>
-              <Link to="/movies/library">Library</Link>
+              <Link to="/movies/library" replace>
+                Library
+              </Link>
             </li>
             <li>
-              <Link to="/movies/wishlist">Wishlist</Link>
+              <Link to="/movies/wishlist" replace>
+                Wishlist
+              </Link>
             </li>
             <li>
               <Link to="/movies/completed">Completed</Link>
