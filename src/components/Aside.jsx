@@ -46,7 +46,7 @@ function Aside() {
         <div className="flex gap-5 sm:p-2">
           <h1
             onClick={() => {
-              navigate("/games", { replace: true });
+              navigate("/games");
             }}
             className="cursor-pointer"
           >
@@ -60,15 +60,9 @@ function Aside() {
           className={`${openSection === "games" ? "max-h-40" : "max-h-0"} overflow-hidden transition-all`}
         >
           <ul className="p-2 ps-6">
-            <li onClick={() => navigate("/games/library", { replace: true })}>
-              Library
-            </li>
-            <li onClick={() => navigate("/games/wishlist", { replace: true })}>
-              Wishlist
-            </li>
-            <li onClick={() => navigate("/games/completed", { replace: true })}>
-              Completed
-            </li>
+            <li onClick={() => navigate("/games/library")}>Library</li>
+            <li onClick={() => navigate("/games/wishlist")}>Wishlist</li>
+            <li onClick={() => navigate("/games/completed")}>Completed</li>
           </ul>
         </div>
       </div>
@@ -76,7 +70,7 @@ function Aside() {
         <div className="flex gap-5 p-2">
           <h1
             onClick={() => {
-              navigate("/movies", { replace: true });
+              navigate("/movies");
             }}
             className="cursor-pointer"
           >
@@ -90,17 +84,9 @@ function Aside() {
           className={`${openSection === "movies" ? "max-h-40" : "max-h-0"} overflow-hidden transition-all`}
         >
           <ul className="p-2 ps-6">
-            <li onClick={() => navigate("/movies/library", { replace: true })}>
-              Library
-            </li>
-            <li onClick={() => navigate("/movies/wishlist", { replace: true })}>
-              Wishlist
-            </li>
-            <li
-              onClick={() => navigate("/movies/completed", { replace: true })}
-            >
-              Completed
-            </li>
+            <li onClick={() => navigate("/movies/library")}>Library</li>
+            <li onClick={() => navigate("/movies/wishlist")}>Wishlist</li>
+            <li onClick={() => navigate("/movies/completed")}>Completed</li>
           </ul>
         </div>
       </div>
