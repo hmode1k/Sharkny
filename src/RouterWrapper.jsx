@@ -76,7 +76,7 @@ function RouterWrapper() {
       path: "/games/wishlist",
       element: (
         <ProtectedRoute user={user}>
-          <WishlistPage />
+          <WishlistPage key="games-wihslist" />
         </ProtectedRoute>
       ),
     },
@@ -84,7 +84,7 @@ function RouterWrapper() {
       path: "/games/completed",
       element: (
         <ProtectedRoute user={user}>
-          <PlayedPage />
+          <PlayedPage key="games-completed" />
         </ProtectedRoute>
       ),
     },
@@ -108,7 +108,7 @@ function RouterWrapper() {
       path: "/movies/wishlist",
       element: (
         <ProtectedRoute user={user}>
-          <WishlistPage />
+          <WishlistPage key="movies-wishlist" />
         </ProtectedRoute>
       ),
     },
@@ -116,7 +116,7 @@ function RouterWrapper() {
       path: "/movies/completed",
       element: (
         <ProtectedRoute user={user}>
-          <PlayedPage />
+          <PlayedPage key="moveis-completed" />
         </ProtectedRoute>
       ),
     },
@@ -160,7 +160,7 @@ function RouterWrapper() {
       path: "/profile/",
       element: (
         <ProtectedRoute user={user}>
-          <Profile />
+          <Profile key="profile" />
         </ProtectedRoute>
       ),
     },
@@ -168,7 +168,7 @@ function RouterWrapper() {
       path: "/profile/:id",
       element: (
         <ProtectedRoute user={user}>
-          <Profile />
+          <Profile key="profile-id" />
         </ProtectedRoute>
       ),
     },
@@ -176,7 +176,7 @@ function RouterWrapper() {
       path: "/profile/:id/:media_type",
       element: (
         <ProtectedRoute user={user}>
-          <Profile />
+          <Profile key="profile-id-media" />
         </ProtectedRoute>
       ),
     },
@@ -184,7 +184,7 @@ function RouterWrapper() {
       path: "/profile/:id/:media_type/:category",
       element: (
         <ProtectedRoute user={user}>
-          <Profile />
+          <Profile key="profile-id-media-cat" />
         </ProtectedRoute>
       ),
     },
@@ -192,7 +192,7 @@ function RouterWrapper() {
       path: "/friends",
       element: (
         <ProtectedRoute user={user}>
-          <FriendsPage />
+          <FriendsPage key="friends" />
         </ProtectedRoute>
       ),
     },
@@ -200,7 +200,7 @@ function RouterWrapper() {
       path: "/requests",
       element: (
         <ProtectedRoute user={user}>
-          <RequestsPage />
+          <RequestsPage key="requests" />
         </ProtectedRoute>
       ),
     },
