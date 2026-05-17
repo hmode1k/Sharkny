@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "../supabase-client";
 import { useParams } from "react-router";
 
-function Modal({ dbstatus, dbplatform, setEditing, type, id }) {
+function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
   const [status, setStatus] = useState(dbstatus);
   const [platform, setPlatform] = useState(dbplatform);
   const { category } = useParams();
@@ -82,109 +82,183 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id }) {
     <>
       {type === "edit" ? (
         <>
-          <div className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white">
-            <div className="">
+          <div
+            className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
+            onClick={(e) => {
+              setEditing(false);
+              e.stopPropagation();
+            }}
+          >
+            <div
+              className=" bg-nav p-4 rounded-lg"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <div className="w-full flex justify-between items-center pbe-4">
+                <h1>{name}</h1>
+                <button
+                  onClick={() => {
+                    setEditing(false);
+                  }}
+                >
+                  X
+                </button>
+              </div>
               <div className="">
                 <form action="">
-                  <input
-                    type="radio"
-                    name={status}
-                    value="library"
-                    checked={status === "library"}
-                    onChange={(e) => {
-                      setStatus(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">library</label>
-                  <input
-                    type="radio"
-                    name={status}
-                    value="wishlist"
-                    checked={status === "wishlist"}
-                    onChange={(e) => {
-                      setStatus(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">wishlist</label>
+                  <h1 className="p-2">Status:</h1>
 
-                  <input
-                    type="radio"
-                    name={status}
-                    value="completed"
-                    checked={status === "completed"}
-                    onChange={(e) => {
-                      setStatus(e.target.value);
-                    }}
-                  />
-                  <label htmlFor="">Completed</label>
+                  <fieldset className="flex gap-2">
+                    <label className="cursor-pointer inline-flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name={status}
+                        value="library"
+                        className="peer sr-only"
+                        checked={status === "library"}
+                        onChange={(e) => setStatus(e.target.value)}
+                      />
+
+                      <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                        Library
+                      </span>
+                    </label>
+                    <label className="cursor-pointer inline-flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name={status}
+                        value="wishlist"
+                        className="peer sr-only"
+                        checked={status === "wishlist"}
+                        onChange={(e) => setStatus(e.target.value)}
+                      />
+
+                      <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                        Wishlist
+                      </span>
+                    </label>
+
+                    <label className="cursor-pointer inline-flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name={status}
+                        value="completed"
+                        className="peer sr-only"
+                        checked={status === "completed"}
+                        onChange={(e) => setStatus(e.target.value)}
+                      />
+
+                      <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                        Completed
+                      </span>
+                    </label>
+                  </fieldset>
                   {category === "games" ? (
                     <>
-                      <fieldset>
-                        <input
-                          type="radio"
-                          name={platform}
-                          value="fitgirl"
-                          checked={platform === "fitgirl"}
-                          onChange={(e) => {
-                            setPlatform(e.target.value);
-                          }}
-                        />
-                        <label htmlFor="">fitgirl</label>
+                      <h1 className="p-2">Platform:</h1>
+                      <fieldset className="flex gap-2">
+                        <label className="cursor-pointer inline-flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name={platform}
+                            value="fitgirl"
+                            checked={platform === "fitgirl"}
+                            className="peer sr-only"
+                            onChange={(e) => {
+                              setPlatform(e.target.value);
+                            }}
+                          />
 
-                        <input
-                          type="radio"
-                          name={platform}
-                          value="dodi"
-                          checked={platform === "dodi"}
-                          onChange={(e) => {
-                            setPlatform(e.target.value);
-                          }}
-                        />
-                        <label htmlFor="">dodi</label>
+                          <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                            Fitgirl
+                          </span>
+                        </label>
+                        <label className="cursor-pointer inline-flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name={platform}
+                            value="dodi"
+                            checked={platform === "dodi"}
+                            className="peer sr-only"
+                            onChange={(e) => {
+                              setPlatform(e.target.value);
+                            }}
+                          />
 
-                        <input
-                          type="radio"
-                          name={platform}
-                          value="steamrip"
-                          checked={platform === "steamrip"}
-                          onChange={(e) => {
-                            setPlatform(e.target.value);
-                          }}
-                        />
-                        <label htmlFor="">steamrip</label>
+                          <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                            Dodi
+                          </span>
+                        </label>
+                        <label className="cursor-pointer inline-flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name={platform}
+                            value="steamrip"
+                            checked={platform === "steamrip"}
+                            className="peer sr-only"
+                            onChange={(e) => {
+                              setPlatform(e.target.value);
+                            }}
+                          />
+                          <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                            Steamrip
+                          </span>
+                        </label>
                       </fieldset>
                     </>
                   ) : (
                     <></>
                   )}
 
-                  <button type="submit" onClick={handleEdit}>
+                  <button
+                    type="submit"
+                    onClick={handleEdit}
+                    className="w-full p-2 mbs-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-100"
+                  >
                     Edit
                   </button>
                 </form>
-                <button
-                  onClick={() => {
-                    setEditing(false);
-                  }}
-                >
-                  exit
-                </button>
               </div>
             </div>
           </div>
         </>
       ) : (
         <>
-          <div className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/30 text-white">
-            <h1>are you sure you want to delete this?</h1>
-            <button onClick={handleDelete}>DELETE</button>
-            <button
-              onClick={() => {
-                setEditing(false);
+          <div
+            className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white"
+            onClick={() => setEditing(false)}
+          >
+            <div
+              className="bg-nav p-4 rounded-lg"
+              onClick={(e) => {
+                e.stopPropagation();
               }}
             >
-              EXIT
-            </button>
+              <div className="flex justify-between items-center w-full ">
+                <h1>Delete</h1>
+                <h1
+                  onClick={() => {
+                    setEditing(false);
+                  }}
+                  className="cursor-pointer"
+                >
+                  X
+                </h1>
+              </div>
+              <div>
+                <h1 className="mbs-2 py-2">
+                  Are You Sure You Want To Delete{" "}
+                  <span className="bold text-red-400">{name}</span>
+                </h1>
+                <button
+                  onClick={handleDelete}
+                  className="mbs-2 p-2 w-full bg-red-500 rounded-2xl tranisiton-all duration-200 hover:opacity-[0.7]"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
           </div>
         </>
       )}

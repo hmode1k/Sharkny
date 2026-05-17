@@ -1,10 +1,10 @@
 import "./App.css";
-import Aside from "./components/Aside";
 import NavBar from "./components/NavBar";
 import CardContainer from "./components/CardContainer";
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase-client";
 import { useNavigate, useParams } from "react-router";
+import AsideWrapper from "./components/AsideWrapper";
 
 function App() {
   const [userId, setUserId] = useState(null);
@@ -29,25 +29,27 @@ function App() {
   ) : (
     <>
       <NavBar></NavBar>
-      <div className="h-full w-full grid grid-cols-[150px_minmax(200px,_1fr)]">
-        <Aside className=""></Aside>
-        <div>
-          <div className="w-full flex gap-50  justify-center content-center">
+      <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+        <AsideWrapper></AsideWrapper>
+        <div className="bg-main text-text-primary">
+          <div className=" tab">
             <button
               onClick={() => {
                 navigate(`/main/games`);
                 setLoading(true);
               }}
+              className={`${category === "games" && "active"} `}
             >
-              game
+              Games
             </button>
             <button
               onClick={() => {
                 navigate(`/main/movies`);
                 setLoading(true);
               }}
+              className={`${category === "movies" && "active"} `}
             >
-              movies
+              Movies
             </button>
           </div>
           <CardContainer

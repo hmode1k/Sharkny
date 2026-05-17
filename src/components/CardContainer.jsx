@@ -96,10 +96,18 @@ function CardContainer({ header, userId, id, media_type }) {
       </>
     ) : (
       <div className="p-4">
-        <div className="flex gap-4 ps-4 mbe-2">
-          <h2 className="text-2xl">{header}</h2>
-          <h2 onClick={handleNavigate}>Expand</h2>
+        <div className="flex gap-4 ps-4 mbe-2 items-center">
+          <h2 className="text-2xl">
+            {header.charAt(0).toUpperCase() + header.slice(1)}
+          </h2>
+          <h2
+            onClick={handleNavigate}
+            className="cursor-pointer mbs-1 text-text-muted hover:text-text-secondary transition-all delay-20 text-lg"
+          >
+            ➜
+          </h2>
         </div>
+
         <div
           className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative"
           ref={ref}
@@ -117,6 +125,13 @@ function CardContainer({ header, userId, id, media_type }) {
               ></GameCard>
             );
           })}
+          {libItems.length === 0 && (
+            <>
+              <h1 className="text-text-muted">
+                Your List Is Empty Fill It Up!
+              </h1>
+            </>
+          )}
         </div>
       </div>
     );
@@ -128,10 +143,20 @@ function CardContainer({ header, userId, id, media_type }) {
     ) : (
       <div className="p-4">
         <div className="flex gap-4 ps-4 mbe-2">
-          <h2 className="text-2xl">{header}</h2>
-          <h2 onClick={handleNavigate}>Expand</h2>
+          <h2 className="text-2xl">
+            {header.charAt(0).toUpperCase() + header.slice(1)}
+          </h2>
+          <h2
+            onClick={handleNavigate}
+            className="cursor-pointer mbs-1 text-text-muted hover:text-text-secondary transition-all delay-20 text-lg"
+          >
+            ➜
+          </h2>
         </div>
-        <div className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative">
+        <div
+          className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative"
+          ref={ref}
+        >
           {libItems.map((item) => {
             return (
               <GameCard
@@ -144,6 +169,13 @@ function CardContainer({ header, userId, id, media_type }) {
               ></GameCard>
             );
           })}
+          {libItems.length === 0 && (
+            <>
+              <h1 className="text-text-muted">
+                Your List Is Empty Fill It Up!
+              </h1>
+            </>
+          )}
         </div>
       </div>
     );

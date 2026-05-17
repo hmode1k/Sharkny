@@ -1,8 +1,8 @@
 import NavBar from "./NavBar";
-import Aside from "./Aside";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
 import ProfileCard from "./ProfileCard";
+import AsideWrapper from "./AsideWrapper";
 
 function FriendsPage() {
   const [users, setUsers] = useState([]);
@@ -29,11 +29,11 @@ function FriendsPage() {
       <h1>loading</h1>
     </>
   ) : (
-    <>
+    <div className="h-screen overflow-hidden">
       <NavBar></NavBar>
-      <div className="w-full grid grid-cols-[150px_minmax(200px,_1fr)]">
-        <Aside></Aside>
-        <div className="w-full">
+      <div className="w-full h-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)] ">
+        <AsideWrapper></AsideWrapper>
+        <div className="flex gap-5 p-4 max-sm:flex-col ">
           {users.map((user) => {
             return (
               <ProfileCard
@@ -45,7 +45,7 @@ function FriendsPage() {
           })}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 export default FriendsPage;

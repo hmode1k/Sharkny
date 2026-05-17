@@ -5,6 +5,7 @@ import { supabase } from "../supabase-client";
 import { useLocation, useNavigate, useParams } from "react-router";
 import FullCardContainer from "./FullCardContainer";
 import RequestModal from "./RequestMoal";
+import AsideWrapper from "./AsideWrapper";
 
 function Profile() {
   const [name, setName] = useState("UserName");
@@ -120,31 +121,44 @@ function Profile() {
     return (
       <div>
         <NavBar></NavBar>
-        <div className="w-full flex gap-50  justify-center content-center">
-          <button
-            onClick={() => {
-              navigate(`/${location.pathname.replace("/movies", "/games")}`);
-              setLoading(true);
-            }}
-          >
-            game
-          </button>
-          <button
-            onClick={() => {
-              navigate(`/${location.pathname.replace("/games", "/movies")}`);
-              setLoading(true);
-            }}
-          >
-            movies
-          </button>
+        <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+          <AsideWrapper></AsideWrapper>
+          <div>
+            <div className="w-full flex gap-50  justify-center content-center tab ">
+              <button
+                onClick={() => {
+                  window.location.href = `${location.pathname.replace("/movies", "/games")}`;
+                  setLoading(true);
+                }}
+                className={`${media_type === "games" && "active"}`}
+              >
+                Games
+              </button>
+              <button
+                onClick={() => {
+                  window.location.href = `${location.pathname.replace("/games", "/movies")}`;
+                  setLoading(true);
+                }}
+                className={`${media_type === "movies" && "active"}`}
+              >
+                Movies
+              </button>
+            </div>
+            <div className="flex items-center p-4 gap-5">
+              <img
+                src={img}
+                alt=""
+                className="w-25 h-25 object-cover rounded-[50%]"
+              />
+              <h1 className="text-xl text-text-primary">{name}</h1>
+            </div>
+            <FullCardContainer
+              header={category === "full" ? null : category}
+              userId={userId}
+              media_type={media_type}
+            ></FullCardContainer>
+          </div>
         </div>
-        <img src={img} alt="" className="w-50 h-50" />
-        <h1>{name}</h1>
-        <FullCardContainer
-          header={category === "full" ? null : category}
-          userId={userId}
-          media_type={media_type}
-        ></FullCardContainer>
       </div>
     );
   } else {
@@ -154,108 +168,139 @@ function Profile() {
       </>
     ) : (
       <>
-        <div>
+        <div className="text-text-primary">
           <NavBar></NavBar>
-          <div className="w-full flex gap-50  justify-center content-center">
-            <button
-              onClick={() => {
-                navigate(`/profile/${id}/games`);
-                setLoading(true);
-              }}
-            >
-              game
-            </button>
-            <button
-              onClick={() => {
-                navigate(`/profile/${id}/movies`);
-                setLoading(true);
-              }}
-            >
-              movies
-            </button>
-            <button
-              onClick={() => {
-                navigate(`${location.pathname}/full`);
-                setLoading(true);
-              }}
-            >
-              FULL
-            </button>
-            {userId === authinticatedUserId ? (
-              <></>
-            ) : (
-              <>
+          <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+            <AsideWrapper></AsideWrapper>
+            <div>
+              <div className="w-full flex gap-50  justify-center content-center tab">
                 <button
                   onClick={() => {
-                    setIsModalOpen(true);
+                    navigate(`/profile/${id}/games`);
+                    setLoading(true);
                   }}
+                  className={`${media_type === "games" && "active"}`}
                 >
-                  REQUEST
+                  Games
                 </button>
-              </>
-            )}
-          </div>
-          <div>
-            {isModalOpen ? (
-              <RequestModal></RequestModal>
-            ) : (
-              <>
-                <h1>ff</h1>
-              </>
-            )}
-          </div>
-          <img src={img} alt="" className="w-50 h-50" />
-          <input
-            type="file"
-            accept="image/*"
-            placeholder="EDIT IMAGEEEEEE"
-            onChange={handleUpload}
-          />
+                <button
+                  onClick={() => {
+                    navigate(`/profile/${id}/movies`);
+                    setLoading(true);
+                  }}
+                  className={`${media_type === "movies" && "active"}`}
+                >
+                  Movies
+                </button>
+              </div>
+              <div>
+                {isModalOpen ? (
+                  <RequestModal setModalOpen={setIsModalOpen}></RequestModal>
+                ) : (
+                  <></>
+                )}
+              </div>
+              <div className="flex items-center p-4">
+                <img
+                  src={img}
+                  alt=""
+                  className="w-25 h-25 object-cover rounded-[50%]"
+                />
 
-          {isEditingName ? (
-            <div>
-              <input
-                placeholder={name}
-                value={name}
-                autoFocus
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              ></input>
-              <button
-                onClick={() => {
-                  setIsEditingName(false);
-                  handleNameEdit();
-                }}
-              >
-                Done
-              </button>
+                {isEditingName ? (
+                  <div
+                    className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
+                    onClick={() => setIsEditingName(false)}
+                  >
+                    <div
+                      className="bg-main border-1 border-white/5 flex flex-col  items-center justify-center gap-10 p-4 rounded-2xl"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <label className="border-1 border-white rounded-[50%] w-30 h-30 cursor-pointer hover:bg-white/90 transition-all duration-200 flex items-center justify-center hover:text-black">
+                        Upload Img
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="sr-only "
+                          placeholder="EDIT IMAGEEEEEE"
+                          onChange={handleUpload}
+                        />
+                      </label>
+                      <input
+                        placeholder={name}
+                        value={name}
+                        autoFocus
+                        className="border-1 border-white/20 rounded-lg px-2"
+                        onChange={(e) => {
+                          setName(e.target.value);
+                        }}
+                      ></input>
+
+                      <button
+                        onClick={() => {
+                          setIsEditingName(false);
+                          handleNameEdit();
+                          window.location.reload();
+                        }}
+                        className="bg-accent-primary w-full rounded-lg hover:bg-accent-hover transition-all duration-200"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between w-full px-4">
+                    <h1 className="text-xl">{name}</h1>
+
+                    <div className="flex items-center gap-10">
+                      {userId === authinticatedUserId ? (
+                        <>
+                          <button
+                            onClick={() => setIsEditingName(true)}
+                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200"
+                          >
+                            Edit Profile
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => {
+                              setIsModalOpen(true);
+                            }}
+                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200"
+                          >
+                            Request Games
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div>
+                <CardContainer
+                  header="library"
+                  userId={userId}
+                  media_type={media_type}
+                  id={URLId}
+                ></CardContainer>
+                <CardContainer
+                  header="wishlist"
+                  userId={userId}
+                  media_type={media_type}
+                  id={URLId}
+                ></CardContainer>
+                <CardContainer
+                  header="completed"
+                  userId={userId}
+                  id={URLId}
+                  media_type={media_type}
+                ></CardContainer>
+              </div>
             </div>
-          ) : (
-            <div>
-              <h1>{name}</h1>
-              <button onClick={() => setIsEditingName(true)}>EDIIIIIIT</button>
-            </div>
-          )}
-          <div>
-            <CardContainer
-              header="library"
-              userId={userId}
-              media_type={media_type}
-              id={URLId}
-            ></CardContainer>
-            <CardContainer
-              header="wishlist"
-              userId={userId}
-              media_type={media_type}
-              id={URLId}
-            ></CardContainer>
-            <CardContainer
-              header="completed"
-              userId={userId}
-              id={URLId}
-              media_type={media_type}
-            ></CardContainer>
           </div>
         </div>
       </>

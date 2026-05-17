@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NavBar from "./NavBar";
 import { useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
@@ -10,7 +10,33 @@ function GameInfoPage() {
   const [gameExists, setGameExists] = useState(false);
   const [status, setStatus] = useState("library");
   const [platform, setPlatform] = useState("fitgirl");
+  const ref = useRef();
+  console.log(platform);
+  console.log(status);
   const navigate = useNavigate();
+
+  const handleback = (e) => {
+    e.preventDefault();
+    navigate(-1);
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    console.log("deleting");
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { error } = await supabase
+      .from("users_games")
+      .delete("")
+      .eq("game_id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+  };
 
   const handleInsertion = async (e) => {
     e.preventDefault();
@@ -111,125 +137,350 @@ function GameInfoPage() {
     loadGameInfo();
   }, [id]);
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      if (e.deltaY === 0) return;
+
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+
+    console.log("container:", el);
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+    };
+  }, [ref.current]);
+
   return loading ? (
     <>
       <h1>loading</h1>
     </>
   ) : (
-    <div>
+    <div className="flex flex-col min-h-screen w-full bg-main">
       <NavBar></NavBar>
-      <div>
-        <h1>{game.name}</h1>
-        <h4>{game.summary}</h4>
-        <h1>{game.name}</h1>
-        <img
-          src={
-            game.cover?.url
-              ? game.cover.url
-              : game.cover
-                ? game.cover
-                : "//images.igdb.com/igdb/image/upload/t_cover_big/cobz58.jpg"
-          }
-          alt=""
-        />
-        <div>
+
+      <div className="px-4 py-2 flex flex-col gap-5 ">
+        <h2
+          className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
+          onClick={handleback}
+        >
+          ←
+        </h2>
+        <div
+          className="sm:grid
+            sm:grid-cols-[clamp(140px,17vw,240px)_1fr]
+            sm:gap-6
+            sm:items-start
+            flex gap-5
+            "
+        >
+          <div>
+            <img
+              src={
+                game.cover?.url
+                  ? game.cover.url.replace("t_thumb", "t_cover_big")
+                  : game.cover
+                    ? game.cover
+                    : "//images.igdb.com/igdb/image/upload/t_cover_big/cobz58.jpg"
+              }
+              alt=""
+              className="w-full
+                        h-auto
+                        rounded-3xl
+                        object-cover
+                        border-1
+                        border-white/5
+                        "
+            />
+          </div>
+
+          <div className="flex flex-col gap-4 min-w-0 w-full overflow-hidden">
+            <div>
+              <h1 className="text-[clamp(1.5rem,3vw,2rem)] fint-bold text-text-primary">
+                {game.name}
+              </h1>
+              <h4 className="text-[clamp(0.5rem,0.9rem,1.5rem)] text-text-secondary leading-relaxed min-w-0 break-words max-sm:text-[0.65rem]">
+                {game.summary}
+              </h4>
+            </div>
+            <div
+              className="flex
+                gap-4
+                overflow-x-auto
+                hover-scroll
+                pb-2 min-w-0 max-sm:hidden
+              "
+              ref={ref}
+            >
+              {game.screenshots.map((screen) => {
+                return (
+                  <img
+                    key={screen.id}
+                    src={
+                      screen?.url
+                        ? screen.url.replace("t_thumb", "t_screenshot_big")
+                        : ""
+                    }
+                    className="w-[clamp(140px,17vw,240px)]
+                            h-auto
+                            rounded-xl
+                            shrink-0
+                            object-cover
+                            border-1
+                        border-white/5"
+                  ></img>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="flex  overflow-x-scroll p-2 pbs-6 gap-5 sm:hidden">
           {game.screenshots.map((screen) => {
             return (
-              <img key={screen.id} src={screen.url} className="w-60 h-30"></img>
+              <img
+                key={screen.id}
+                src={
+                  screen?.url
+                    ? screen.url.replace("t_thumb", "t_screenshot_big")
+                    : ""
+                }
+                className="w-60 h-30 border-1
+                        border-white/5"
+              ></img>
             );
           })}
         </div>
-        <form action="">
-          <fieldset>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="status"
-                value="library"
-                checked={status === "library"}
-                onChange={(e) => {
-                  setStatus(e.target.value);
-                }}
-              />
-              library
-            </label>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="status"
-                value="wishlist"
-                checked={status === "wishlist"}
-                onChange={(e) => {
-                  setStatus(e.target.value);
-                }}
-              />
-              wishlist
-            </label>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="status"
-                value="completed"
-                checked={status === "completed"}
-                onChange={(e) => {
-                  setStatus(e.target.value);
-                }}
-              />
-              played
-            </label>
-          </fieldset>
 
-          <fieldset>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="platform"
-                value="fitgirl"
-                checked={platform === "fitgirl"}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-              />
-              fitgirl
-            </label>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="platform"
-                value="dodi"
-                checked={platform === "dodi"}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-              />
-              dodi
-            </label>
-            <label htmlFor="">
-              <input
-                type="radio"
-                name="platform"
-                value="steamrip"
-                checked={platform === "steamrip"}
-                onChange={(e) => {
-                  setPlatform(e.target.value);
-                }}
-              />
-              steamrip
-            </label>
-          </fieldset>
-          {gameExists ? (
-            <>
-              <button type="submit" onClick={handleEdit}>
-                Edit
-              </button>
-            </>
-          ) : (
-            <>
-              <button type="submit" onClick={handleInsertion}>
-                Add
-              </button>
-            </>
-          )}
+        <form
+          action=""
+          className="flex
+          flex-col
+                  gap-5
+                  w-full
+                  max-w-full
+                  min-w-0"
+        >
+          <div className="w-full sm:flex items-center gap-10 ">
+            <fieldset className="flex gap-2 sm:gap-3 flex-wrap items-center ">
+              <h2 className="ps-1 py-1 text-text-primary">Status: </h2>
+              <label className="cursor-pointer inline-flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="status"
+                  value="library"
+                  className="peer sr-only"
+                  checked={status === "library"}
+                  onChange={(e) => setStatus(e.target.value)}
+                />
+
+                <span
+                  className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-blue-500
+    peer-checked:text-blue-500
+  "
+                >
+                  Library
+                </span>
+              </label>
+              <label className="cursor-pointer inline-flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="status"
+                  value="wishlist"
+                  className="peer sr-only"
+                  checked={status === "wishlist"}
+                  onChange={(e) => setStatus(e.target.value)}
+                />
+
+                <span
+                  className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-blue-500
+    peer-checked:text-blue-500
+  "
+                >
+                  Wishlist
+                </span>
+              </label>
+              <label className="cursor-pointer inline-flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="status"
+                  value="completed"
+                  className="peer sr-only"
+                  checked={status === "completed"}
+                  onChange={(e) => setStatus(e.target.value)}
+                />
+
+                <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                  Completed
+                </span>
+              </label>
+            </fieldset>
+
+            <fieldset className="flex gap-3 flex-wrap max-sm:pbs-4">
+              <h2 className="text-text-primary">Platform: </h2>
+              <label className="cursor-pointer inline-flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="platform"
+                  value="fitgirl"
+                  className="peer sr-only"
+                  checked={platform === "fitgirl"}
+                  onChange={(e) => setPlatform(e.target.value)}
+                />
+
+                <span
+                  className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-blue-500
+    peer-checked:text-blue-500
+  "
+                >
+                  Fitgirl
+                </span>
+              </label>
+              <label className="cursor-pointer inline-flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="platform"
+                  value="dodi"
+                  className="peer sr-only"
+                  checked={platform === "dodi"}
+                  onChange={(e) => setPlatform(e.target.value)}
+                />
+
+                <span
+                  className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-blue-500
+    peer-checked:text-blue-500
+  "
+                >
+                  dodi
+                </span>
+              </label>
+              <label className="cursor-pointer inline-flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="platform"
+                  value="steamrip"
+                  className="peer sr-only"
+                  checked={platform === "steamrip"}
+                  onChange={(e) => setPlatform(e.target.value)}
+                />
+
+                <span
+                  className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-accent-primary
+    peer-checked:text-accent-primary
+  "
+                >
+                  steamrip
+                </span>
+              </label>
+            </fieldset>
+            <div className="flex pe-6 pbs-8 md:hidden w-full">
+              {gameExists ? (
+                <div className="flex gap-5 w-full">
+                  <button
+                    onClick={handleDelete}
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%]  rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="submit"
+                    onClick={handleEdit}
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  >
+                    Edit
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-5">
+                  <button
+                    type="submit"
+                    onClick={handleInsertion}
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  >
+                    Add
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex max-md:hidden">
+            {gameExists ? (
+              <div className="flex gap-5">
+                <button
+                  onClick={handleDelete}
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                >
+                  Delete
+                </button>
+                <button
+                  type="submit"
+                  onClick={handleEdit}
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                >
+                  Edit
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-5">
+                <button
+                  type="submit"
+                  onClick={handleInsertion}
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                >
+                  Add
+                </button>
+              </div>
+            )}
+          </div>
         </form>
       </div>
     </div>

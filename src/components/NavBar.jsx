@@ -19,8 +19,8 @@ function NavBar(q) {
   const isSearchPage = location.pathname === "/search";
 
   return (
-    <div className="w-full flex justify-between p-4">
-      <h1 className="text-4xl text-black hover:cursor-pointer">
+    <div className="w-full flex justify-between p-4 bg-nav border-b-1 border-bottom border-white/10">
+      <h1 className="text-4xl text-white hover:cursor-pointer max-sm:text-[1.5rem]">
         <Link to="/main">Sharkny</Link>
       </h1>
       <SearchComponent

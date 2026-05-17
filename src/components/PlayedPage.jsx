@@ -1,7 +1,7 @@
 import NavBar from "./NavBar";
-import Aside from "./Aside";
 import FullCardContainer from "./FullCardContainer";
 import { useLocation } from "react-router";
+import AsideWrapper from "./AsideWrapper";
 
 function PlayedPage() {
   const location = useLocation();
@@ -9,8 +9,8 @@ function PlayedPage() {
   return (
     <>
       <NavBar></NavBar>
-      <div className="h-full w-full grid grid-cols-[150px_minmax(200px,_1fr)]">
-        <Aside className=""></Aside>
+      <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+        <AsideWrapper></AsideWrapper>
         <div>
           <FullCardContainer
             header={"completed"}

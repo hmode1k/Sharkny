@@ -11,6 +11,7 @@ function SearchPage() {
   const query = searchParams.get("q");
   const [games, setGames] = useState([]);
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleSearch = async () => {
@@ -33,6 +34,7 @@ function SearchPage() {
         });
 
         setGames(ranked);
+        setLoading(false);
       } else if (location.pathname === "/search/movies") {
         const res = await supabase.functions.invoke("search-media", {
           body: JSON.stringify({
@@ -42,34 +44,54 @@ function SearchPage() {
         console.log(res.data);
 
         setMovies(res.data);
+        setLoading(false);
       }
     };
 
     handleSearch();
   }, [query, location.pathname]);
 
-  if (location.pathname === "/search/games") {
+  if (loading) {
     return (
       <>
+        <h1>loading</h1>
+      </>
+    );
+  }
+
+  if (location.pathname === "/search/games") {
+    return (
+      <div className="bg-main text-text-primary h-full ">
         <NavBar q={query}></NavBar>
-        <div className="w-full flex gap-50  justify-center content-center">
-          <button
+        <div className="flex w-full items-center relative">
+          <h1
+            className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"
             onClick={() => {
-              navigate(`/search/games?q=${query}`);
+              navigate(-1);
             }}
           >
-            game
-          </button>
-          <button
-            onClick={() => {
-              navigate(`/search/movies?q=${query}`);
-            }}
-          >
-            movies
-          </button>
+            ←
+          </h1>
+          <div className="w-full flex gap-50  justify-center content-center h-full tab">
+            <button
+              onClick={() => {
+                navigate(`/search/games?q=${query}`);
+              }}
+              className="active"
+            >
+              Games
+            </button>
+            <button
+              onClick={() => {
+                navigate(`/search/movies?q=${query}`);
+              }}
+            >
+              Movies
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 p-4">
+        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:justify-center">
           {games.map((game) => {
             return (
               <GameCard
@@ -85,31 +107,37 @@ function SearchPage() {
               ></GameCard>
             );
           })}
+          {games.length === 0 && (
+            <>
+              <h1>No Results</h1>
+            </>
+          )}
         </div>
-      </>
+      </div>
     );
   } else {
     return (
-      <>
+      <div className="bg-main text-text-primary h-full">
         <NavBar q={query}></NavBar>
-        <div className="w-full flex gap-50  justify-center content-center">
+        <div className="w-full flex gap-50  justify-center content-center bg-main h-full tab">
           <button
             onClick={() => {
               navigate(`/search/games?q=${query}`);
             }}
           >
-            game
+            Games
           </button>
           <button
             onClick={() => {
               navigate(`/search/movies?q=${query}`);
             }}
+            className="active"
           >
-            movies
+            Movies
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-5 p-4">
+        <div className="flex flex-wrap gap-5 p-4 h-full bg-main">
           {movies.map((movie) => {
             return (
               <GameCard
@@ -121,8 +149,13 @@ function SearchPage() {
               ></GameCard>
             );
           })}
+          {movies.length === 0 && (
+            <>
+              <h1>No Results</h1>
+            </>
+          )}
         </div>
-      </>
+      </div>
     );
   }
 }
