@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "../supabase-client";
 
 import GameCard from "./GameCard";
-import SearchComponent from "./SearchComponent";
 import { useLocation, useSearchParams } from "react-router";
 
 function FullCardContainer({ header, userId, media_type }) {
@@ -138,7 +137,6 @@ function FullCardContainer({ header, userId, media_type }) {
       <div className="w-full p-2">
         <div className="flex items-center gap-10 p-2">
           <h2>{header?.charAt(0).toUpperCase() + header?.slice(1)}</h2>
-          <SearchComponent width="50" />
         </div>
         <div
           className="grid
