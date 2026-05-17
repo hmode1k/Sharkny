@@ -4,7 +4,6 @@ function ViewRequestModal({
   setModalOpen,
   modalRequest,
   handleUpdate,
-  handleDelete,
   requester,
 }) {
   const [tab, setTab] = useState("games");
