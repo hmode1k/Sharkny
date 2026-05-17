@@ -46,7 +46,7 @@ function Aside() {
         <div className="flex gap-5 sm:p-2">
           <h1
             onClick={() => {
-              window.location.href = "/games";
+              navigate("/games", { replace: true });
             }}
             className="cursor-pointer"
           >
@@ -60,13 +60,13 @@ function Aside() {
           className={`${openSection === "games" ? "max-h-40" : "max-h-0"} overflow-hidden transition-all`}
         >
           <ul className="p-2 ps-6">
-            <li onClick={() => (window.location.href = "/games/library")}>
+            <li onClick={() => navigate("/games/library", { replace: true })}>
               Library
             </li>
-            <li onClick={() => (window.location.href = "/games/wishlist")}>
+            <li onClick={() => navigate("/games/wishlist", { replace: true })}>
               Wishlist
             </li>
-            <li onClick={() => (window.location.href = "/games/completed")}>
+            <li onClick={() => navigate("/games/completed", { replace: true })}>
               Completed
             </li>
           </ul>
@@ -76,7 +76,7 @@ function Aside() {
         <div className="flex gap-5 p-2">
           <h1
             onClick={() => {
-              window.location.href = "/movies";
+              navigate("/movies", { replace: true });
             }}
             className="cursor-pointer"
           >
@@ -90,13 +90,15 @@ function Aside() {
           className={`${openSection === "movies" ? "max-h-40" : "max-h-0"} overflow-hidden transition-all`}
         >
           <ul className="p-2 ps-6">
-            <li onClick={() => (window.location.href = "/movies/library")}>
+            <li onClick={() => navigate("/movies/library", { replace: true })}>
               Library
             </li>
-            <li onClick={() => (window.location.href = "/movies/wishlist")}>
+            <li onClick={() => navigate("/movies/wishlist", { replace: true })}>
               Wishlist
             </li>
-            <li onClick={() => (window.location.href = "/movies/completed")}>
+            <li
+              onClick={() => navigate("/movies/completed", { replace: true })}
+            >
               Completed
             </li>
           </ul>
