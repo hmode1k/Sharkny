@@ -41,7 +41,7 @@ function RouterWrapper() {
       element: <LoginPage />,
     },
     {
-      path: "search/games",
+      path: "/search/games",
       element: (
         <ProtectedRoute user={user}>
           <SearchPage />
@@ -49,7 +49,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "search/movies",
+      path: "/search/movies",
       element: (
         <ProtectedRoute user={user}>
           <SearchPage />
@@ -121,7 +121,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "games/:id",
+      path: "/games/:id",
       element: (
         <ProtectedRoute user={user}>
           <GameInfoPage />
@@ -129,7 +129,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "tv/:id",
+      path: "/tv/:id",
       element: (
         <ProtectedRoute user={user}>
           <MovieInfoPage />
@@ -137,7 +137,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "movie/:id",
+      path: "/movie/:id",
       element: (
         <ProtectedRoute user={user}>
           <MovieInfoPage />
@@ -145,11 +145,11 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "main",
+      path: "/main",
       element: <Navigate to="/main/games" replcae />,
     },
     {
-      path: "main/:category",
+      path: "/main/:category",
       element: (
         <ProtectedRoute user={user}>
           <App />
@@ -157,7 +157,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "profile/",
+      path: "/profile/",
       element: (
         <ProtectedRoute user={user}>
           <Profile />
@@ -173,7 +173,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "profile/:id/:media_type",
+      path: "/profile/:id/:media_type",
       element: (
         <ProtectedRoute user={user}>
           <Profile />
@@ -181,7 +181,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "profile/:id/:media_type/:category",
+      path: "/profile/:id/:media_type/:category",
       element: (
         <ProtectedRoute user={user}>
           <Profile />
@@ -189,7 +189,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "friends",
+      path: "/friends",
       element: (
         <ProtectedRoute user={user}>
           <FriendsPage />
@@ -197,7 +197,7 @@ function RouterWrapper() {
       ),
     },
     {
-      path: "requests",
+      path: "/requests",
       element: (
         <ProtectedRoute user={user}>
           <RequestsPage />
