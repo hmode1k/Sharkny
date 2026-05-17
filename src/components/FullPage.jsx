@@ -13,7 +13,10 @@ function FullPage() {
       <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
         <AsideWrapper></AsideWrapper>
         <div>
-          <FullCardContainer media_type={path[1]}></FullCardContainer>
+          <FullCardContainer
+            key={path[1]}
+            media_type={path[1]}
+          ></FullCardContainer>
         </div>
       </div>
     </>

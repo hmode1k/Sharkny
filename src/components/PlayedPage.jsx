@@ -13,6 +13,7 @@ function PlayedPage() {
         <AsideWrapper></AsideWrapper>
         <div>
           <FullCardContainer
+            key={path[1]}
             header={"completed"}
             media_type={path[1]}
           ></FullCardContainer>

@@ -153,6 +153,7 @@ function Profile() {
               <h1 className="text-xl text-text-primary">{name}</h1>
             </div>
             <FullCardContainer
+              key={`${category}-${id}-${media_type}`}
               header={category === "full" ? null : category}
               userId={userId}
               media_type={media_type}

@@ -13,6 +13,7 @@ function WishlistPage() {
         <AsideWrapper></AsideWrapper>
         <div>
           <FullCardContainer
+            key={path[1]}
             header={"wishlist"}
             media_type={path[1]}
           ></FullCardContainer>
