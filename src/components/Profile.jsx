@@ -127,7 +127,7 @@ function Profile() {
             <div className="w-full flex gap-50  justify-center content-center tab ">
               <button
                 onClick={() => {
-                  window.location.href = `${location.pathname.replace("/movies", "/games")}`;
+                  navigate(location.pathname.replace("/movies", "/games"));
                   setLoading(true);
                 }}
                 className={`${media_type === "games" && "active"}`}
@@ -136,7 +136,7 @@ function Profile() {
               </button>
               <button
                 onClick={() => {
-                  window.location.href = `${location.pathname.replace("/games", "/movies")}`;
+                  navigate(location.pathname.replace("/games", "/movies"));
                   setLoading(true);
                 }}
                 className={`${media_type === "movies" && "active"}`}
