@@ -4,13 +4,15 @@ import { supabase } from "../supabase-client";
 import GameCard from "./GameCard";
 import { useLocation, useSearchParams } from "react-router";
 
-function FullCardContainer({ header, userId, media_type }) {
+function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
   const [libItems, setLibItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(userId);
   const [localSearch, setLocalSearch] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+
+  console.log("authh", authinticatedUser);
 
   useEffect(() => {
     const fetchLibrary = async () => {
@@ -204,6 +206,8 @@ function FullCardContainer({ header, userId, media_type }) {
                 platform={game.platform}
                 status={game.status}
                 media_type={media_type}
+                authinticatedUser={authinticatedUser}
+                userId={userId}
               ></GameCard>
             );
           })}
@@ -254,6 +258,8 @@ function FullCardContainer({ header, userId, media_type }) {
                 id={item.movies.id}
                 status={item.status}
                 media_type={item.movies.media_type}
+                authinticatedUser={authinticatedUser}
+                userId={userId}
               ></GameCard>
             );
           })}
