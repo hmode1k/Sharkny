@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-main: #1a1a1a;
+  /* --color-main: #1a1a1a; */
 
-  --color-nav: #121212;
+  --color-main: #102217;
+  /* 
+  --color-nav: #121212; */
 
-  --color-search: #202020;
+  --color-nav: #101914;
+
+  /* --color-search: #202020; */
+
+  --color-search: #29382f;
 
   --color-accent-primary: #3b82f6;
   --color-accent-hover: #60a5fa;
@@ -60,9 +66,9 @@ body {
 }
 
 .tab .active {
-  color: yellow;
+  color: #28e16d;
   z-index: 4;
-  border-bottom: 1px solid yellow;
+  border-bottom: 1px solid #28e16d;
 }
 
 .card-bg {

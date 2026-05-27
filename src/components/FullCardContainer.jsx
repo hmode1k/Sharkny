@@ -1,120 +1,29 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../supabase-client";
+import { useState } from "react";
 
 import GameCard from "./GameCard";
 import { useLocation, useSearchParams } from "react-router";
+import { useData } from "../DataContext";
 
-function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
-  const [libItems, setLibItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [id, setId] = useState(userId);
+function FullCardContainer({ header, media_type }) {
+  const { games, movies } = useData();
+
+  console.log(header);
+
+  let libItems = [];
+
+  if (media_type === "movies") {
+    libItems = movies.filter(
+      (item) => header === undefined || item.status === header,
+    );
+  } else if (media_type === "games") {
+    libItems = games.filter(
+      (item) => header === undefined || item.status === header,
+    );
+  }
+
   const [localSearch, setLocalSearch] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-
-  console.log("authh", authinticatedUser);
-
-  useEffect(() => {
-    const fetchLibrary = async () => {
-      if (header) {
-        if (id === undefined || id === null) {
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-          setId(user.id);
-        }
-        if (location.pathname.includes("games")) {
-          const { data, error } = await supabase
-            .from("users_games")
-            .select(
-              `
-      *,
-      games (*
-      )
-    `,
-            )
-            .eq("user_id", id)
-            .eq("status", header);
-
-          if (error) {
-            console.error(error);
-            return;
-          }
-
-          setLibItems(data);
-          setLoading(false);
-        } else if (location.pathname.includes("movies")) {
-          const { data, error } = await supabase
-            .from("users_movies")
-            .select(
-              `
-      *,
-      movies (*
-      )
-    `,
-            )
-            .eq("user_id", id)
-            .eq("status", header);
-
-          if (error) {
-            console.error(error);
-            return;
-          }
-
-          setLibItems(data);
-          setLoading(false);
-        }
-      } else {
-        if (id === undefined || id === null) {
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-          setId(user.id);
-        }
-        if (location.pathname.includes("games")) {
-          const { data, error } = await supabase
-            .from("users_games")
-            .select(
-              `
-      *,
-      games (*
-      )
-    `,
-            )
-            .eq("user_id", id);
-
-          if (error) {
-            console.error(error);
-            return;
-          }
-
-          setLibItems(data);
-          setLoading(false);
-        } else if (location.pathname.includes("movies")) {
-          const { data, error } = await supabase
-            .from("users_movies")
-            .select(
-              `
-      *,
-      movies (*
-      )
-    `,
-            )
-            .eq("user_id", id);
-
-          if (error) {
-            console.error(error);
-            return;
-          }
-
-          setLibItems(data);
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchLibrary();
-  }, [header, id, location.pathname]);
 
   const filteredItems = libItems.filter((item) => {
     const itemName = item?.games?.name || item?.movies?.title || "";
@@ -130,38 +39,11 @@ function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
 
   const endIndex = startIndex + CARDS_PER_PAGE;
 
-  const visibleGames = filteredItems.slice(startIndex, endIndex);
+  const visibleItems = filteredItems.slice(startIndex, endIndex);
 
   const totalPages = Math.ceil(filteredItems.length / CARDS_PER_PAGE);
 
-  if (loading) {
-    return (
-      <div className="w-full p-2">
-        <div className="flex items-center gap-10 p-2">
-          <h2>{header?.charAt(0).toUpperCase() + header?.slice(1)}</h2>
-        </div>
-        <div
-          className="grid
-  grid-cols-[repeat(auto-fill,minmax(220px,1fr))]
-  gap-6 gap-5 p-2"
-        >
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-          <GameCard></GameCard>
-        </div>
-      </div>
-    );
-  }
-  if (location.pathname.includes("games") && !loading) {
+  if (location.pathname.includes("games")) {
     return (
       <div className="w-full ps-15 pe-15 text-text-primary">
         <div className="flex items-center justify-between p-2 items-center">
@@ -196,7 +78,7 @@ function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
   grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
   gap-3  p-4"
         >
-          {visibleGames.map((game) => {
+          {visibleItems.map((game) => {
             return (
               <GameCard
                 key={game.id}
@@ -206,15 +88,13 @@ function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
                 platform={game.platform}
                 status={game.status}
                 media_type={media_type}
-                authinticatedUser={authinticatedUser}
-                userId={userId}
               ></GameCard>
             );
           })}
         </div>
       </div>
     );
-  } else if (location.pathname.includes("movies") && !loading) {
+  } else if (location.pathname.includes("movies")) {
     return (
       <div className="w-full ps-15 pe-15 text-text-primary">
         <div className="flex items-center justify-between p-2 items-center">
@@ -249,7 +129,7 @@ function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
   grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
   gap-2 p-4"
         >
-          {visibleGames.map((item) => {
+          {visibleItems.map((item) => {
             return (
               <GameCard
                 key={item.id}
@@ -258,8 +138,6 @@ function FullCardContainer({ header, userId, media_type, authinticatedUser }) {
                 id={item.movies.id}
                 status={item.status}
                 media_type={item.movies.media_type}
-                authinticatedUser={authinticatedUser}
-                userId={userId}
               ></GameCard>
             );
           })}

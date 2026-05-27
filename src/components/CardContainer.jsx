@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import GameCard from "./GameCard";
-import { supabase } from "../supabase-client";
 import { useLocation, useNavigate } from "react-router";
+import { useData } from "../DataContext";
 
-function CardContainer({ header, userId, id, media_type }) {
-  const [libItems, setLibItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+function CardContainer({ header, id, media_type }) {
+  const { games, movies } = useData();
   const location = useLocation();
   const navigate = useNavigate();
   const ref = useRef(null);
@@ -17,58 +16,6 @@ function CardContainer({ header, userId, id, media_type }) {
       navigate(`/${media_type}/${header}`);
     }
   }
-
-  useEffect(() => {
-    const fetchLibrary = async () => {
-      if (media_type === "games") {
-        const { data, error } = await supabase
-          .from("users_games")
-          .select(
-            `
-    *,
-    games (
-      *
-    )
-  `,
-          )
-          .eq("user_id", userId)
-          .eq("status", header)
-          .limit(16);
-
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        setLoading(false);
-        setLibItems(data);
-      } else if (media_type === "movies") {
-        const { data, error } = await supabase
-          .from("users_movies")
-          .select(
-            `
-    *,
-    movies (
-      *
-    )
-  `,
-          )
-          .eq("user_id", userId)
-          .eq("status", header)
-          .limit(16);
-
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        setLoading(false);
-        setLibItems(data);
-      }
-    };
-
-    fetchLibrary();
-  }, [header, userId, media_type]);
 
   useEffect(() => {
     const el = ref.current;
@@ -90,11 +37,7 @@ function CardContainer({ header, userId, id, media_type }) {
   }, [ref.current]);
 
   if (media_type === "games") {
-    return loading ? (
-      <>
-        <h1>Loading</h1>
-      </>
-    ) : (
+    return (
       <div className="p-4">
         <div className="flex gap-4 ps-4 mbe-2 items-center">
           <h2 className="text-2xl">
@@ -112,20 +55,22 @@ function CardContainer({ header, userId, id, media_type }) {
           className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative"
           ref={ref}
         >
-          {libItems.map((item) => {
-            return (
-              <GameCard
-                key={item.id}
-                id={item.games.id}
-                name={item.games.name}
-                img={item.games.cover}
-                platform={item.platform}
-                status={item.status}
-                media_type={media_type}
-              ></GameCard>
-            );
-          })}
-          {libItems.length === 0 && (
+          {games
+            .filter((item) => item.status === header)
+            .map((item) => {
+              return (
+                <GameCard
+                  key={item.id}
+                  id={item.games.id}
+                  name={item.games.name}
+                  img={item.games.cover}
+                  platform={item.platform}
+                  status={item.status}
+                  media_type={media_type}
+                ></GameCard>
+              );
+            })}
+          {games.length === 0 && (
             <>
               <h1 className="text-text-muted">
                 Your List Is Empty Fill It Up!
@@ -136,11 +81,7 @@ function CardContainer({ header, userId, id, media_type }) {
       </div>
     );
   } else if (media_type === "movies") {
-    return loading ? (
-      <>
-        <h1>Loading</h1>
-      </>
-    ) : (
+    return (
       <div className="p-4">
         <div className="flex gap-4 ps-4 mbe-2">
           <h2 className="text-2xl">
@@ -157,19 +98,21 @@ function CardContainer({ header, userId, id, media_type }) {
           className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative"
           ref={ref}
         >
-          {libItems.map((item) => {
-            return (
-              <GameCard
-                key={item.movie_id}
-                id={item.movie_id}
-                name={item.movies.title}
-                img={item.movies.poster}
-                status={item.status}
-                media_type={item.movies.media_type}
-              ></GameCard>
-            );
-          })}
-          {libItems.length === 0 && (
+          {movies
+            .filter((item) => item.status === header)
+            .map((item) => {
+              return (
+                <GameCard
+                  key={item.movie_id}
+                  id={item.movie_id}
+                  name={item.movies.title}
+                  img={item.movies.poster}
+                  status={item.status}
+                  media_type={item.movies.media_type}
+                ></GameCard>
+              );
+            })}
+          {movies.length === 0 && (
             <>
               <h1 className="text-text-muted">
                 Your List Is Empty Fill It Up!

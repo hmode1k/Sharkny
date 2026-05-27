@@ -56,19 +56,16 @@ function App() {
             header="library"
             userId={userId}
             media_type={category}
-            setLoading2={setLoading}
           ></CardContainer>
           <CardContainer
             header="wishlist"
             userId={userId}
             media_type={category}
-            setLoading2={setLoading}
           ></CardContainer>
           <CardContainer
             header="completed"
             userId={userId}
             media_type={category}
-            setLoading2={setLoading}
           ></CardContainer>
         </div>
       </div>

@@ -16,7 +16,6 @@ function GameCard({
   const [type, setType] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log("auttthhh", authinticatedUser);
 
   function handleClick() {
     navigate(`/${media_type}/${id}`);

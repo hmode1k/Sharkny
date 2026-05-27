@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import "./index.css";
 import App from "./App.jsx";
@@ -14,26 +13,10 @@ import MovieInfoPage from "./components/MovieInfoPage.jsx";
 import FullPage from "./components/FullPage.jsx";
 import RequestsPage from "./components/RequestsPage.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import { supabase } from "./supabase-client.js";
+import { useAuth } from "./AuthContext.jsx";
 
 function RouterWrapper() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user || null);
-      setLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user || null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const { user, loading } = useAuth();
 
   const router = createBrowserRouter([
     {
@@ -146,7 +129,7 @@ function RouterWrapper() {
     },
     {
       path: "/main",
-      element: <Navigate to="/main/games" replace />,
+      element: <Navigate to="/main/games" />,
     },
     {
       path: "/main/:category",
