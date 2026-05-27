@@ -155,9 +155,7 @@ function Profile() {
             <FullCardContainer
               key={`${category}-${id}-${media_type}`}
               header={category === "full" ? null : category}
-              userId={userId}
               media_type={media_type}
-              authinticatedUser={authinticatedUserId}
             ></FullCardContainer>
           </div>
         </div>

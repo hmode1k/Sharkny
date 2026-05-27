@@ -33,7 +33,7 @@ function FriendsPage() {
       <NavBar></NavBar>
       <div className="w-full h-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)] ">
         <AsideWrapper></AsideWrapper>
-        <div className="flex gap-5 p-4 max-sm:flex-col ">
+        <div className="flex flex-col gap-5 p-4 max-sm:flex-col overflow-scroll">
           {users.map((user) => {
             return (
               <ProfileCard
