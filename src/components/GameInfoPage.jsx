@@ -168,6 +168,7 @@ function GameInfoPage() {
         });
 
         setGame(res.data[0]);
+        console.log(res.data[0]);
         setLoading(false);
         console.log("from api");
       }
@@ -256,7 +257,7 @@ function GameInfoPage() {
               "
               ref={ref}
             >
-              {game.screenshots.map((screen) => {
+              {game?.screenshots?.map((screen) => {
                 return (
                   <img
                     key={screen.id}
@@ -279,7 +280,7 @@ function GameInfoPage() {
           </div>
         </div>
         <div className="flex  overflow-x-scroll p-2 pbs-6 gap-5 sm:hidden">
-          {game.screenshots.map((screen) => {
+          {game?.screenshots?.map((screen) => {
             return (
               <img
                 key={screen.id}
