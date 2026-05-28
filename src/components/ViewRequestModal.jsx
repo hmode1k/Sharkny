@@ -4,6 +4,7 @@ function ViewRequestModal({
   setModalOpen,
   modalRequest,
   handleUpdate,
+  handleDelete,
   requester,
 }) {
   const [tab, setTab] = useState("games");
@@ -71,7 +72,16 @@ function ViewRequestModal({
             {modalRequest.request_status === "pending" ? (
               <div>
                 {modalRequest.requester_id === requester ? (
-                  <></>
+                  <>
+                    <button
+                      onClick={() => {
+                        handleDelete(modalRequest.id);
+                      }}
+                      className="text-text-primary bg-red-500 hover:bg-red-600 transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl"
+                    >
+                      cancel
+                    </button>
+                  </>
                 ) : (
                   <>
                     <div className="flex w-full gap-5">
@@ -79,17 +89,17 @@ function ViewRequestModal({
                         onClick={() =>
                           handleUpdate("rejected", modalRequest.id)
                         }
-                        className="text-text-primary bg-red-500 hover:bg-red-400 transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl"
+                        className="text-text-primary bg-red-500 hover:bg-red-600 transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl"
                       >
                         Reject
                       </button>
                       <button
                         onClick={() =>
-                          handleUpdate("accepted", modalRequest.id)
+                          handleUpdate("completed", modalRequest.id)
                         }
-                        className="text-text-primary bg-green-500 hover:bg-accent-hover transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl"
+                        className="text-text-primary bg-green-500 hover:bg-green-600 transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl"
                       >
-                        Accept
+                        Complete
                       </button>
                     </div>
                   </>

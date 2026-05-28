@@ -79,8 +79,11 @@ function RequestsPage() {
   `,
         )
         .or(`requester_id.eq.${userId[0].id},requested_id.eq.${userId[0].id}`);
-      console.log(data);
-      setRequests(data);
+      const sortedRequests = [...data].sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at),
+      );
+
+      setRequests(sortedRequests);
       setLoading(false);
     };
 
@@ -155,11 +158,11 @@ function RequestsPage() {
                                 <>
                                   <button
                                     onClick={() => {
-                                      handleUpdate("accepted", req.id);
+                                      handleUpdate("completed", req.id);
                                     }}
                                     className="px-4 bg-green-500 rounded-xl"
                                   >
-                                    Accept
+                                    Complete
                                   </button>
                                   <button
                                     onClick={() => {
@@ -255,11 +258,11 @@ function RequestsPage() {
                               <>
                                 <button
                                   onClick={() => {
-                                    handleUpdate("accepted", req.id);
+                                    handleUpdate("completed", req.id);
                                   }}
                                   className="px-4 bg-green-500 rounded-xl"
                                 >
-                                  Accept
+                                  Complete
                                 </button>
                                 <button
                                   onClick={() => {
@@ -271,16 +274,7 @@ function RequestsPage() {
                                 </button>
                               </>
                             ) : req.request_status === "accepted" ? (
-                              <>
-                                <button
-                                  onClick={() => {
-                                    handleUpdate("completed", req.id);
-                                  }}
-                                  className="px-4 bg-accent-primary rounded-xl"
-                                >
-                                  Complete
-                                </button>
-                              </>
+                              <></>
                             ) : (
                               <></>
                             )}
@@ -296,7 +290,7 @@ function RequestsPage() {
             </div>
             <div>
               <div className="flex gap-10">
-                <h1 className="pbe-4 "> Your Requests</h1>
+                <h1 className="pbe-4 "> My Requests</h1>
                 <h1
                   onClick={() => toggleSection("your-requests")}
                   className="cursor-pointer"
