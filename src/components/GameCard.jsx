@@ -2,16 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Modal from "./Modal";
 
-function GameCard({
-  name,
-  img,
-  id,
-  platform,
-  status,
-  media_type,
-  authinticatedUser,
-  userId,
-}) {
+function GameCard({ name, img, id, platform, status, media_type }) {
   const [isEditing, setIsEditing] = useState(false);
   const [type, setType] = useState(null);
   const navigate = useNavigate();
@@ -37,8 +28,15 @@ function GameCard({
             <>
               <div className="w-full p-1 flex flex-col gap-1 items-end">
                 <button
-                  className="text-white w-6 h-6 bg-yellow-500 rounded-4xl card-stuff"
-                  disabled={authinticatedUser === userId ? false : true}
+                  className={`
+                    ${
+                      location.pathname.includes("profile")
+                        ? "opacity-0"
+                        : "opacity-90"
+                    } text-white w-6 h-6 bg-yellow-500 rounded-4xl card-stuff`}
+                  disabled={
+                    location.pathname.includes("profile") ? true : false
+                  }
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditing(true);
@@ -48,8 +46,15 @@ function GameCard({
                   🖉
                 </button>
                 <button
-                  className="text-white w-6 h-6 bg-red-500 rounded-4xl card-stuff"
-                  disabled={authinticatedUser === userId ? false : true}
+                  className={`
+                    ${
+                      location.pathname.includes("profile")
+                        ? "opacity-0"
+                        : "opacity-90"
+                    } text-white w-6 h-6 bg-red-500 rounded-4xl card-stuff`}
+                  disabled={
+                    location.pathname.includes("profile") ? true : false
+                  }
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsEditing(true);

@@ -6,15 +6,12 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import FullCardContainer from "./FullCardContainer";
 import RequestModal from "./RequestMoal";
 import AsideWrapper from "./AsideWrapper";
+import { useAuth } from "../AuthContext";
 
 function Profile() {
-  const [name, setName] = useState("UserName");
-  const [img, setImg] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [URLId, setURLId] = useState(null);
-  const [authinticatedUserId, setAuthinticatedUserId] = useState(null);
+  const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
   const { id, category, media_type } = useParams();
-  console.log("id", id);
   const [isEditingName, setIsEditingName] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -26,7 +23,7 @@ function Profile() {
 
     if (!file) return;
 
-    const filePath = `${userId}/${Date.now()}-${file.name}`;
+    const filePath = `${user.id}/${Date.now()}-${file.name}`;
 
     const { error } = await supabase.storage
       .from("avatars")
@@ -46,7 +43,7 @@ function Profile() {
       .update({
         avatar_url: imageUrl,
       })
-      .eq("user_id", userId);
+      .eq("user_id", user.id);
 
     if (updateError) {
       console.error(updateError);
@@ -60,9 +57,9 @@ function Profile() {
     const { error } = await supabase
       .from("profiles")
       .update({
-        full_name: name,
+        full_name: profile.full_name,
       })
-      .eq("user_id", userId);
+      .eq("user_id", user.id);
 
     if (error) {
       console.error(error);
@@ -73,10 +70,6 @@ function Profile() {
   useEffect(() => {
     const fetchUser = async () => {
       if (id === undefined || id === null) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-
         const { data } = await supabase
           .from("profiles")
           .select("*")
@@ -85,12 +78,6 @@ function Profile() {
         console.log(data[0]);
         navigate(`/profile/${data[0].id}/games`);
       }
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setAuthinticatedUserId(user.id);
 
       const { error, data } = await supabase
         .from("profiles")
@@ -101,11 +88,7 @@ function Profile() {
         console.error(error);
         return;
       }
-
-      setName(data[0].full_name);
-      setImg(data[0].avatar_url);
-      setUserId(data[0].user_id);
-      setURLId(id);
+      setProfile(data[0]);
       setLoading(false);
     };
 
@@ -146,11 +129,11 @@ function Profile() {
             </div>
             <div className="flex items-center p-4 gap-5">
               <img
-                src={img}
+                src={profile.avatar_url}
                 alt=""
                 className="w-25 h-25 object-cover rounded-[50%]"
               />
-              <h1 className="text-xl text-text-primary">{name}</h1>
+              <h1 className="text-xl text-text-primary">{profile.full_name}</h1>
             </div>
             <FullCardContainer
               key={`${category}-${id}-${media_type}`}
@@ -202,7 +185,7 @@ function Profile() {
               </div>
               <div className="flex items-center p-4">
                 <img
-                  src={img}
+                  src={profile.avatar_url}
                   alt=""
                   className="w-25 h-25 object-cover rounded-[50%]"
                 />
@@ -229,12 +212,12 @@ function Profile() {
                         />
                       </label>
                       <input
-                        placeholder={name}
-                        value={name}
+                        placeholder={profile.full_name}
+                        value={profile.full_name}
                         autoFocus
                         className="border-1 border-white/20 rounded-lg px-2"
                         onChange={(e) => {
-                          setName(e.target.value);
+                          setProfile({ ...profile, full_name: e.target.value });
                         }}
                       ></input>
 
@@ -242,7 +225,6 @@ function Profile() {
                         onClick={() => {
                           setIsEditingName(false);
                           handleNameEdit();
-                          window.location.reload();
                         }}
                         className="bg-accent-primary w-full rounded-lg hover:bg-accent-hover transition-all duration-200"
                       >
@@ -252,10 +234,10 @@ function Profile() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-between w-full px-4">
-                    <h1 className="text-xl">{name}</h1>
+                    <h1 className="text-xl">{profile.full_name}</h1>
 
                     <div className="flex items-center gap-10">
-                      {userId === authinticatedUserId ? (
+                      {user.id === profile.user_id ? (
                         <>
                           <button
                             onClick={() => setIsEditingName(true)}
@@ -283,20 +265,17 @@ function Profile() {
               <div>
                 <CardContainer
                   header="library"
-                  userId={userId}
                   media_type={media_type}
-                  id={URLId}
+                  id={profile.user_id}
                 ></CardContainer>
                 <CardContainer
                   header="wishlist"
-                  userId={userId}
                   media_type={media_type}
-                  id={URLId}
+                  id={profile.user_id}
                 ></CardContainer>
                 <CardContainer
                   header="completed"
-                  userId={userId}
-                  id={URLId}
+                  id={profile.user_id}
                   media_type={media_type}
                 ></CardContainer>
               </div>

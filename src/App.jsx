@@ -52,19 +52,13 @@ function App() {
               Movies
             </button>
           </div>
-          <CardContainer
-            header="library"
-            userId={userId}
-            media_type={category}
-          ></CardContainer>
+          <CardContainer header="library" media_type={category}></CardContainer>
           <CardContainer
             header="wishlist"
-            userId={userId}
             media_type={category}
           ></CardContainer>
           <CardContainer
             header="completed"
-            userId={userId}
             media_type={category}
           ></CardContainer>
         </div>

@@ -1,15 +1,50 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import GameCard from "./GameCard";
 import { useLocation, useNavigate } from "react-router";
 import { useData } from "../DataContext";
+import { supabase } from "../supabase-client";
 
 function CardContainer({ header, id, media_type }) {
-  const { games, movies } = useData();
+  const [games, setGames] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  console.log(id);
+  console.log(games.length);
+
+  const { games: contextGames, movies: contextMovies } = useData();
+
+  useEffect(() => {
+    if (id === undefined) {
+      setGames(contextGames);
+      setMovies(contextMovies);
+      setLoading(false);
+      return;
+    }
+    const fetchData = async () => {
+      if (id === undefined) {
+        return;
+      }
+      setLoading(true);
+      const { data: games } = await supabase
+        .from("users_games")
+        .select(`* , games(*)`)
+        .eq("user_id", id);
+      const { data: movies } = await supabase
+        .from("users_movies")
+        .select(`* , movies(*)`)
+        .eq("user_id", id);
+
+      setGames(games);
+      setMovies(movies);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [id, contextGames, contextMovies]);
+
   const location = useLocation();
   const navigate = useNavigate();
   const ref = useRef(null);
-
-  console.log(games);
 
   function handleNavigate() {
     if (location.pathname.startsWith("/profile")) {
@@ -35,6 +70,10 @@ function CardContainer({ header, id, media_type }) {
       el.removeEventListener("wheel", handleWheel);
     };
   }, [ref.current]);
+
+  if (loading) {
+    return <>loading</>;
+  }
 
   if (media_type === "games") {
     return (
@@ -70,11 +109,9 @@ function CardContainer({ header, id, media_type }) {
                 ></GameCard>
               );
             })}
-          {games.length === 0 && (
+          {games.filter((item) => item.status === header).length === 0 && (
             <>
-              <h1 className="text-text-muted">
-                Your List Is Empty Fill It Up!
-              </h1>
+              <h1 className="text-text-muted">This List Is Empty</h1>
             </>
           )}
         </div>
@@ -112,11 +149,9 @@ function CardContainer({ header, id, media_type }) {
                 ></GameCard>
               );
             })}
-          {movies.length === 0 && (
+          {movies.filter((item) => item.status === header).length === 0 && (
             <>
-              <h1 className="text-text-muted">
-                Your List Is Empty Fill It Up!
-              </h1>
+              <h1 className="text-text-muted">This List Is Empty</h1>
             </>
           )}
         </div>

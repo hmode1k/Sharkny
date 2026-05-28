@@ -319,7 +319,7 @@ function RequestsPage() {
                               className="w-20 h-20 object-cover rounded-[50%]"
                             />
                             <div className="flex flex-col gap-2">
-                              <h1>{req.requester.full_name}</h1>
+                              <h1>{req.requested.full_name}</h1>
                               <h2 className="text-text-muted">
                                 {req.created_at?.slice(0, 10)}
                               </h2>
