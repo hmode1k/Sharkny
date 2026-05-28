@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { supabase } from "../supabase-client";
 import { useParams } from "react-router";
+import { useAuth } from "../AuthContext";
+import { useData } from "../DataContext";
 
 function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
+  const { setGames, setMovies } = useData();
+  const { user } = useAuth();
   const [status, setStatus] = useState(dbstatus);
   const [platform, setPlatform] = useState(dbplatform);
   const [toast, setToast] = useState("");
@@ -12,15 +16,11 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
 
   function handleClose() {
     setEditing(false);
-    window.location.reload();
   }
 
   const handleEdit = async (e) => {
     e.preventDefault();
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     if (category === "games") {
       const { error } = await supabase
         .from("users_games")
@@ -40,6 +40,14 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
 
       setToastType("Success");
       setToast("Editied Game");
+      setGames((prev) =>
+        prev.map((game) =>
+          game.game_id === id ? { ...game, status: status } : game,
+        ),
+      );
+      setTimeout(() => {
+        handleClose();
+      }, 1000);
       console.log("edited");
     } else {
       const { error } = await supabase
@@ -59,14 +67,18 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
       }
       setToastType("Success");
       setToast("Edited Movie");
+      setMovies((prev) =>
+        prev.map((movie) =>
+          movie.movies.id === id ? { ...movie, status: status } : movie,
+        ),
+      );
+      setTimeout(() => {
+        handleClose();
+      }, 1000);
     }
   };
 
   const handleDelete = async () => {
-    console.log("deleting");
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     if (category === "games") {
       const { error } = await supabase
         .from("users_games")
@@ -82,6 +94,10 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
       }
       setToastType("Success");
       setToast("Deleted Game");
+      setGames((prev) => prev.filter((item) => item.games.id !== id));
+      setTimeout(() => {
+        handleClose();
+      }, 1000);
     } else {
       const { error } = await supabase
         .from("users_movies")
@@ -97,6 +113,11 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
       }
       setToastType("Success");
       setToast("Deleted Movie");
+      setMovies((prev) => prev.filter((item) => item.movies.id !== id));
+
+      setTimeout(() => {
+        handleClose();
+      }, 1000);
     }
   };
 

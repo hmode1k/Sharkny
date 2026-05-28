@@ -29,7 +29,7 @@ function FriendsPage() {
       <h1>loading</h1>
     </>
   ) : (
-    <div className="h-screen overflow-hidden">
+    <div className="h-full overflow-hidden">
       <NavBar></NavBar>
       <div className="w-full h-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)] ">
         <AsideWrapper></AsideWrapper>

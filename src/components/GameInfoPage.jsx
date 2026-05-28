@@ -2,8 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import NavBar from "./NavBar";
 import { useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
+import { useData } from "../DataContext";
+import { useAuth } from "../AuthContext";
 
 function GameInfoPage() {
+  const { user } = useAuth();
+  const { setGames } = useData();
   const { id } = useParams();
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,10 +28,6 @@ function GameInfoPage() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    console.log("deleting");
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     const { error } = await supabase
       .from("users_games")
       .delete("")
@@ -38,18 +38,24 @@ function GameInfoPage() {
       console.error(error);
       setToastType("error");
       setToast("Error");
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
       return;
     }
 
     setToastType("Success");
     setToast("Deleted Game");
+    setGameExists(false);
+    setGames((prev) => prev.filter((item) => item.games.id !== Number(id)));
+    console.log();
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   };
 
   const handleInsertion = async (e) => {
     e.preventDefault();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
     const { error } = await supabase.from("games").insert({
       id: game.id,
@@ -67,28 +73,40 @@ function GameInfoPage() {
       console.error(error);
     }
 
-    const { error2 } = await supabase.from("users_games").insert({
-      user_id: user.id,
-      game_id: game.id,
-      platform: platform,
-      status: status,
-    });
+    const { data, error2 } = await supabase
+      .from("users_games")
+      .insert({
+        user_id: user.id,
+        game_id: game.id,
+        platform: platform,
+        status: status,
+      })
+      .select(`*, games(*)`)
+      .single();
     if (error2) {
       console.error(error2);
       setToastType("error");
       setToast("Error Adding Game");
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
       return;
     }
 
     setToastType("success");
     setToast(`Game Added To ${status}`);
+    setGameExists(true);
+    console.log("gameeeeeeeeeeeeeeeeeeee", game);
+
+    setGames((prev) => [data, ...prev]);
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   };
 
   async function handleEdit(e) {
     e.preventDefault();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+
     const { error } = await supabase
       .from("users_games")
       .update({
@@ -102,19 +120,26 @@ function GameInfoPage() {
       console.error(error);
       setToastType("error");
       setToast("Error Editing Game Info");
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
       return;
     }
 
     setToastType("success");
     setToast("Game Info Edited ");
+    setGames((prev) =>
+      prev.map((game) =>
+        game.game_id === Number(id) ? { ...game, status: status } : game,
+      ),
+    );
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   }
 
   useEffect(() => {
     const loadGameInfo = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
       const { error, data } = await supabase
         .from("users_games")
         .select("*")
@@ -178,7 +203,7 @@ function GameInfoPage() {
     <div className="flex flex-col min-h-screen w-full bg-main">
       <NavBar></NavBar>
 
-      <div className="px-4 py-2 flex flex-col gap-5 ">
+      <div className="px-4 flex flex-col gap-5 ">
         <h2
           className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
           onClick={handleback}
@@ -496,16 +521,18 @@ function GameInfoPage() {
             )}
           </div>
         </form>
-        <div>
+        <div className="relative w-full h-full ">
           {toast.length === 0 ? (
             <></>
           ) : (
             <>
-              <h1
-                className={`absolute left-[50%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
-              >
-                {toast}
-              </h1>
+              <div className="absolute flex flex-col items-center justify-end w-full h-full">
+                <h1
+                  className={` max-w-50 text-center  border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+                >
+                  {toast}
+                </h1>
+              </div>
             </>
           )}
         </div>

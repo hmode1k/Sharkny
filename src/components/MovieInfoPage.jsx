@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
+import { useData } from "../DataContext";
+import { useAuth } from "../AuthContext";
 
 function MovieInfoPage() {
+  const { user } = useAuth();
+  const { setMovies } = useData();
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,10 +20,6 @@ function MovieInfoPage() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
-    console.log("deleting");
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
     const { error } = await supabase
       .from("users_movies")
@@ -31,10 +31,19 @@ function MovieInfoPage() {
       console.error(error);
       setToastType("error");
       setToast("Error");
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
       return;
     }
     setToastType("Success");
     setToast("Deleted Movie");
+    setMovieExists(false);
+    setMovies((prev) => prev.filter((item) => item.movies.id !== Number(id)));
+
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   };
 
   const handleback = (e) => {
@@ -44,9 +53,6 @@ function MovieInfoPage() {
 
   const handleInsertion = async (e) => {
     e.preventDefault();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
 
     const { error } = await supabase.from("movies").insert({
       id: movie.id,
@@ -62,26 +68,36 @@ function MovieInfoPage() {
       console.error(error);
     }
 
-    const { error2 } = await supabase.from("users_movies").insert({
-      user_id: user.id,
-      movie_id: movie.id,
-      status: status,
-    });
+    const { data, error2 } = await supabase
+      .from("users_movies")
+      .insert({
+        user_id: user.id,
+        movie_id: movie.id,
+        status: status,
+      })
+      .select(` *, movies(*)`)
+      .single();
     if (error2) {
       console.error(error2);
       setToastType("error");
       setToast("Error Adding Game");
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
       return;
     }
     setToastType("success");
     setToast(`Movie Added To ${status}`);
+    setMovieExists(true);
+    setMovies((prev) => [data, ...prev]);
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   };
 
   async function handleEdit(e) {
     e.preventDefault();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+
     const { error } = await supabase
       .from("users_movies")
       .update({
@@ -94,18 +110,25 @@ function MovieInfoPage() {
       console.error(error);
       setToastType("error");
       setToast("Error Editing Game Info");
+      setTimeout(() => {
+        setToast("");
+      }, 3000);
       return;
     }
     setToastType("success");
     setToast("Movie Info Edited ");
+    setMovies((prev) =>
+      prev.map((movie) =>
+        movie.movies.id === Number(id) ? { ...movie, status: status } : movie,
+      ),
+    );
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
   }
 
   useEffect(() => {
     const loadMovieInfo = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
       const { error, data } = await supabase
         .from("users_movies")
         .select("*")
@@ -357,16 +380,18 @@ function MovieInfoPage() {
             )}
           </div>
         </form>
-        <div>
+        <div className="relative w-full h-full">
           {toast.length === 0 ? (
             <></>
           ) : (
             <>
-              <h1
-                className={`absolute left-[50%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
-              >
-                {toast}
-              </h1>
+              <div className="absolute flex w-full h-full flex-col items-center justify-end">
+                <h1
+                  className={`max-w-50 text-center border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+                >
+                  {toast}
+                </h1>
+              </div>
             </>
           )}
         </div>

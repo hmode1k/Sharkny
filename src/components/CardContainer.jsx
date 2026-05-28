@@ -9,6 +9,8 @@ function CardContainer({ header, id, media_type }) {
   const navigate = useNavigate();
   const ref = useRef(null);
 
+  console.log(games);
+
   function handleNavigate() {
     if (location.pathname.startsWith("/profile")) {
       navigate(`/profile/${id}/${media_type}/${header}`);
@@ -29,8 +31,6 @@ function CardContainer({ header, id, media_type }) {
     };
 
     el.addEventListener("wheel", handleWheel, { passive: false });
-
-    console.log("container:", el);
     return () => {
       el.removeEventListener("wheel", handleWheel);
     };

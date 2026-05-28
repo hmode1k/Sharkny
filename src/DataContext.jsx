@@ -41,7 +41,9 @@ export function DataProvider({ children }) {
     <DataContext.Provider
       value={{
         games,
+        setGames,
         movies,
+        setMovies,
         loading,
       }}
     >
