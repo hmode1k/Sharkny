@@ -1,5 +1,5 @@
 import SearchComponent from "./SearchComponent";
-import logo from "../assets/sharknyLogo";
+import logo from "../assets/sharknyLogo.png";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 function NavBar(q) {
