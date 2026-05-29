@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import { useData } from "../DataContext";
 import { supabase } from "../supabase-client";
 
-function CardContainer({ header, id, media_type }) {
+function CardContainer({ header, id, media_type, URLId }) {
   const [games, setGames] = useState([]);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,10 +45,11 @@ function CardContainer({ header, id, media_type }) {
   const location = useLocation();
   const navigate = useNavigate();
   const ref = useRef(null);
+  console.log("URLIDDDDDDDDD", URLId);
 
   function handleNavigate() {
     if (location.pathname.startsWith("/profile")) {
-      navigate(`/profile/${id}/${media_type}/${header}`);
+      navigate(`/profile/${URLId}/${media_type}/${header}`);
     } else {
       navigate(`/${media_type}/${header}`);
     }

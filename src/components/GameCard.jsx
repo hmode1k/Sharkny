@@ -69,12 +69,12 @@ function GameCard({ name, img, id, platform, status, media_type }) {
           <div>
             <h4 className="text-white w-full card-name">{name}</h4>
             <div className=" flex gap-2 text-[0.7rem] w-full ">
-              <h4 className="text-text-primary bg-blue-500 card-stuff border-1 border-blue-500 px-1 rounded-sm">
+              <h4 className="text-accent-text bg-accent-primary card-stuff border-1 border-blue-500 px-1 rounded-sm">
                 {status?.charAt(0).toUpperCase() + status?.slice(1) || ""}
               </h4>
               {platform ? (
                 <>
-                  <h4 className="text-text-primary bg-blue-500 card-stuff border-1 border-blue-500 px-1 rounded-sm">
+                  <h4 className="text-accent-text bg-accent-primary card-stuff border-1 border-blue-500 px-1 rounded-sm">
                     {platform?.charAt(0).toUpperCase() + platform?.slice(1) ||
                       ""}
                   </h4>

@@ -328,8 +328,9 @@ function GameInfoPage() {
     select-none
     transition
 
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   Library
@@ -355,8 +356,9 @@ function GameInfoPage() {
     select-none
     transition
 
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   Wishlist
@@ -372,7 +374,10 @@ function GameInfoPage() {
                   onChange={(e) => setStatus(e.target.value)}
                 />
 
-                <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                <span
+                  className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition       peer-checked:border-accent-primary
+    peer-checked:text-accent-text peer-checked:bg-accent-primary"
+                >
                   Completed
                 </span>
               </label>
@@ -400,8 +405,9 @@ function GameInfoPage() {
     select-none
     transition
 
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+    peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   Fitgirl
@@ -427,8 +433,9 @@ function GameInfoPage() {
     select-none
     transition
 
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   dodi
@@ -454,8 +461,9 @@ function GameInfoPage() {
     select-none
     transition
 
-    peer-checked:border-accent-primary
-    peer-checked:text-accent-primary
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   steamrip
@@ -497,14 +505,14 @@ function GameInfoPage() {
               <div className="flex gap-5">
                 <button
                   onClick={handleDelete}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-accent-text hover:bg-accent-hover"
                 >
                   Delete
                 </button>
                 <button
                   type="submit"
                   onClick={handleEdit}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-accent-text hover:bg-accent-hover"
                 >
                   Edit
                 </button>
@@ -514,7 +522,7 @@ function GameInfoPage() {
                 <button
                   type="submit"
                   onClick={handleInsertion}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-accebt-text hover:bg-accent-hover"
                 >
                   Add
                 </button>

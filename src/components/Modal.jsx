@@ -164,7 +164,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                           onChange={(e) => setStatus(e.target.value)}
                         />
 
-                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                           Library
                         </span>
                       </label>
@@ -178,7 +178,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                           onChange={(e) => setStatus(e.target.value)}
                         />
 
-                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                           Wishlist
                         </span>
                       </label>
@@ -193,7 +193,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                           onChange={(e) => setStatus(e.target.value)}
                         />
 
-                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                        <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                           Completed
                         </span>
                       </label>
@@ -214,7 +214,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                               }}
                             />
 
-                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                               Fitgirl
                             </span>
                           </label>
@@ -230,7 +230,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                               }}
                             />
 
-                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                               Dodi
                             </span>
                           </label>
@@ -245,7 +245,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                                 setPlatform(e.target.value);
                               }}
                             />
-                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-blue-500 peer-checked:text-blue-500">
+                            <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                               Steamrip
                             </span>
                           </label>
@@ -258,7 +258,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                     <button
                       type="submit"
                       onClick={handleEdit}
-                      className="w-full p-2 mbs-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-100"
+                      className="w-full p-2 mbs-4 bg-accent-primary text-accent-text rounded-2xl hover:bg-accent-hover transition-all duration-100"
                     >
                       Edit
                     </button>

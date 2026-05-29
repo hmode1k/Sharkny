@@ -255,8 +255,9 @@ function MovieInfoPage() {
     select-none
     transition
 
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   Library
@@ -282,9 +283,9 @@ function MovieInfoPage() {
     text-gray-300
     select-none
     transition
-
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   Wishlist
@@ -311,8 +312,9 @@ function MovieInfoPage() {
     select-none
     transition
 
-    peer-checked:border-blue-500
-    peer-checked:text-blue-500
+peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
   "
                 >
                   Completed
@@ -323,7 +325,7 @@ function MovieInfoPage() {
               {movieExists ? (
                 <div className="flex gap-5 w-full">
                   <button
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%] rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
                     onClick={handleDelete}
                   >
                     Delete
@@ -331,7 +333,7 @@ function MovieInfoPage() {
                   <button
                     type="submit"
                     onClick={handleEdit}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
                   >
                     Edit
                   </button>
@@ -341,7 +343,7 @@ function MovieInfoPage() {
                   <button
                     type="submit"
                     onClick={handleInsertion}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full rounded-xl text-lg text-accent-text hover:bg-accent-hover"
                   >
                     Add
                   </button>
@@ -354,7 +356,7 @@ function MovieInfoPage() {
             {movieExists ? (
               <div className="flex gap-5 w-full">
                 <button
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
                   onClick={handleDelete}
                 >
                   Delete
@@ -362,7 +364,7 @@ function MovieInfoPage() {
                 <button
                   type="submit"
                   onClick={handleEdit}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
                 >
                   Edit
                 </button>
@@ -372,7 +374,7 @@ function MovieInfoPage() {
                 <button
                   type="submit"
                   onClick={handleInsertion}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
                 >
                   Add
                 </button>

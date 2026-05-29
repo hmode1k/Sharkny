@@ -95,6 +95,10 @@ function Profile() {
     fetchUser();
   }, [id, location.pathname, navigate]);
 
+  if (loading) {
+    return <>loading</>;
+  }
+
   if (
     category === "library" ||
     category === "wishlist" ||
@@ -226,7 +230,7 @@ function Profile() {
                           setIsEditingName(false);
                           handleNameEdit();
                         }}
-                        className="bg-accent-primary w-full rounded-lg hover:bg-accent-hover transition-all duration-200"
+                        className="bg-accent-primary text-accent-text w-full rounded-lg hover:bg-accent-hover transition-all duration-200"
                       >
                         Done
                       </button>
@@ -241,7 +245,7 @@ function Profile() {
                         <>
                           <button
                             onClick={() => setIsEditingName(true)}
-                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200"
+                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text"
                           >
                             Edit Profile
                           </button>
@@ -252,7 +256,7 @@ function Profile() {
                             onClick={() => {
                               setIsModalOpen(true);
                             }}
-                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200"
+                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text"
                           >
                             Request Games
                           </button>
@@ -267,16 +271,19 @@ function Profile() {
                   header="library"
                   media_type={media_type}
                   id={profile.user_id}
+                  URLId={id}
                 ></CardContainer>
                 <CardContainer
                   header="wishlist"
                   media_type={media_type}
                   id={profile.user_id}
+                  URLId={id}
                 ></CardContainer>
                 <CardContainer
                   header="completed"
                   id={profile.user_id}
                   media_type={media_type}
+                  URLId={id}
                 ></CardContainer>
               </div>
             </div>
