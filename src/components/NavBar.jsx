@@ -1,4 +1,5 @@
 import SearchComponent from "./SearchComponent";
+import logo from "../assets/sharknyLogo.png";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 function NavBar(q) {
@@ -22,7 +23,7 @@ function NavBar(q) {
     <div className="w-full flex justify-between p-4 bg-nav border-b-1 border-bottom border-white/10">
       <div>
         <Link to="/main" className="flex gap-2 items-center">
-          <img src="../../sharknyLogo.png" alt="" className="w-10 h-10" />
+          <img src={logo} alt="" className="w-10 h-10" />
           <h1 className="text-4xl text-white hover:cursor-pointer max-sm:text-[1.5rem]">
             Sharkny
           </h1>
