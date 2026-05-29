@@ -33,7 +33,7 @@ function FullCardContainer({ header, media_type }) {
 
   const currentPage = Number(searchParams.get("p")) || 1;
 
-  const CARDS_PER_PAGE = 10;
+  const CARDS_PER_PAGE = 12;
 
   const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
 
@@ -45,10 +45,10 @@ function FullCardContainer({ header, media_type }) {
 
   if (location.pathname.includes("games")) {
     return (
-      <div className="w-full ps-15 pe-15 text-text-primary">
+      <div className="w-full ps-5 pe-5 text-text-primary">
         <div className="flex items-center justify-between p-2 items-center">
           <div className="flex items-center gap-10 p-2 ">
-            <h2 className="text-3xl">
+            <h2 className="text-3xl max-sm:text-2xl">
               {header?.charAt(0).toUpperCase() + header?.slice(1) ||
                 location.pathname.split("/")[1]?.charAt(0).toUpperCase() +
                   location.pathname.split("/")[1]?.slice(1)}
@@ -58,25 +58,14 @@ function FullCardContainer({ header, media_type }) {
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
               placeholder="search..."
-              className="bg-search border-1 border-white/10 rounded-2xl px-2 focus:border-white/20 focus:outline-none mbe-[-6px]"
+              className="bg-search border-1 border-white/10 rounded-2xl px-2 focus:border-white/20 focus:outline-none mbe-[-6px] w-full"
             />
-          </div>
-          <div>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setSearchParams({ p: i + 1 })}
-                className="p-1 text-text-secondary hover:text-text-primary"
-              >
-                {i + 1}
-              </button>
-            ))}
           </div>
         </div>
         <div
           className="grid
   grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
-  gap-3  p-4"
+  gap-3  p-4 max-sm:flex max-sm:flex-wrap max-sm:px-0"
         >
           {visibleItems.map((game) => {
             return (
@@ -92,14 +81,25 @@ function FullCardContainer({ header, media_type }) {
             );
           })}
         </div>
+        <div className="pbs-5">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setSearchParams({ p: i + 1 })}
+              className="p-1 text-text-secondary hover:text-text-primary"
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
       </div>
     );
   } else if (location.pathname.includes("movies")) {
     return (
-      <div className="w-full ps-15 pe-15 text-text-primary">
+      <div className="w-full ps-5 pe-5 text-text-primary">
         <div className="flex items-center justify-between p-2 items-center">
           <div className="flex items-center gap-10 p-2 ">
-            <h2 className="text-3xl">
+            <h2 className="text-3xl max-sm:text-2xl">
               {header?.charAt(0).toUpperCase() + header?.slice(1) ||
                 location.pathname.split("/")[1]?.charAt(0).toUpperCase() +
                   location.pathname.split("/")[1]?.slice(1)}
@@ -109,25 +109,14 @@ function FullCardContainer({ header, media_type }) {
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
               placeholder="search..."
-              className="bg-search border-1 border-white/10 rounded-2xl px-2 focus:border-white/20 focus:outline-none mbe-[-6px]"
+              className="bg-search border-1 border-white/10 rounded-2xl px-2 focus:border-white/20 focus:outline-none mbe-[-6px] w-full"
             />
-          </div>
-          <div>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setSearchParams({ p: i + 1 })}
-                className="p-1 text-text-secondary hover:text-text-primary"
-              >
-                {i + 1}
-              </button>
-            ))}
           </div>
         </div>
         <div
           className="grid
   grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
-  gap-2 p-4"
+  gap-3 p-4 max-sm:flex max-sm:flex-wrap max-sm:p-0"
         >
           {visibleItems.map((item) => {
             return (
@@ -141,6 +130,17 @@ function FullCardContainer({ header, media_type }) {
               ></GameCard>
             );
           })}
+        </div>
+        <div className="pbs-5">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setSearchParams({ p: i + 1 })}
+              className="p-1 text-text-secondary hover:text-text-primary"
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       </div>
     );

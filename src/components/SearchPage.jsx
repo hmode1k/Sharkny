@@ -60,6 +60,7 @@ function SearchPage() {
   }
 
   if (location.pathname === "/search/games") {
+    console.log(games);
     return (
       <div className="bg-main text-text-primary h-full ">
         <NavBar q={query}></NavBar>

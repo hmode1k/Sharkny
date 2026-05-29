@@ -80,12 +80,12 @@ function CardContainer({ header, id, media_type, URLId }) {
     return (
       <div className="p-4">
         <div className="flex gap-4 ps-4 mbe-2 items-center">
-          <h2 className="text-2xl">
+          <h2 className="text-2xl max-sm:text-xl">
             {header.charAt(0).toUpperCase() + header.slice(1)}
           </h2>
           <h2
             onClick={handleNavigate}
-            className="cursor-pointer mbs-1 text-text-muted hover:text-text-secondary transition-all delay-20 text-lg"
+            className="cursor-pointer mbs-1 text-text-muted hover:text-text-secondary transition-all delay-20 text-lg max-sm:text-sm"
           >
             ➜
           </h2>

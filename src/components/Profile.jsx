@@ -191,7 +191,7 @@ function Profile() {
                 <img
                   src={profile.avatar_url}
                   alt=""
-                  className="w-25 h-25 object-cover rounded-[50%]"
+                  className="w-25 h-25 object-cover rounded-[50%] max-sm:w-15 max-sm:h-15"
                 />
 
                 {isEditingName ? (
@@ -238,14 +238,16 @@ function Profile() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-between w-full px-4">
-                    <h1 className="text-xl">{profile.full_name}</h1>
+                    <h1 className="text-xl max-sm:text-sm">
+                      {profile.full_name}
+                    </h1>
 
                     <div className="flex items-center gap-10">
                       {user.id === profile.user_id ? (
                         <>
                           <button
                             onClick={() => setIsEditingName(true)}
-                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text"
+                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text max-sm:text-xs max-sm:py-2"
                           >
                             Edit Profile
                           </button>
@@ -256,7 +258,7 @@ function Profile() {
                             onClick={() => {
                               setIsModalOpen(true);
                             }}
-                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text"
+                            className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text max-sm:text-xs max-sm:py-2"
                           >
                             Request Games
                           </button>

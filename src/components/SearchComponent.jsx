@@ -5,7 +5,7 @@ function SearchComponent({ width, autofocus, setQuery, query, handleClick }) {
 
   return (
     <div
-      className="flex flex-row w-[50%] md:w-[var(--width)] items-center rounded-2xl hover:cursor-pointer mbs-1 text-text-secondary max-sm:w-full max-sm:ps-8"
+      className="flex flex-row w-[70%] max-sm:w-[60%] items-center rounded-2xl hover:cursor-pointer mbs-1 text-text-secondary max-sm:ps-8"
       style={barStyles}
     >
       <form
