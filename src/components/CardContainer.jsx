@@ -96,7 +96,7 @@ function CardContainer({ header, id, media_type, URLId }) {
           ref={ref}
         >
           {games
-            .filter((item) => item.status === header)
+            .filter((item) => item?.status === header)
             .map((item) => {
               return (
                 <GameCard
@@ -137,7 +137,7 @@ function CardContainer({ header, id, media_type, URLId }) {
           ref={ref}
         >
           {movies
-            .filter((item) => item.status === header)
+            .filter((item) => item?.status === header)
             .map((item) => {
               return (
                 <GameCard

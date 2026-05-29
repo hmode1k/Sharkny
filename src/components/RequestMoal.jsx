@@ -107,30 +107,17 @@ function RequestModal({ setModalOpen }) {
 
     return (
       <div
-        className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
+        className="fixed w-screen h-screen z-20 flex flex-col gap-5 items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
         onClick={() => setModalOpen(false)}
       >
-        <div>
-          {toast.length === 0 ? (
-            <></>
-          ) : (
-            <>
-              <h1
-                className={`absolute left-[40%] bottom-5 border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
-              >
-                {toast}
-              </h1>
-            </>
-          )}
-        </div>
         <div
-          className=" p-2 rounded-2xl bg-main w-[30%] h-[80%]"
+          className=" p-2 rounded-2xl bg-main w-[40%] max-sm:py-6 max-sm:w-[70%]"
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
-          <div className="h-full">
-            <div className="flex justify-between p-2">
+          <div className="w-full h-full">
+            <div className="flex justify-between p-2 pbe-4">
               <h1>Request</h1>
               <button
                 onClick={() => {
@@ -158,10 +145,10 @@ function RequestModal({ setModalOpen }) {
                 Movies
               </button>
             </div>
-            <div className="h-full flex flex-col">
+            <div>
               {tab === "games" ? (
-                <div className="overflow-scroll h-[60%] pbe-4">
-                  <ul className=" p-4 flex flex-col gap-2">
+                <div className=" h-full pbe-4 flex flex-col gap-4">
+                  <ul className="overflow-scroll max-h-60 max-sm:max-h-70 p-4 flex flex-col gap-2">
                     {games.map((item) => {
                       console.log(item);
                       return (
@@ -181,6 +168,14 @@ function RequestModal({ setModalOpen }) {
                       );
                     })}
                   </ul>
+                  <div className="h-full flex flex-col justify-end items-end ">
+                    <button
+                      onClick={() => handleRequest()}
+                      className="text-text-primary bg-accent-primary hover:bg-accent-hover transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl "
+                    >
+                      Request
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="overflow-scroll h-[60%] pbe-4">
@@ -204,16 +199,31 @@ function RequestModal({ setModalOpen }) {
                       );
                     })}
                   </ul>
+                  <div className="h-full flex flex-col justify-end items-end ">
+                    <button
+                      onClick={() => handleRequest()}
+                      className="text-text-primary bg-accent-primary hover:bg-accent-hover transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl "
+                    >
+                      Request
+                    </button>
+                  </div>
                 </div>
               )}
-              <button
-                onClick={() => handleRequest()}
-                className="text-text-primary bg-accent-primary hover:bg-accent-hover transition-all duration-200 cursor-pointer w-full mbs-8 rounded-2xl"
-              >
-                Request
-              </button>
             </div>
           </div>
+        </div>
+        <div>
+          {toast.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <h1
+                className={`   border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+              >
+                {toast}
+              </h1>
+            </>
+          )}
         </div>
       </div>
     );

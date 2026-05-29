@@ -17,7 +17,7 @@ function ViewRequestModal({
       onClick={() => setModalOpen(false)}
     >
       <div
-        className=" p-2 rounded-2xl bg-main w-[30%] h-[80%]"
+        className=" p-2 rounded-2xl bg-main w-[40%] py-4 max-sm:py-6 max-sm:w-[70%] "
         onClick={(e) => {
           e.stopPropagation();
         }}

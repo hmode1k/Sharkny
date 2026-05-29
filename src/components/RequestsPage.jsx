@@ -111,27 +111,29 @@ function RequestsPage() {
               </div>
               <div>
                 <ul
-                  className={`${openSection === "pending" ? "max-h-40" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-4 px-4`}
+                  className={`${openSection === "pending" ? "max-h-80" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-4 px-4`}
                 >
                   {requests.map((req) => {
                     return req.requested_id === userId ? (
                       req.request_status === "pending" ? (
                         <>
                           <li className="w-full border-white border-1 rounded-xl flex items-center justify-between p-4">
-                            <div className="flex items-center gap-10">
+                            <div className="flex items-center gap-10 max-sm:gap-5">
                               <img
                                 src={req.requester.avatar_url}
                                 alt=""
-                                className="w-20 h-20 object-cover rounded-[50%]"
+                                className="w-20 h-20 object-cover rounded-[50%] max-sm:w-15 max-sm:h-15"
                               />
                               <div className="flex flex-col gap-2">
-                                <h1>{req.requester.full_name}</h1>
-                                <h2 className="text-text-muted">
+                                <h1 className="max-sm:text-sm">
+                                  {req.requester.full_name}
+                                </h1>
+                                <h2 className="text-text-muted max-sm:text-xs">
                                   {req.created_at?.slice(0, 10)}
                                 </h2>
                               </div>
                               <h2
-                                className={
+                                className={`${
                                   req.request_status === "pending"
                                     ? "text-yellow-500"
                                     : req.request_status === "completed"
@@ -139,28 +141,28 @@ function RequestsPage() {
                                       : req.request_status === "accepted"
                                         ? "text-green-500"
                                         : "text-red-500"
-                                }
+                                } max-sm:text-sm`}
                               >
                                 {req.request_status}
                               </h2>
                             </div>
-                            <div className="flex gap-5">
+                            <div className="flex flex-col gap-5 max-sm:gap-3">
                               <button
                                 onClick={() => {
                                   setIsOpen(true);
                                   setModalRequest(req);
                                 }}
-                                className="px-4 bg-accent-primary rounded-xl"
+                                className="px-4 bg-accent-primary rounded-xl max-sm:text-xs max-sm:px-0"
                               >
                                 See Request
                               </button>
                               {req.request_status === "pending" ? (
-                                <>
+                                <div className="flex gap-2">
                                   <button
                                     onClick={() => {
                                       handleUpdate("completed", req.id);
                                     }}
-                                    className="px-4 bg-green-500 rounded-xl"
+                                    className="px-4 bg-green-500 rounded-xl max-sm:text-xs max-sm:px-2"
                                   >
                                     Complete
                                   </button>
@@ -168,11 +170,11 @@ function RequestsPage() {
                                     onClick={() => {
                                       handleUpdate("rejected", req.id);
                                     }}
-                                    className="px-4 bg-red-500 rounded-xl"
+                                    className="px-4 bg-red-500 rounded-xl max-sm:text-xs max-sm:px-2"
                                   >
                                     Reject
                                   </button>
-                                </>
+                                </div>
                               ) : req.request_status === "accepted" ? (
                                 <>
                                   <button
@@ -218,20 +220,22 @@ function RequestsPage() {
                     return req.requested_id === userId ? (
                       <>
                         <li className="w-full border-white border-1 flex items-center justify-between p-4 rounded-xl">
-                          <div className="flex items-center gap-10">
+                          <div className="flex items-center gap-10 max-sm:gap-5">
                             <img
                               src={req.requester.avatar_url}
                               alt=""
-                              className="w-20 h-20 object-cover rounded-[50%]"
+                              className="w-20 h-20 object-cover rounded-[50%] max-sm:w-15 max-sm:h-15"
                             />
-                            <div className="flex flex-col gap-2">
-                              <h1>{req.requester.full_name}</h1>
-                              <h2 className="text-text-muted">
+                            <div className="flex flex-col gap-2 ">
+                              <h1 className="max-sm:text-sm">
+                                {req.requester.full_name}
+                              </h1>
+                              <h2 className="text-text-muted max-sm:text-xs">
                                 {req.created_at?.slice(0, 10)}
                               </h2>
                             </div>
                             <h2
-                              className={
+                              className={`${
                                 req.request_status === "pending"
                                   ? "text-yellow-500"
                                   : req.request_status === "completed"
@@ -239,28 +243,28 @@ function RequestsPage() {
                                     : req.request_status === "accepted"
                                       ? "text-green-500"
                                       : "text-red-500"
-                              }
+                              } max-sm:text-sm`}
                             >
                               {req.request_status}
                             </h2>
                           </div>
-                          <div className="flex gap-5">
+                          <div className="flex flex-col gap-5 max-sm:gap-4">
                             <button
                               onClick={() => {
                                 setIsOpen(true);
                                 setModalRequest(req);
                               }}
-                              className="px-4 bg-accent-primary rounded-xl"
+                              className="px-4 bg-accent-primary rounded-xl max-sm:text-xs max-sm:px-2"
                             >
                               See Request
                             </button>
                             {req.request_status === "pending" ? (
-                              <>
+                              <div className="flex gap-2">
                                 <button
                                   onClick={() => {
                                     handleUpdate("completed", req.id);
                                   }}
-                                  className="px-4 bg-green-500 rounded-xl"
+                                  className="px-4 bg-green-500 rounded-xl max-sm:text-xs max-sm:px-2"
                                 >
                                   Complete
                                 </button>
@@ -268,11 +272,11 @@ function RequestsPage() {
                                   onClick={() => {
                                     handleUpdate("rejected", req.id);
                                   }}
-                                  className="px-4 bg-red-500 rounded-xl"
+                                  className="px-4 bg-red-500 rounded-xl max-sm:text-xs max-sm:px-2"
                                 >
                                   Reject
                                 </button>
-                              </>
+                              </div>
                             ) : req.request_status === "accepted" ? (
                               <></>
                             ) : (
@@ -306,20 +310,22 @@ function RequestsPage() {
                     return req.requester_id === userId ? (
                       <>
                         <li className="w-full h-40 border-white border-1 rounded-2xl flex items-center justify-between p-4">
-                          <div className="flex gap-10 items-center">
+                          <div className="flex gap-10 items-center max-sm:gap-5">
                             <img
                               src={req.requested.avatar_url}
                               alt=""
-                              className="w-20 h-20 object-cover rounded-[50%]"
+                              className="w-20 h-20 object-cover rounded-[50%] max-sm:2-15 max-sm:h-15"
                             />
                             <div className="flex flex-col gap-2">
-                              <h1>{req.requested.full_name}</h1>
-                              <h2 className="text-text-muted">
+                              <h1 className="max-sm:text-sm">
+                                {req.requested.full_name}
+                              </h1>
+                              <h2 className="text-text-muted max-sm:text-xs">
                                 {req.created_at?.slice(0, 10)}
                               </h2>
                             </div>
                             <h2
-                              className={
+                              className={`${
                                 req.request_status === "pending"
                                   ? "text-yellow-500"
                                   : req.request_status === "completed"
@@ -327,19 +333,19 @@ function RequestsPage() {
                                     : req.request_status === "accepted"
                                       ? "text-green-500"
                                       : "text-red-500"
-                              }
+                              } max-sm:text-sm`}
                             >
                               {req.request_status}
                             </h2>
                           </div>
-                          <div className="flex gap-5">
+                          <div className="flex flex-col max-sm:gap-4 gap-5">
                             <button
                               onClick={() => {
                                 setIsOpen(true);
                                 setModalRequest(req);
                                 setRequester(req.requester_id);
                               }}
-                              className="px-4 bg-accent-primary rounded-xl"
+                              className="px-4 bg-accent-primary rounded-xl max-sm:text-xs max-sm:px-2"
                             >
                               See Request
                             </button>
@@ -349,7 +355,7 @@ function RequestsPage() {
                                   onClick={() => {
                                     handleDelete(req.id);
                                   }}
-                                  className="px-4 bg-red-500 rounded-xl"
+                                  className="px-4 bg-red-500 rounded-xl max-sm:text-xs max-sm:px-2"
                                 >
                                   cancel
                                 </button>
