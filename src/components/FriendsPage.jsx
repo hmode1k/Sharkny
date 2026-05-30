@@ -51,13 +51,16 @@ function FriendsPage() {
               />
             </div>
             <div className="flex flex-col gap-5 p-4 max-sm:flex-col overflow-scroll ">
-              <ProfileCard></ProfileCard>
-              <ProfileCard></ProfileCard>
-              <ProfileCard></ProfileCard>
-              <ProfileCard></ProfileCard>
-              <ProfileCard></ProfileCard>
-              <ProfileCard></ProfileCard>
-              <ProfileCard></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
+              <ProfileCard loading={loading}></ProfileCard>
             </div>
           </div>
         </div>

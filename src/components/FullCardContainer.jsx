@@ -5,7 +5,7 @@ import { useLocation, useSearchParams } from "react-router";
 import { useData } from "../DataContext";
 
 function FullCardContainer({ header, media_type }) {
-  const { games, movies } = useData();
+  const { games, movies, loading } = useData();
 
   console.log(header);
 
@@ -42,6 +42,58 @@ function FullCardContainer({ header, media_type }) {
   const visibleItems = filteredItems.slice(startIndex, endIndex);
 
   const totalPages = Math.ceil(filteredItems.length / CARDS_PER_PAGE);
+
+  if (loading) {
+    return (
+      <>
+        <div>
+          <div className="w-full ps-5 pe-5 text-text-primary">
+            <div className="flex items-center justify-between p-2 items-center">
+              <div className="flex items-center gap-10 p-2 ">
+                <h2 className="text-3xl max-sm:text-2xl">
+                  {header?.charAt(0).toUpperCase() + header?.slice(1) ||
+                    location.pathname.split("/")[1]?.charAt(0).toUpperCase() +
+                      location.pathname.split("/")[1]?.slice(1)}
+                </h2>
+                <input
+                  type="text"
+                  value={localSearch}
+                  onChange={(e) => setLocalSearch(e.target.value)}
+                  placeholder="search..."
+                  className="bg-search border-1 border-white/10 rounded-2xl px-2 focus:border-white/20 focus:outline-none mbe-[-6px] w-full"
+                />
+              </div>
+            </div>
+            <div
+              className="grid
+  grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
+  gap-3  p-4 max-sm:flex max-sm:flex-wrap max-sm:px-0"
+            >
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+              <GameCard loading={loading}></GameCard>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   if (location.pathname.includes("games")) {
     return (

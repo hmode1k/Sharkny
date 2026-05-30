@@ -145,11 +145,12 @@ function Profile() {
                 </button>
               </div>
               <div className="flex items-center p-4 gap-5">
-                <img
-                  alt=""
-                  className="w-25 h-25 object-cover rounded-[50%] border-none border-gray-500 bg-gray-500"
-                />
-                <h1 className="text-xl text-text-primary border-1 border-gray-500 bg-gray-500 w-10 h-5"></h1>
+                <div className="relative overflow-hidden rounded-full bg-neutral-700/20 border-1 border-gray-600 w-25 h-25">
+                  <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                </div>
+                <div className=" relative overflow-hidden bg-gray-700/20 w-40 h-5 rounded-xl border-1 border-gray-600 ">
+                  <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                </div>
               </div>
               <FullCardContainer
                 key={`${category}-${id}-${media_type}`}
@@ -232,12 +233,12 @@ function Profile() {
                 </button>
               </div>
               <div className="flex items-center p-4 gap-5">
-                <img
-                  src=""
-                  alt=""
-                  className="w-25 h-25 object-cover rounded-[50%] bg-gray-500"
-                />
-                <h1 className="text-xl text-text-primary bg-gray-500 w-10 h-5"></h1>
+                <div className="relative overflow-hidden rounded-full bg-neutral-700/20 border-1 border-gray-600 w-25 h-25">
+                  <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                </div>
+                <div className=" relative overflow-hidden bg-gray-700/20 w-40 h-5 rounded-xl border-1 border-gray-600 ">
+                  <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                </div>
               </div>
               <div className="text-text-primary">
                 <CardContainer

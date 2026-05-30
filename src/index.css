@@ -27,6 +27,20 @@
   --color-text-muted: #6b7280;
 }
 
+@keyframes shimmer {
+  from {
+    transform: translateX(-150%) rotate(20deg);
+  }
+
+  to {
+    transform: translateX(250%) rotate(20deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite linear;
+}
+
 :root {
   --scroll-thumb: #575757;
   --scroll-track: #2b2b2b;

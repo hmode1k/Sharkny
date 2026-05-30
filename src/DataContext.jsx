@@ -32,6 +32,7 @@ export function DataProvider({ children }) {
 
       setGames(games);
       setMovies(movies);
+      setLoading(false);
     }
 
     fetchData();

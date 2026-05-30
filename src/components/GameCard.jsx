@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Modal from "./Modal";
 
-function GameCard({ name, img, id, platform, status, media_type }) {
+function GameCard({ name, img, id, platform, status, media_type, loading }) {
   const [isEditing, setIsEditing] = useState(false);
   const [type, setType] = useState(null);
   const navigate = useNavigate();
@@ -10,6 +10,23 @@ function GameCard({ name, img, id, platform, status, media_type }) {
 
   function handleClick() {
     navigate(`/${media_type}/${id}`);
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <div>
+          <div className="relative overflow-hidden rounded-4xl bg-neutral-700/20 border-1 border-gray-600 w-25 h-25 max-sm:w-25 max-sm:h-35 max-sm:text-xs ps-2 pbe-1 w-35 h-50 border-1 flex flex-col  justify-end">
+            <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="p-2">
+              <div className=" relative overflow-hidden bg-gray-700/20 w-20 h-5 rounded-xl border-1 border-gray-600 ">
+                <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
