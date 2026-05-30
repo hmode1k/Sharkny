@@ -198,7 +198,51 @@ function GameInfoPage() {
 
   return loading ? (
     <>
-      <h1>loading</h1>
+      <div className="flex flex-col min-h-screen w-full bg-main">
+        <NavBar></NavBar>
+
+        <div className="px-4 flex flex-col gap-5 ">
+          <h2
+            className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
+            onClick={handleback}
+          >
+            ←
+          </h2>
+          <div
+            className="sm:grid
+            sm:grid-cols-[clamp(140px,17vw,240px)_1fr]
+            sm:gap-6
+            sm:items-start
+            flex gap-5
+            "
+          >
+            <div>
+              <div
+                className="relative overflow-hidden bg-neutral-700/20 border-1 border-gray-600 w-full
+                        h-70 max-sm:w-35 max-sm:h-50
+                        rounded-3xl"
+              >
+                <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 min-w-0 w-full overflow-hidden">
+              <div className="p-4 flex flex-col gap-5">
+                <h1 className="text-[clamp(1.5rem,3vw,2rem)] fint-bold text-text-primary">
+                  <div className=" relative overflow-hidden bg-gray-700/20 w-40 max-sm:w-20 h-5 rounded-xl border-1 border-gray-600 ">
+                    <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  </div>
+                </h1>
+                <h4 className="text-[clamp(0.5rem,0.9rem,1.5rem)] text-text-secondary leading-relaxed min-w-0 break-words max-sm:text-[0.65rem]">
+                  <div className=" relative overflow-hidden bg-gray-700/20 w-[80%] max-sm:w-30 h-5 rounded-xl border-1 border-gray-600 ">
+                    <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  </div>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   ) : (
     <div className="flex flex-col min-h-screen w-full bg-main">
