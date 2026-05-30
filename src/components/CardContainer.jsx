@@ -72,10 +72,6 @@ function CardContainer({ header, id, media_type, URLId }) {
     };
   }, [ref.current]);
 
-  if (loading) {
-    return <>loading</>;
-  }
-
   if (media_type === "games") {
     return (
       <div className="p-4">
@@ -95,21 +91,35 @@ function CardContainer({ header, id, media_type, URLId }) {
           className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative"
           ref={ref}
         >
-          {games
-            .filter((item) => item?.status === header)
-            .map((item) => {
-              return (
-                <GameCard
-                  key={item.id}
-                  id={item.games.id}
-                  name={item.games.name}
-                  img={item.games.cover}
-                  platform={item.platform}
-                  status={item.status}
-                  media_type={media_type}
-                ></GameCard>
-              );
-            })}
+          {loading ? (
+            <>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+            </>
+          ) : (
+            games
+              .filter((item) => item?.status === header)
+              .map((item) => {
+                return (
+                  <GameCard
+                    key={item.id}
+                    id={item.games.id}
+                    name={item.games.name}
+                    img={item.games.cover}
+                    platform={item.platform}
+                    status={item.status}
+                    media_type={media_type}
+                  ></GameCard>
+                );
+              })
+          )}
           {games.filter((item) => item.status === header).length === 0 && (
             <>
               <h1 className="text-text-muted">This List Is Empty</h1>
@@ -136,20 +146,34 @@ function CardContainer({ header, id, media_type, URLId }) {
           className="flex flex-row flex-nowrap *:shrink-0 p-4 gap-4 overflow-x-scroll overflow-y-hidden hover-scroll w-full relative"
           ref={ref}
         >
-          {movies
-            .filter((item) => item?.status === header)
-            .map((item) => {
-              return (
-                <GameCard
-                  key={item.movie_id}
-                  id={item.movie_id}
-                  name={item.movies.title}
-                  img={item.movies.poster}
-                  status={item.status}
-                  media_type={item.movies.media_type}
-                ></GameCard>
-              );
-            })}
+          {loading ? (
+            <>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+              <GameCard></GameCard>
+            </>
+          ) : (
+            movies
+              .filter((item) => item?.status === header)
+              .map((item) => {
+                return (
+                  <GameCard
+                    key={item.movie_id}
+                    id={item.movie_id}
+                    name={item.movies.title}
+                    img={item.movies.poster}
+                    status={item.status}
+                    media_type={item.movies.media_type}
+                  ></GameCard>
+                );
+              })
+          )}
           {movies.filter((item) => item.status === header).length === 0 && (
             <>
               <h1 className="text-text-muted">This List Is Empty</h1>

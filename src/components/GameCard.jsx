@@ -15,7 +15,7 @@ function GameCard({ name, img, id, platform, status, media_type }) {
   return (
     <div className="relative">
       <div
-        className="max-sm:w-25 max-sm:h-35 max-sm:text-xs ps-2 pbe-1 w-35 h-50 border-1 flex flex-col justify-end hover:cursor-pointer rounded-4xl overflow-hidden card-bg"
+        className="max-sm:w-25 max-sm:h-35 max-sm:text-xs ps-2 pbe-1 w-35 h-50 border-1 flex flex-col justify-end hover:cursor-pointer rounded-4xl overflow-hidden card-bg "
         style={{
           backgroundImage: `url(${img?.replace("t_thumb", "t_cover_big")})`,
         }}

@@ -17,11 +17,16 @@ function Profile() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState("");
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
 
     if (!file) return;
+
+    setToast("Uploading Img Please Wait");
+    setToastType("uploading");
 
     const filePath = `${user.id}/${Date.now()}-${file.name}`;
 
@@ -31,6 +36,11 @@ function Profile() {
 
     if (error) {
       console.error(error);
+      setToast("Error Uploading Img Please Try Again later");
+      setToastType("error");
+      setTimeout(() => {
+        setToast("");
+      }, 4000);
       return;
     }
 
@@ -51,6 +61,12 @@ function Profile() {
     }
 
     console.log("profile image updated");
+    setToast("Uploaded Successfully");
+    setToastType("success");
+
+    setTimeout(() => {
+      setToast("");
+    }, 4000);
   };
 
   const handleNameEdit = async () => {
@@ -95,17 +111,56 @@ function Profile() {
     fetchUser();
   }, [id, location.pathname, navigate]);
 
-  if (loading) {
-    return <>loading</>;
-  }
-
   if (
     category === "library" ||
     category === "wishlist" ||
     category === "completed" ||
     category === "full"
   ) {
-    return (
+    return loading ? (
+      <>
+        <div>
+          <NavBar></NavBar>
+          <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+            <AsideWrapper></AsideWrapper>
+            <div>
+              <div className="w-full flex gap-50  justify-center content-center tab ">
+                <button
+                  onClick={() => {
+                    navigate(location.pathname.replace("/movies", "/games"));
+                    setLoading(true);
+                  }}
+                  className={`${media_type === "games" && "active"}`}
+                >
+                  Games
+                </button>
+                <button
+                  onClick={() => {
+                    navigate(location.pathname.replace("/games", "/movies"));
+                    setLoading(true);
+                  }}
+                  className={`${media_type === "movies" && "active"}`}
+                >
+                  Movies
+                </button>
+              </div>
+              <div className="flex items-center p-4 gap-5">
+                <img
+                  alt=""
+                  className="w-25 h-25 object-cover rounded-[50%] border-none border-gray-500 bg-gray-500"
+                />
+                <h1 className="text-xl text-text-primary border-1 border-gray-500 bg-gray-500 w-10 h-5"></h1>
+              </div>
+              <FullCardContainer
+                key={`${category}-${id}-${media_type}`}
+                header={category === "full" ? null : category}
+                media_type={media_type}
+              ></FullCardContainer>
+            </div>
+          </div>
+        </div>
+      </>
+    ) : (
       <div>
         <NavBar></NavBar>
         <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
@@ -151,7 +206,56 @@ function Profile() {
   } else {
     return loading ? (
       <>
-        <h1>loading</h1>
+        <div>
+          <NavBar></NavBar>
+          <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+            <AsideWrapper></AsideWrapper>
+            <div>
+              <div className="w-full flex gap-50  justify-center content-center tab ">
+                <button
+                  onClick={() => {
+                    navigate(location.pathname.replace("/movies", "/games"));
+                    setLoading(true);
+                  }}
+                  className={`${media_type === "games" && "active"}`}
+                >
+                  Games
+                </button>
+                <button
+                  onClick={() => {
+                    navigate(location.pathname.replace("/games", "/movies"));
+                    setLoading(true);
+                  }}
+                  className={`${media_type === "movies" && "active"}`}
+                >
+                  Movies
+                </button>
+              </div>
+              <div className="flex items-center p-4 gap-5">
+                <img
+                  src=""
+                  alt=""
+                  className="w-25 h-25 object-cover rounded-[50%] bg-gray-500"
+                />
+                <h1 className="text-xl text-text-primary bg-gray-500 w-10 h-5"></h1>
+              </div>
+              <div className="text-text-primary">
+                <CardContainer
+                  header="library"
+                  media_type={media_type}
+                ></CardContainer>
+                <CardContainer
+                  header="wishlist"
+                  media_type={media_type}
+                ></CardContainer>
+                <CardContainer
+                  header="completed"
+                  media_type={media_type}
+                ></CardContainer>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     ) : (
       <>
@@ -182,7 +286,10 @@ function Profile() {
               </div>
               <div>
                 {isModalOpen ? (
-                  <RequestModal setModalOpen={setIsModalOpen}></RequestModal>
+                  <RequestModal
+                    setModalOpen={setIsModalOpen}
+                    requested_name={profile.full_name}
+                  ></RequestModal>
                 ) : (
                   <></>
                 )}
@@ -196,11 +303,11 @@ function Profile() {
 
                 {isEditingName ? (
                   <div
-                    className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4"
+                    className="fixed w-screen h-screen z-20 flex items-center justify-center  top-0 left-0  bg-black/80 text-white p-4 flex flex-col gap-5"
                     onClick={() => setIsEditingName(false)}
                   >
                     <div
-                      className="bg-main border-1 border-white/5 flex flex-col  items-center justify-center gap-10 p-4 rounded-2xl"
+                      className="bg-main border-1 border-white/5 flex flex-col  items-center justify-center gap-10 p-4 rounded-2xl "
                       onClick={(e) => {
                         e.stopPropagation();
                       }}
@@ -235,6 +342,19 @@ function Profile() {
                         Done
                       </button>
                     </div>
+                    <div>
+                      {toast.length > 0 ? (
+                        <>
+                          <h1
+                            className={`${toastType === "success" ? "bg-green-500/50 border-green-600" : toastType === "error" ? "  bg-red-500/50 border-red-600" : " bg-yellow-500/50 border-yellow-600"} text-white w-full p-2 rounded-xl border-2`}
+                          >
+                            {toast}
+                          </h1>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between w-full px-4">
@@ -260,7 +380,7 @@ function Profile() {
                             }}
                             className="px-4 bg-accent-primary rounded-2xl hover:bg-accent-hover transition-all duration-200 text-accent-text max-sm:text-xs max-sm:py-2"
                           >
-                            Request Games
+                            Make A Request
                           </button>
                         </>
                       )}

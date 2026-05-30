@@ -9,7 +9,7 @@ function LibraryPage() {
   return (
     <>
       <NavBar></NavBar>
-      <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
+      <div className="h-screen w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
         <AsideWrapper></AsideWrapper>
         <div>
           <FullCardContainer
