@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
 
-      setUser(session.user);
+      setUser(session?.user);
       setLoading(false);
       // Do NOT await async calls here (e.g., fetch user profile)
     });
