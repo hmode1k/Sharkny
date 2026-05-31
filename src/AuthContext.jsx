@@ -7,27 +7,40 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 1. Clean OAuth hash once on app load
+  useEffect(() => {
+    if (window.location.hash.includes("access_token")) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  // 2. Auth initialization + listener
   useEffect(() => {
     let mounted = true;
 
-    // 1. Get initial session (ONLY place we set loading=false)
-    const init = async () => {
-      const { data } = await supabase.auth.getSession();
+    const initAuth = async () => {
+      const { data, error } = await supabase.auth.getSession();
 
       if (!mounted) return;
+
+      if (error) {
+        console.error("Auth init error:", error);
+      }
 
       setUser(data.session?.user ?? null);
       setLoading(false);
     };
 
-    init();
+    initAuth();
 
-    // 2. Listen for auth changes (DO NOT touch loading here)
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        console.log("AUTH EVENT:", _event);
-        console.log("SESSION:", session);
+      (event, session) => {
+        console.log("AUTH EVENT:", event);
+
+        if (!mounted) return;
+
         setUser(session?.user ?? null);
+        setLoading(false);
       },
     );
 
