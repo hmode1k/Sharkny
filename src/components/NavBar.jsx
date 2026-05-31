@@ -1,12 +1,15 @@
 import SearchComponent from "./SearchComponent";
 import logo from "../assets/sharkny.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 function NavBar(q) {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [query, setQuery] = useState(q.q || "");
+
+  useEffect(() => {
+    setQuery(q.q);
+  }, [q]);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -23,10 +26,13 @@ function NavBar(q) {
     <div className="w-full flex justify-between p-4 bg-nav border-b-1 border-bottom border-white/10">
       <div>
         <Link to="/main" className="flex gap-2 items-center">
-          <img src={logo} alt="" className="w-10 h-10" />
-          <h1 className="text-4xl text-white hover:cursor-pointer max-sm:text-[1.5rem]">
+          <img src={logo} alt="" className="w-10 h-10 max-sm:w-6 max-sm:h-6" />
+          <h1 className="text-4xl text-white hover:cursor-pointer max-sm:text-[1.4rem]">
             Sharkny
           </h1>
+          <Link to="/search/games?q=">
+            <h2 className="text-white p-2 max-sm:text-xs">Popular</h2>
+          </Link>
         </Link>
       </div>
       <SearchComponent

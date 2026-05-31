@@ -9,57 +9,98 @@ function SearchPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const query = searchParams.get("q");
-  const [games, setGames] = useState([]);
+  const [visibleGames, setVisibleGames] = useState(null);
   const [movies, setMovies] = useState([]);
+  const [moviesToatlPages, setMoviesTotalPages] = useState(null);
+  const [gamesTotalPages, setGamesTotalPages] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const currentPage = Number(searchParams.get("p")) || 1;
 
-  const CARDS_PER_PAGE = 21;
+  function getPages(current, total) {
+    const pages = [];
 
-  const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
+    const delta = 2; // how many pages around current
 
-  const endIndex = startIndex + CARDS_PER_PAGE;
+    const range = [];
 
-  const visiblegames = games.slice(startIndex, endIndex);
+    for (
+      let i = Math.max(2, current - delta);
+      i <= Math.min(total - 1, current + delta);
+      i++
+    ) {
+      range.push(i);
+    }
 
-  const visibleMovies = movies.slice(startIndex, endIndex);
-  const totalMoviesPages = Math.ceil(movies.length / CARDS_PER_PAGE);
+    // always include first page
+    pages.push(1);
 
-  const totalGamesPages = Math.ceil(games.length / CARDS_PER_PAGE);
+    if (current - delta > 2) {
+      pages.push("...");
+    }
+
+    pages.push(...range);
+
+    if (current + delta < total - 1) {
+      pages.push("...");
+    }
+
+    // always include last page
+    if (total > 1) {
+      pages.push(total);
+    }
+
+    return pages;
+  }
+
+  function getVisibleGames(games) {
+    const CARDS_PER_PAGE = 20;
+
+    const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
+
+    const endIndex = startIndex + CARDS_PER_PAGE;
+
+    setVisibleGames(games.slice(startIndex, endIndex));
+  }
 
   useEffect(() => {
+    setLoading(true);
     const handleSearch = async () => {
       const gamesRes = await supabase.functions.invoke("search-games", {
         body: JSON.stringify({
           search: query,
+          page: currentPage,
         }),
       });
 
-      const ranked = gamesRes.data.sort((a, b) => {
-        const aName = a.name.toLowerCase();
-        const bName = b.name.toLowerCase();
+      const ranked = gamesRes.data.sort(
+        (a, b) => (b.total_rating_count || 0) - (a.total_rating_count || 0),
+      );
 
-        if (aName === query) return -1;
-        if (bName === query) return 1;
-
-        return 0;
-      });
-
-      setGames(ranked);
+      let totalPages;
+      if (query) {
+        totalPages = Math.ceil(ranked.length / 20);
+        getVisibleGames(ranked);
+      } else {
+        setVisibleGames(ranked);
+        totalPages = 50;
+      }
+      setGamesTotalPages(getPages(currentPage, totalPages));
 
       const movieRes = await supabase.functions.invoke("search-media", {
         body: JSON.stringify({
           query: query,
+          page: currentPage,
         }),
       });
 
-      setMovies(movieRes.data);
+      setMovies(movieRes.data.results);
+      setMoviesTotalPages(getPages(currentPage, movieRes.data.total_pages));
       setLoading(false);
     };
 
     handleSearch();
-  }, [query, location.pathname]);
+  }, [query, location.pathname, currentPage]);
 
   if (loading) {
     return (
@@ -80,7 +121,7 @@ function SearchPage() {
                 onClick={() => {
                   navigate(`/search/games?q=${query}`);
                 }}
-                className="active"
+                className={`${location.pathname.includes("games") && "active"}`}
               >
                 Games
               </button>
@@ -88,6 +129,7 @@ function SearchPage() {
                 onClick={() => {
                   navigate(`/search/movies?q=${query}`);
                 }}
+                className={`${location.pathname.includes("movies") && "active"}`}
               >
                 Movies
               </button>
@@ -108,60 +150,16 @@ function SearchPage() {
             <GameCard loading={loading}></GameCard>
             <GameCard loading={loading}></GameCard>
             <GameCard loading={loading}></GameCard>
-            <GameCard loading={loading}></GameCard>
-            <GameCard loading={loading}></GameCard>
-            <GameCard loading={loading}></GameCard>
-            <GameCard loading={loading}></GameCard>
           </div>
         </div>
       </>
     );
   }
 
-  if (games.length === 0 && !loading && location.pathname.includes("games")) {
-    return (
-      <>
-        <div>
-          <div>
-            <NavBar></NavBar>
-            <div className="flex w-full items-center relative">
-              <h1
-                className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"
-                onClick={() => {
-                  navigate(-1);
-                }}
-              >
-                ←
-              </h1>
-              <div className="w-full flex gap-50  justify-center content-center h-full tab">
-                <button
-                  onClick={() => {
-                    navigate(`/search/games?q=${query}`);
-                  }}
-                  className="active"
-                >
-                  Games
-                </button>
-                <button
-                  onClick={() => {
-                    navigate(`/search/movies?q=${query}`);
-                  }}
-                >
-                  Movies
-                </button>
-              </div>
-            </div>
-            <div>
-              <h1>No Results</h1>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  } else if (
-    movies.length === 0 &&
+  if (
+    visibleGames.length === 0 &&
     !loading &&
-    location.pathname.includes("movies")
+    location.pathname.includes("games")
   ) {
     return (
       <>
@@ -196,7 +194,51 @@ function SearchPage() {
               </div>
             </div>
             <div>
-              <h1>No Results</h1>
+              <h1 className="text-text-primary p-4">No Results</h1>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  } else if (
+    movies.length === 0 &&
+    !loading &&
+    location.pathname.includes("movies")
+  ) {
+    return (
+      <>
+        <div>
+          <div>
+            <NavBar></NavBar>
+            <div className="flex w-full items-center relative text-text-primary">
+              <h1
+                className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                ←
+              </h1>
+              <div className="w-full flex gap-50  justify-center content-center h-full tab">
+                <button
+                  onClick={() => {
+                    navigate(`/search/games?q=${query}`);
+                  }}
+                >
+                  Games
+                </button>
+                <button
+                  onClick={() => {
+                    navigate(`/search/movies?q=${query}`);
+                  }}
+                  className="active"
+                >
+                  Movies
+                </button>
+              </div>
+            </div>
+            <div>
+              <h1 className="text-text-primary p-4">No Results</h1>
             </div>
           </div>
         </div>
@@ -208,7 +250,7 @@ function SearchPage() {
     return (
       <div className="bg-main text-text-primary h-full ">
         <NavBar q={query}></NavBar>
-        <div className="flex w-full items-center relative">
+        <div className="flex w-full items-center  relative">
           <h1
             className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"
             onClick={() => {
@@ -236,8 +278,8 @@ function SearchPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:p-2">
-          {visiblegames.map((game) => {
+        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:justify-center max-sm:p-2">
+          {visibleGames.map((game) => {
             return (
               <GameCard
                 key={game.id}
@@ -253,16 +295,26 @@ function SearchPage() {
             );
           })}
         </div>
-        <div className="px-8 p-2">
-          {Array.from({ length: totalGamesPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setSearchParams({ p: i + 1, q: query })}
-              className="p-1 text-text-secondary hover:text-text-primary"
-            >
-              {i + 1}
-            </button>
-          ))}
+        <div className="px-8 p-2 flex gap-2">
+          {gamesTotalPages.map((p, i) =>
+            p === "..." ? (
+              <span key={i} className="px-2">
+                ...
+              </span>
+            ) : (
+              <button
+                key={i}
+                onClick={() => setSearchParams({ p, q: query })}
+                className={`p-1 ${
+                  p === currentPage
+                    ? "text-text-primary font-bold"
+                    : "text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {p}
+              </button>
+            ),
+          )}
         </div>
       </div>
     );
@@ -298,8 +350,8 @@ function SearchPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:p-2">
-          {visibleMovies.map((movie) => {
+        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:justify-center max-sm:p-2">
+          {movies.map((movie) => {
             return (
               <GameCard
                 key={movie.id}
@@ -311,16 +363,26 @@ function SearchPage() {
             );
           })}
         </div>
-        <div className="pbs-5">
-          {Array.from({ length: totalMoviesPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setSearchParams({ p: i + 1, q: query })}
-              className="p-1 text-text-secondary hover:text-text-primary"
-            >
-              {i + 1}
-            </button>
-          ))}
+        <div className="px-8 p-2 flex gap-2">
+          {moviesToatlPages.map((p, i) =>
+            p === "..." ? (
+              <span key={i} className="px-2">
+                ...
+              </span>
+            ) : (
+              <button
+                key={i}
+                onClick={() => setSearchParams({ p, q: query })}
+                className={`p-1 ${
+                  p === currentPage
+                    ? "text-text-primary font-bold"
+                    : "text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {p}
+              </button>
+            ),
+          )}
         </div>
       </div>
     );
