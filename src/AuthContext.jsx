@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
     // 2. Listen for auth changes (DO NOT touch loading here)
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        console.log("AUTH EVENT:", event);
+        console.log("AUTH EVENT:", _event);
         console.log("SESSION:", session);
         setUser(session?.user ?? null);
       },

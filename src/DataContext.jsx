@@ -13,6 +13,10 @@ export function DataProvider({ children }) {
 
   // FETCH ONCE
   useEffect(() => {
+    console.log("USER CHANGED", user?.id);
+
+    if (!user) return;
+
     async function fetchData() {
       setLoading(true);
 
