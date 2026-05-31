@@ -5,49 +5,27 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 1. Clean OAuth hash once on app load
   useEffect(() => {
-    if (window.location.hash.includes("access_token")) {
-      window.history.replaceState(null, "", window.location.pathname);
-    }
-  }, []);
+    // 1. Get initial session immediately
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session.user);
+    });
 
-  // 2. Auth initialization + listener
-  useEffect(() => {
-    let mounted = true;
+    // 2. Listen for changes (keep callback synchronous)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
 
-    const initAuth = async () => {
-      const { data, error } = await supabase.auth.getSession();
-
-      if (!mounted) return;
-
-      if (error) {
-        console.error("Auth init error:", error);
-      }
-
-      setUser(data.session?.user ?? null);
       setLoading(false);
-    };
+      // Do NOT await async calls here (e.g., fetch user profile)
+    });
 
-    initAuth();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log("AUTH EVENT:", event);
-
-        if (!mounted) return;
-
-        setUser(session?.user ?? null);
-        setLoading(false);
-      },
-    );
-
-    return () => {
-      mounted = false;
-      listener.subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
