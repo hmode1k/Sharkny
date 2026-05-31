@@ -1,13 +1,32 @@
 import "./App.css";
 import NavBar from "./components/NavBar";
 import CardContainer from "./components/CardContainer";
-
+import { supabase } from "./supabase-client";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import AsideWrapper from "./components/AsideWrapper";
+import { useAuth } from "./AuthContext";
 
 function App() {
   const navigate = useNavigate();
   const { category } = useParams();
+  const { user, setUserId } = useAuth();
+
+  useEffect(() => {
+    const fetchId = async () => {
+      const { error, data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error(error);
+      }
+      setUserId(data[0].id);
+    };
+
+    fetchId();
+  }, [user]);
 
   return (
     <>

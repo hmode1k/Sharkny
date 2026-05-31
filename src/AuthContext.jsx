@@ -29,24 +29,8 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const fetchId = async () => {
-      const { error, data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error(error);
-      }
-      setUserId(data[0].id);
-    };
-
-    fetchId();
-  }, [user]);
-
   return (
-    <AuthContext.Provider value={{ user, loading, userId }}>
+    <AuthContext.Provider value={{ user, loading, setUserId }}>
       {children}
     </AuthContext.Provider>
   );
