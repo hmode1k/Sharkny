@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     // 1. Get initial session immediately
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setUser(session?.user);
     });
 
     // 2. Listen for changes (keep callback synchronous)
@@ -21,7 +22,6 @@ export function AuthProvider({ children }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
 
-      setUser(session?.user);
       setLoading(false);
       // Do NOT await async calls here (e.g., fetch user profile)
     });
