@@ -1,13 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
 import { useState } from "react";
-import { useAuth } from "../AuthContext";
 
 function Aside() {
   const navigate = useNavigate();
   const [openSection, setOpenSection] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { userId } = useAuth();
 
   function handleNavigate(path, cat) {
     navigate(`/${path}/${cat}`);
@@ -109,7 +107,7 @@ function Aside() {
       </div>
       <div>
         <h1 className="ms-2 p-1">
-          <Link to={`/profile/${userId}/games`}>Profile</Link>
+          <Link to={`/profile/${"1"}/games`}>Profile</Link>
         </h1>
         <h1 className="ms-2 p-1">
           <Link to="/friends">Friends</Link>
