@@ -85,16 +85,6 @@ function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (id === undefined || id === null) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", user.id);
-
-        console.log(data[0]);
-        navigate(`/profile/${data[0].id}/games`);
-      }
-
       const { error, data } = await supabase
         .from("profiles")
         .select("*")
