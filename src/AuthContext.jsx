@@ -11,9 +11,9 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     // 1. Get initial session immediately
-    setUser(session?.user);
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setUser(session?.user);
     });
 
     // 2. Listen for changes (keep callback synchronous)
