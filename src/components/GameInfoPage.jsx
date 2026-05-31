@@ -270,7 +270,7 @@ function GameInfoPage() {
                   ? game.cover.url.replace("t_thumb", "t_cover_big")
                   : game.cover
                     ? game.cover
-                    : "//images.igdb.com/igdb/image/upload/t_cover_big/cobz58.jpg"
+                    : "https://imgs.search.brave.com/I9lRT1KD63dS5F4kY28jKwaJsWWrEuMQbZiIJV-jd0k/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L3ByZW1pdW0tdmVj/dG9yL3RpY2stbWFy/ay1pY29uLXN5bWJv/bC12ZWN0b3ItaWxs/dXN0cmF0aW9uXzg3/NTI0MC0yOTA2Lmpw/Zz9zZW10PWFpc19o/eWJyaWQmdz03NDAm/cT04MA"
               }
               alt=""
               className="w-full
