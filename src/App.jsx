@@ -10,24 +10,6 @@ import { useAuth } from "./AuthContext";
 function App() {
   const navigate = useNavigate();
   const { category } = useParams();
-  const { user, setUserId } = useAuth();
-
-  useEffect(() => {
-    const fetchId = async () => {
-      const { error, data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error(error);
-      }
-      setUserId(data[0].id);
-      console.log("fetching ", data);
-    };
-
-    fetchId();
-  }, [user, setUserId]);
 
   return (
     <>
