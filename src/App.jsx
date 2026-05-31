@@ -23,10 +23,11 @@ function App() {
         console.error(error);
       }
       setUserId(data[0].id);
+      console.log("fetching ", data);
     };
 
     fetchId();
-  }, [user]);
+  }, [user, setUserId]);
 
   return (
     <>
