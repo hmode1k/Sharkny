@@ -5,13 +5,28 @@ import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { supabase } from "../supabase-client";
 
 function SearchPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
   const query = searchParams.get("q");
   const [games, setGames] = useState([]);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const currentPage = Number(searchParams.get("p")) || 1;
+
+  const CARDS_PER_PAGE = 21;
+
+  const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
+
+  const endIndex = startIndex + CARDS_PER_PAGE;
+
+  const visiblegames = games.slice(startIndex, endIndex);
+
+  const visibleMovies = movies.slice(startIndex, endIndex);
+  const totalMoviesPages = Math.ceil(movies.length / CARDS_PER_PAGE);
+
+  const totalGamesPages = Math.ceil(games.length / CARDS_PER_PAGE);
 
   useEffect(() => {
     const handleSearch = async () => {
@@ -190,7 +205,6 @@ function SearchPage() {
   }
 
   if (location.pathname === "/search/games") {
-    console.log(games);
     return (
       <div className="bg-main text-text-primary h-full ">
         <NavBar q={query}></NavBar>
@@ -223,7 +237,7 @@ function SearchPage() {
         </div>
 
         <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:p-2">
-          {games.map((game) => {
+          {visiblegames.map((game) => {
             return (
               <GameCard
                 key={game.id}
@@ -238,6 +252,17 @@ function SearchPage() {
               ></GameCard>
             );
           })}
+        </div>
+        <div className="px-8 p-2">
+          {Array.from({ length: totalGamesPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setSearchParams({ p: i + 1, q: query })}
+              className="p-1 text-text-secondary hover:text-text-primary"
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -274,7 +299,7 @@ function SearchPage() {
         </div>
 
         <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:p-2">
-          {movies.map((movie) => {
+          {visibleMovies.map((movie) => {
             return (
               <GameCard
                 key={movie.id}
@@ -285,6 +310,17 @@ function SearchPage() {
               ></GameCard>
             );
           })}
+        </div>
+        <div className="pbs-5">
+          {Array.from({ length: totalMoviesPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setSearchParams({ p: i + 1, q: query })}
+              className="p-1 text-text-secondary hover:text-text-primary"
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       </div>
     );
