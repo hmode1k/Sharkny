@@ -7,8 +7,6 @@ import { supabase } from "../supabase-client";
 function CardContainer({ header, id, media_type, URLId }) {
   const [games, setGames] = useState([]);
   const [movies, setMovies] = useState([]);
-  console.log(id);
-  console.log(games.length);
 
   const {
     games: contextGames,
@@ -50,7 +48,6 @@ function CardContainer({ header, id, media_type, URLId }) {
   const location = useLocation();
   const navigate = useNavigate();
   const ref = useRef(null);
-  console.log("URLIDDDDDDDDD", URLId);
 
   function handleNavigate() {
     if (location.pathname.startsWith("/profile")) {

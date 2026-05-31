@@ -4,11 +4,17 @@ import CardContainer from "./components/CardContainer";
 
 import { useNavigate, useParams } from "react-router";
 import AsideWrapper from "./components/AsideWrapper";
+import { useEffect, useState } from "react";
 
 function App() {
   const navigate = useNavigate();
   const { category } = useParams();
-  console.log("param", category);
+  const [rerender, setRerenders] = useState();
+  console.log("rereders", rerender);
+
+  useEffect(() => {
+    setRerenders(rerender + 1);
+  }, []);
 
   return (
     <>
