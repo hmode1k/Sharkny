@@ -30,9 +30,14 @@ function NavBar(q) {
           <h1 className="text-4xl text-white hover:cursor-pointer max-sm:text-[1.4rem]">
             Sharkny
           </h1>
-          <Link to="/search/games?q=">
-            <h2 className="text-white p-2 max-sm:text-xs">Popular</h2>
-          </Link>
+          <div className="flex flex-col gqp-1 ">
+            <Link to="/search/games?q=">
+              <h2 className="text-white  max-sm:text-xs">Popular</h2>
+            </Link>
+            <Link to="/search/games?q=&recent=week">
+              <h2 className="text-white max-sm:text-xs">Recent</h2>
+            </Link>
+          </div>
         </Link>
       </div>
       <SearchComponent

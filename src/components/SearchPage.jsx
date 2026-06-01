@@ -9,6 +9,7 @@ function SearchPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const query = searchParams.get("q");
+  const recent = searchParams.get("recent") || null;
   const [visibleGames, setVisibleGames] = useState(null);
   const [movies, setMovies] = useState([]);
   const [moviesToatlPages, setMoviesTotalPages] = useState(null);
@@ -70,13 +71,14 @@ function SearchPage() {
         body: JSON.stringify({
           search: query,
           page: currentPage,
+          recent: recent,
         }),
       });
 
       const ranked = gamesRes.data.sort(
         (a, b) => (b.total_rating_count || 0) - (a.total_rating_count || 0),
       );
-
+      console.log(ranked);
       let totalPages;
       if (query) {
         totalPages = Math.ceil(ranked.length / 20);
@@ -100,7 +102,7 @@ function SearchPage() {
     };
 
     handleSearch();
-  }, [query, location.pathname, currentPage]);
+  }, [query, location.pathname, currentPage, recent]);
 
   if (loading) {
     return (
@@ -304,7 +306,7 @@ function SearchPage() {
             ) : (
               <button
                 key={i}
-                onClick={() => setSearchParams({ p, q: query })}
+                onClick={() => setSearchParams({ p, q: query, recent: recent })}
                 className={`p-1 ${
                   p === currentPage
                     ? "text-text-primary font-bold"
@@ -315,6 +317,36 @@ function SearchPage() {
               </button>
             ),
           )}
+          <div>
+            {recent && (
+              <>
+                <select
+                  value={recent}
+                  onChange={(e) => {
+                    setSearchParams((prev) => {
+                      const params = new URLSearchParams(prev);
+                      params.set("recent", e.target.value);
+                      params.set("p", "1"); // reset pagination
+                      return params;
+                    });
+                  }}
+                >
+                  <option value="week" className="text-black">
+                    This Week
+                  </option>
+                  <option value="month" className="text-black">
+                    This Month
+                  </option>
+                  <option value="year" className="text-black">
+                    This Year
+                  </option>
+                  <option value="all" className="text-black">
+                    All Time
+                  </option>
+                </select>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );
