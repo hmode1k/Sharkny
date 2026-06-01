@@ -154,28 +154,32 @@ function GameInfoPage() {
         const res = await supabase.from("games").select("*").eq("id", id);
         setGame(res.data[0]);
 
-        setLoading(false);
         setGameExists(true);
         setStatus(data[0].status);
         setPlatform(data[0].platform);
-        console.log("from db");
-        console.log(res.data[0]);
-      } else {
-        const res = await supabase.functions.invoke("game-info", {
-          body: {
-            id: id,
-          },
-        });
-
-        setGame(res.data[0]);
-        console.log(res.data[0]);
-        setLoading(false);
-        console.log("from api");
       }
+
+      const res = await supabase.functions.invoke("game-info", {
+        body: {
+          id: id,
+        },
+      });
+
+      setGame({
+        ...res.data[0],
+        first_release_date: res.data[0].first_release_date
+          ? new Date(res.data[0].first_release_date * 1000)
+              .toISOString()
+              .split("T")[0]
+          : null,
+      });
+
+      console.log(res.data[0]);
+      setLoading(false);
     };
 
     loadGameInfo();
-  }, [id, user?.id]);
+  }, [id]);
 
   useEffect(() => {
     const el = ref.current;
@@ -255,89 +259,103 @@ function GameInfoPage() {
         >
           ←
         </h2>
-        <div
-          className="sm:grid
-            sm:grid-cols-[clamp(140px,17vw,240px)_1fr]
-            sm:gap-6
-            sm:items-start
-            flex gap-5
-            "
-        >
-          <div>
-            <img
-              src={
-                game.cover?.url
-                  ? game.cover.url.replace("t_thumb", "t_cover_big")
-                  : game.cover
-                    ? game.cover
-                    : "https://imgs.search.brave.com/I9lRT1KD63dS5F4kY28jKwaJsWWrEuMQbZiIJV-jd0k/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L3ByZW1pdW0tdmVj/dG9yL3RpY2stbWFy/ay1pY29uLXN5bWJv/bC12ZWN0b3ItaWxs/dXN0cmF0aW9uXzg3/NTI0MC0yOTA2Lmpw/Zz9zZW10PWFpc19o/eWJyaWQmdz03NDAm/cT04MA"
-              }
-              alt=""
-              className="w-full
-                        h-auto
-                        rounded-3xl
-                        object-cover
-                        border-1
-                        border-white/5
-                        "
-            />
+        <div className="flex flex-col gap-5">
+          {/* image and stuff next to it(name rating etc...) div */}
+          <div className="text-white flex px-2 max-sm:flex-col max-sm:gap-5">
+            <div>
+              <img
+                src={game?.cover?.url?.replace("t_thumb", "t_cover_big")}
+                alt=""
+                className="w-[90%] h-auto rounded-xl border-1 border-accent-primary/30 "
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <h1 className="text-4xl">{game.name}</h1>
+              {/* caclulate rating from out of 100 to out of 5 and fix it to just 2 numbers after the floatng point */}
+              <div className="flex gap-5">
+                <h3 className="text-md text-text-muted">
+                  Release Date: {game.first_release_date}
+                </h3>
+                <h2 className="">⭐: {((game.rating * 5) / 100).toFixed(2)}</h2>
+              </div>
+              <div className="flex gap-2 p-2">
+                {game.game_modes.map((mode) => {
+                  return (
+                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs">
+                      {mode.name}
+                    </h1>
+                  );
+                })}
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <h1 className="text-lg max-sm:text-sm">Genres: </h1>
+                {game.genres.map((genre) => {
+                  return (
+                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
+                      {genre.name}
+                    </h1>
+                  );
+                })}
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <h1 className="text-lg max-sm:text-sm">Themes: </h1>
+                {game.themes.map((theme) => {
+                  return (
+                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
+                      {theme.name}
+                    </h1>
+                  );
+                })}
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <h1 className="text-lg max-sm:text-sm">Platforms: </h1>
+                {game.platforms.map((platform) => {
+                  return (
+                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
+                      {platform.abbreviation}
+                    </h1>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-4 min-w-0 w-full overflow-hidden">
-            <div>
-              <h1 className="text-[clamp(1.5rem,3vw,2rem)] fint-bold text-text-primary">
-                {game.name}
-              </h1>
-              <h4 className="text-[clamp(0.5rem,0.9rem,1.5rem)] text-text-secondary leading-relaxed min-w-0 break-words max-sm:text-[0.65rem]">
+          {/* summary screenshots div */}
+          <div className="text-white flex flex-col gap-5">
+            <div className="p-2">
+              <h1 className="text-lg max-sm:text-md">Game Description:</h1>
+              <h2 className="p-2 text-text-secondary max-sm:text-sm">
                 {game.summary}
-              </h4>
+              </h2>
             </div>
+
             <div
-              className="flex
-                gap-4
-                overflow-x-auto
-                hover-scroll
-                pb-2 min-w-0 max-sm:hidden
-              "
+              className="flex flex-row gap-4 w-full overflow-scroll hover-scroll pb-2 min-w-0"
               ref={ref}
             >
               {game?.screenshots?.map((screen) => {
                 return (
                   <img
                     key={screen.id}
-                    src={
-                      screen?.url
-                        ? screen.url.replace("t_thumb", "t_screenshot_big")
-                        : ""
-                    }
-                    className="w-[clamp(140px,17vw,240px)]
-                            h-auto
-                            rounded-xl
-                            shrink-0
-                            object-cover
-                            border-1
-                        border-white/5"
+                    src={screen?.url?.replace("t_thumb", "t_screenshot_big")}
+                    className="w-[clamp(250px,30vw,400px)] h-auto rounded-xl shrink-0 object-cover border-1 border-white/5 "
                   ></img>
                 );
               })}
             </div>
+
+            <div>
+              <iframe
+                width="100%"
+                src={`https://www.youtube.com/embed/${game?.videos[0]?.video_id}`}
+                title="Game Trailer"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="rounded-xl h-[400px] max-sm:h-[200px]"
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex  overflow-x-scroll p-2 pbs-6 gap-5 sm:hidden">
-          {game?.screenshots?.map((screen) => {
-            return (
-              <img
-                key={screen.id}
-                src={
-                  screen?.url
-                    ? screen.url.replace("t_thumb", "t_screenshot_big")
-                    : ""
-                }
-                className="w-60 h-30 border-1
-                        border-white/5"
-              ></img>
-            );
-          })}
         </div>
 
         <form
@@ -349,7 +367,7 @@ function GameInfoPage() {
                   max-w-full
                   min-w-0"
         >
-          <div className="w-full sm:flex items-center gap-10 ">
+          <div className="w-full gap-5 flex flex-col ">
             <fieldset className="flex gap-2 sm:gap-3 flex-wrap items-center ">
               <h2 className="ps-1 py-1 text-text-primary">Status: </h2>
               <label className="cursor-pointer inline-flex items-center gap-2">
@@ -603,14 +621,14 @@ peer-checked:border-accent-primary
                 <div className="flex gap-5 w-full">
                   <button
                     onClick={handleDelete}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%]  rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[40%] text-center rounded-xl text-lg text-black hover:bg-accent-hover"
                   >
                     Delete
                   </button>
                   <button
                     type="submit"
                     onClick={handleEdit}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] text-center rounded-xl text-lg text-black hover:bg-accent-hover"
                   >
                     Edit
                   </button>
@@ -620,7 +638,7 @@ peer-checked:border-accent-primary
                   <button
                     type="submit"
                     onClick={handleInsertion}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full rounded-xl text-lg text-gray-300 hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full text-center rounded-xl text-lg text-black hover:bg-accent-hover"
                   >
                     Add
                   </button>
@@ -633,14 +651,14 @@ peer-checked:border-accent-primary
               <div className="flex gap-5">
                 <button
                   onClick={handleDelete}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-accent-text hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-center text-lg text-black hover:bg-accent-hover"
                 >
                   Delete
                 </button>
                 <button
                   type="submit"
                   onClick={handleEdit}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-accent-text hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-center text-lg text-black hover:bg-accent-hover"
                 >
                   Edit
                 </button>
@@ -650,7 +668,7 @@ peer-checked:border-accent-primary
                 <button
                   type="submit"
                   onClick={handleInsertion}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-accebt-text hover:bg-accent-hover"
+                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-center text-lg text-black hover:bg-accent-hover"
                 >
                   Add
                 </button>
@@ -658,17 +676,25 @@ peer-checked:border-accent-primary
             )}
           </div>
         </form>
-        <div className="relative w-full h-full ">
+        <div className="relative w-full h-full bg-black">
           {toast.length === 0 ? (
             <></>
           ) : (
             <>
-              <div className="absolute flex flex-col items-center justify-end w-full h-full">
-                <h1
-                  className={` max-w-50 text-center  border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
-                >
-                  {toast}
-                </h1>
+              <div className="absolute flex flex-col items-center justify-end w-full h-full z-40 bg-black ">
+                <div className="flex flex-col items-center justify-end w-full h-full bg-black">
+                  <h1
+                    className={`max-w-50 text-center px-4 py-2 rounded-xl text-text-primary border
+  ${
+    toastType === "error"
+      ? "bg-red-500/10 border-red-500"
+      : "bg-green-500/10 border-green-500"
+  }
+  shadow-2xl backdrop-blur-md mbe-8 shadow-[0_10px_30px_rgba(0,0,0,0.4)]`}
+                  >
+                    {toast}
+                  </h1>
+                </div>
               </div>
             </>
           )}
