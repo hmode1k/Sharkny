@@ -354,7 +354,7 @@ function Profile() {
                     </h1>
 
                     <div className="flex items-center gap-10">
-                      {user.id === profile.user_id ? (
+                      {user?.id === profile.user_id ? (
                         <>
                           <button
                             onClick={() => setIsEditingName(true)}

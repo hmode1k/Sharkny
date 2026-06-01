@@ -32,7 +32,7 @@ function GameInfoPage() {
       .from("users_games")
       .delete("")
       .eq("game_id", id)
-      .eq("user_id", user.id);
+      .eq("user_id", user?.id);
 
     if (error) {
       console.error(error);
@@ -76,7 +76,7 @@ function GameInfoPage() {
     const { data, error2 } = await supabase
       .from("users_games")
       .insert({
-        user_id: user.id,
+        user_id: user?.id,
         game_id: game.id,
         platform: platform,
         status: status,
@@ -114,7 +114,7 @@ function GameInfoPage() {
         platform: platform,
       })
       .eq("game_id", id)
-      .eq("user_id", user.id);
+      .eq("user_id", user?.id);
 
     if (error) {
       console.error(error);
@@ -144,7 +144,7 @@ function GameInfoPage() {
         .from("users_games")
         .select("*")
         .eq("game_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error(error);
@@ -175,7 +175,7 @@ function GameInfoPage() {
     };
 
     loadGameInfo();
-  }, [id]);
+  }, [id, user?.id]);
 
   useEffect(() => {
     const el = ref.current;

@@ -15,7 +15,7 @@ export function DataProvider({ children }) {
   useEffect(() => {
     console.log("USER CHANGED", user?.id);
 
-    if (!user) return;
+    if (!user?.id) return;
 
     async function fetchData() {
       setLoading(true);
@@ -40,7 +40,7 @@ export function DataProvider({ children }) {
     }
 
     fetchData();
-  }, [user]);
+  }, [user?.id]);
 
   return (
     <DataContext.Provider

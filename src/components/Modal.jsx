@@ -29,7 +29,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
           status: status,
         })
         .eq("game_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error(error);
@@ -57,7 +57,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
           status: status,
         })
         .eq("movie_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error(error);
@@ -84,7 +84,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
         .from("users_games")
         .delete("")
         .eq("game_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error(error);
@@ -103,7 +103,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
         .from("users_movies")
         .delete("")
         .eq("movie_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error(error);

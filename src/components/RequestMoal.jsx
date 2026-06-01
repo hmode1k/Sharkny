@@ -29,7 +29,7 @@ function RequestModal({ setModalOpen, requested_name }) {
     const { data } = await supabase
       .from("profiles")
       .select("id")
-      .eq("user_id", user.id);
+      .eq("user_id", user?.id);
 
     const { error: request_error, data: request } = await supabase
       .from("requests")

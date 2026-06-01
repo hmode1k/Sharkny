@@ -25,7 +25,7 @@ function MovieInfoPage() {
       .from("users_movies")
       .delete("")
       .eq("movie_id", id)
-      .eq("user_id", user.id);
+      .eq("user_id", user?.id);
 
     if (error) {
       console.error(error);
@@ -71,7 +71,7 @@ function MovieInfoPage() {
     const { data, error2 } = await supabase
       .from("users_movies")
       .insert({
-        user_id: user.id,
+        user_id: user?.id,
         movie_id: movie.id,
         status: status,
       })
@@ -104,7 +104,7 @@ function MovieInfoPage() {
         status: status,
       })
       .eq("movie_id", id)
-      .eq("user_id", user.id);
+      .eq("user_id", user?.id);
 
     if (error) {
       console.error(error);
@@ -133,7 +133,7 @@ function MovieInfoPage() {
         .from("users_movies")
         .select("*")
         .eq("movie_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       if (error) {
         console.error(error);
@@ -176,7 +176,7 @@ function MovieInfoPage() {
     };
 
     loadMovieInfo();
-  }, [id, location.pathname]);
+  }, [id, location.pathname, user?.id]);
 
   return loading ? (
     <>

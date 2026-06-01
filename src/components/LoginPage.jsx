@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
+import { useAuth } from "../AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -8,23 +9,9 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("");
-  const [session, setSession] = useState(null);
+  const { session } = useAuth();
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   useEffect(() => {
     if (session) {

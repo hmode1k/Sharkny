@@ -3,6 +3,7 @@ import { supabase } from "../supabase-client";
 import ViewRequestModal from "./ViewRequestModal";
 import AsideWrapper from "./AsideWrapper";
 import NavBar from "./NavBar";
+import { useAuth } from "../AuthContext";
 
 function RequestsPage() {
   const [requests, setRequests] = useState(null);
@@ -14,6 +15,7 @@ function RequestsPage() {
   const [toastType, setToastType] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const toggleSection = (name) => {
     setOpenSection((prev) => (prev === name ? null : name));
@@ -57,14 +59,10 @@ function RequestsPage() {
 
   useEffect(() => {
     const fetchRequests = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
       const { data: userId } = await supabase
         .from("profiles")
         .select("id")
-        .eq("user_id", user.id);
+        .eq("user_id", user?.id);
 
       console.log(userId[0].id);
       setUserId(userId[0].id);
@@ -88,7 +86,7 @@ function RequestsPage() {
     };
 
     fetchRequests();
-  }, []);
+  }, [user?.id]);
 
   return loading ? (
     <>loading</>

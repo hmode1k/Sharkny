@@ -21,6 +21,7 @@ export function AuthProvider({ children }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setUser(session?.user);
       setLoading(false);
       // Do NOT await async calls here (e.g., fetch user profile)
     });
@@ -46,7 +47,7 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, userId }}>
+    <AuthContext.Provider value={{ user, loading, userId, session }}>
       {children}
     </AuthContext.Provider>
   );
