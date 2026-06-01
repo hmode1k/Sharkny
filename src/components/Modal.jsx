@@ -201,7 +201,7 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                     {category === "games" ? (
                       <>
                         <h1 className="p-2">Platform:</h1>
-                        <fieldset className="flex gap-2">
+                        <fieldset className="flex gap-2 flex-wrap">
                           <label className="cursor-pointer inline-flex items-center gap-2">
                             <input
                               type="radio"
@@ -247,6 +247,90 @@ function Modal({ dbstatus, dbplatform, setEditing, type, id, name }) {
                             />
                             <span className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition   peer-checked:border-accent-primary peer-checked:text-accent-text peer-checked:bg-accent-primary">
                               Steamrip
+                            </span>
+                          </label>
+                          <label className="cursor-pointer inline-flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="platform"
+                              value="steamgg"
+                              className="peer sr-only"
+                              checked={platform === "steamgg"}
+                              onChange={(e) => setPlatform(e.target.value)}
+                            />
+
+                            <span
+                              className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
+  "
+                            >
+                              Steam GG
+                            </span>
+                          </label>
+                          <label className="cursor-pointer inline-flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="platform"
+                              value="steam"
+                              className="peer sr-only"
+                              checked={platform === "steam"}
+                              onChange={(e) => setPlatform(e.target.value)}
+                            />
+
+                            <span
+                              className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
+  "
+                            >
+                              Steam
+                            </span>
+                          </label>
+                          <label className="cursor-pointer inline-flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="platform"
+                              value="goggames"
+                              className="peer sr-only"
+                              checked={platform === "goggames"}
+                              onChange={(e) => setPlatform(e.target.value)}
+                            />
+
+                            <span
+                              className="
+    px-4
+    rounded-full
+    border
+    border-gray-500
+    text-gray-300
+    select-none
+    transition
+
+    peer-checked:border-accent-primary
+    peer-checked:text-accent-text
+    peer-checked:bg-accent-primary
+  "
+                            >
+                              GoG Games
                             </span>
                           </label>
                         </fieldset>
