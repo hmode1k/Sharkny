@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("");
-  const { session } = useAuth();
+  const { session, loading } = useAuth();
 
   const navigate = useNavigate();
 
@@ -59,6 +59,14 @@ export default function LoginPage() {
       navigate("/main");
     }
   };
+
+  if (loading) {
+    return (
+      <>
+        <h1>loading from login page</h1>
+      </>
+    );
+  }
 
   if (!isSignUp) {
     return (
