@@ -259,14 +259,14 @@ function GameInfoPage() {
         >
           ←
         </h2>
-        <div className="flex flex-col gap-5 justify-center">
+        <div className="flex flex-col gap-5">
           {/* image and stuff next to it(name rating etc...) div */}
-          <div className="text-white flex px-2 max-sm:flex-col max-sm:gap-5">
+          <div className="text-white flex px-2 max-sm:flex-col max-sm:gap-5 ">
             <div>
               <img
                 src={game?.cover?.url?.replace("t_thumb", "t_cover_big")}
                 alt=""
-                className="w-[90%] h-auto rounded-xl border-1 border-accent-primary/30 "
+                className="max-sm:w-full w-[90%] h-auto rounded-xl border-1 border-accent-primary/30 "
               />
             </div>
             <div className="flex flex-col gap-3">
