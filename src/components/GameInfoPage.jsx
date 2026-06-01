@@ -259,7 +259,7 @@ function GameInfoPage() {
         >
           ←
         </h2>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 justify-center">
           {/* image and stuff next to it(name rating etc...) div */}
           <div className="text-white flex px-2 max-sm:flex-col max-sm:gap-5">
             <div>
