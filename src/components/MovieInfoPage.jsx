@@ -457,7 +457,7 @@ peer-checked:border-accent-primary
                   {movieExists ? (
                     <div className="flex gap-5 w-full">
                       <button
-                        className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
+                        className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[40%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
                         onClick={handleDelete}
                       >
                         Delete
