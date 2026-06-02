@@ -142,11 +142,7 @@ function Profile() {
                   <div className="absolute -inset-10 w-full animate-shimmer rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 </div>
               </div>
-              <FullCardContainer
-                key={`${category}-${id}-${media_type}`}
-                header={category === "full" ? null : category}
-                media_type={media_type}
-              ></FullCardContainer>
+              <FullCardContainer></FullCardContainer>
             </div>
           </div>
         </div>
@@ -231,18 +227,9 @@ function Profile() {
                 </div>
               </div>
               <div className="text-text-primary">
-                <CardContainer
-                  header="library"
-                  media_type={media_type}
-                ></CardContainer>
-                <CardContainer
-                  header="wishlist"
-                  media_type={media_type}
-                ></CardContainer>
-                <CardContainer
-                  header="completed"
-                  media_type={media_type}
-                ></CardContainer>
+                <CardContainer></CardContainer>
+                <CardContainer></CardContainer>
+                <CardContainer></CardContainer>
               </div>
             </div>
           </div>
