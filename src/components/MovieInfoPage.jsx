@@ -242,12 +242,7 @@ function MovieInfoPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
 
         <div className="relative z-10 ">
-          <div
-            className="p-4 py-2 flex flex-col gap-5 backdrop"
-            style={{
-              backgroundImage: `url(${movie?.backdrop})`,
-            }}
-          >
+          <div className="p-4 py-2 flex flex-col gap-5 ">
             <h2
               className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
               onClick={handleback}
@@ -257,7 +252,7 @@ function MovieInfoPage() {
             <div className="flex flex-col gap-5">
               {/* image and stuff next to it(name rating etc...) div */}
               <div className="text-white flex px-2 max-sm:flex-col gap-5 [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]">
-                <div className="w-[clamp(120px,25vw,300px)] max-sm:w-full">
+                <div className="w-[clamp(120px,21vw,300px)] max-sm:w-full">
                   <img
                     src={movie?.poster}
                     alt=""

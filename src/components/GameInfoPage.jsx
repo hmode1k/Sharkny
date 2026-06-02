@@ -17,8 +17,7 @@ function GameInfoPage() {
   const [status, setStatus] = useState("library");
   const [platform, setPlatform] = useState("fitgirl");
   const ref = useRef();
-  console.log(platform);
-  console.log(status);
+
   const navigate = useNavigate();
 
   const handleback = (e) => {
@@ -179,7 +178,7 @@ function GameInfoPage() {
     };
 
     loadGameInfo();
-  }, [id]);
+  }, [id, user?.id]);
 
   useEffect(() => {
     const el = ref.current;
@@ -194,7 +193,6 @@ function GameInfoPage() {
 
     el.addEventListener("wheel", handleWheel, { passive: false });
 
-    console.log("container:", el);
     return () => {
       el.removeEventListener("wheel", handleWheel);
     };
@@ -252,136 +250,149 @@ function GameInfoPage() {
     <div className="flex flex-col min-h-screen w-full bg-main">
       <NavBar></NavBar>
 
-      <div className="px-4 flex flex-col gap-5 ">
-        <h2
-          className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
-          onClick={handleback}
-        >
-          ←
-        </h2>
-        <div className="flex flex-col gap-5">
-          {/* image and stuff next to it(name rating etc...) div */}
-          <div className="text-white flex px-2 max-sm:flex-col max-sm:gap-5 ">
-            <div>
-              <img
-                src={game?.cover?.url?.replace("t_thumb", "t_cover_big")}
-                alt=""
-                className="max-sm:w-full w-[90%] h-auto rounded-xl border-1 border-accent-primary/30 "
-              />
-            </div>
-            <div className="flex flex-col gap-3">
-              <h1 className="text-4xl">{game.name}</h1>
-              {/* caclulate rating from out of 100 to out of 5 and fix it to just 2 numbers after the floatng point */}
-              <div className="flex gap-5">
-                <h3 className="text-md text-text-muted">
-                  Release Date: {game.first_release_date}
-                </h3>
-                <h2 className="">⭐: {((game.rating * 5) / 100).toFixed(2)}</h2>
-              </div>
-              <div className="flex gap-2 p-2">
-                {game.game_modes.map((mode) => {
-                  return (
-                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs">
-                      {mode.name}
-                    </h1>
-                  );
-                })}
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <h1 className="text-lg max-sm:text-sm">Genres: </h1>
-                {game.genres.map((genre) => {
-                  return (
-                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
-                      {genre.name}
-                    </h1>
-                  );
-                })}
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <h1 className="text-lg max-sm:text-sm">Themes: </h1>
-                {game.themes.map((theme) => {
-                  return (
-                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
-                      {theme.name}
-                    </h1>
-                  );
-                })}
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <h1 className="text-lg max-sm:text-sm">Platforms: </h1>
-                {game.platforms.map((platform) => {
-                  return (
-                    <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
-                      {platform.abbreviation}
-                    </h1>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+      <div className="relative">
+        <img
+          src={game.background}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-          {/* summary screenshots div */}
-          <div className="text-white flex flex-col gap-5">
-            <div className="p-2">
-              <h1 className="text-lg max-sm:text-md">Game Description:</h1>
-              <h2 className="p-2 text-text-secondary max-sm:text-sm">
-                {game.summary}
-              </h2>
-            </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
 
-            <div
-              className="flex flex-row gap-4 w-full overflow-scroll hover-scroll pb-2 min-w-0"
-              ref={ref}
+        <div className="relative z-10 ">
+          <div className="px-4 flex flex-col gap-5 ">
+            <h2
+              className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
+              onClick={handleback}
             >
-              {game?.screenshots?.map((screen) => {
-                return (
-                  <img
-                    key={screen.id}
-                    src={screen?.url?.replace("t_thumb", "t_screenshot_big")}
-                    className="w-[clamp(250px,30vw,400px)] h-auto rounded-xl shrink-0 object-cover border-1 border-white/5 "
-                  ></img>
-                );
-              })}
+              ←
+            </h2>
+          </div>
+          <div className="flex flex-col gap-5">
+            {/* image and stuff next to it(name rating etc...) div */}
+            <div className="text-white flex px-2 max-sm:flex-col max-sm:gap-5 [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]">
+              <div>
+                <img
+                  src={game?.cover?.url?.replace("t_thumb", "t_cover_big")}
+                  alt=""
+                  className="max-sm:w-full w-[90%] h-auto rounded-xl "
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <h1 className="text-4xl">{game.name}</h1>
+                {/* caclulate rating from out of 100 to out of 5 and fix it to just 2 numbers after the floatng point */}
+                <div className="flex gap-5">
+                  <h3 className="text-md text-text-secondary ">
+                    Release Date: {game.first_release_date}
+                  </h3>
+                  <h2 className="">
+                    ⭐: {((game.rating * 5) / 100).toFixed(2)}
+                  </h2>
+                </div>
+                <div className="flex gap-2 p-2">
+                  {game.game_modes.map((mode) => {
+                    return (
+                      <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs">
+                        {mode.name}
+                      </h1>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  <h1 className="text-lg max-sm:text-sm">Genres: </h1>
+                  {game.genres.map((genre) => {
+                    return (
+                      <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
+                        {genre.name}
+                      </h1>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  <h1 className="text-lg max-sm:text-sm">Themes: </h1>
+                  {game.themes.map((theme) => {
+                    return (
+                      <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
+                        {theme.name}
+                      </h1>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  <h1 className="text-lg max-sm:text-sm">Platforms: </h1>
+                  {game.platforms.map((platform) => {
+                    return (
+                      <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
+                        {platform.abbreviation}
+                      </h1>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
-            <div>
-              <iframe
-                width="100%"
-                src={`https://www.youtube.com/embed/${game?.videos[0]?.video_id}`}
-                title="Game Trailer"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="rounded-xl h-[400px] max-sm:h-[200px]"
-              />
+            {/* summary screenshots div */}
+            <div className="text-white flex flex-col gap-5 [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]">
+              <div className="p-2">
+                <h1 className="text-lg max-sm:text-md">Game Description:</h1>
+                <h2 className="p-2 text-text-secondary max-sm:text-sm">
+                  {game.summary}
+                </h2>
+              </div>
+
+              <div
+                className="flex flex-row gap-4 w-full overflow-scroll hover-scroll pb-2 min-w-0"
+                ref={ref}
+              >
+                {game?.screenshots?.map((screen) => {
+                  return (
+                    <img
+                      key={screen.id}
+                      src={screen?.url?.replace("t_thumb", "t_screenshot_big")}
+                      className="w-[clamp(250px,30vw,400px)] h-auto rounded-xl shrink-0 object-cover border-1 border-white/5 "
+                    ></img>
+                  );
+                })}
+              </div>
+
+              <div className="p-2 rounded-xl">
+                <iframe
+                  width="100%"
+                  src={`https://www.youtube.com/embed/${game?.videos[0]?.video_id}`}
+                  title="Game Trailer"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded-xl h-[400px] max-sm:h-[200px] px-4 "
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <form
-          action=""
-          className="flex
+          <form
+            action=""
+            className="flex
           flex-col
                   gap-5
                   w-full
                   max-w-full
-                  min-w-0"
-        >
-          <div className="w-full gap-5 flex flex-col ">
-            <fieldset className="flex gap-2 sm:gap-3 flex-wrap items-center ">
-              <h2 className="ps-1 py-1 text-text-primary">Status: </h2>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="library"
-                  className="peer sr-only"
-                  checked={status === "library"}
-                  onChange={(e) => setStatus(e.target.value)}
-                />
+                  min-w-0
+                  p-4"
+          >
+            <div className="w-full gap-5 flex flex-col ">
+              <fieldset className="flex gap-2 sm:gap-3 flex-wrap items-center ">
+                <h2 className="ps-1 py-1 text-text-primary">Status: </h2>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="library"
+                    className="peer sr-only"
+                    checked={status === "library"}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -394,22 +405,22 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Library
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="wishlist"
-                  className="peer sr-only"
-                  checked={status === "wishlist"}
-                  onChange={(e) => setStatus(e.target.value)}
-                />
+                  >
+                    Library
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="wishlist"
+                    className="peer sr-only"
+                    checked={status === "wishlist"}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -422,43 +433,43 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Wishlist
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="completed"
-                  className="peer sr-only"
-                  checked={status === "completed"}
-                  onChange={(e) => setStatus(e.target.value)}
-                />
+                  >
+                    Wishlist
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="status"
+                    value="completed"
+                    className="peer sr-only"
+                    checked={status === "completed"}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
 
-                <span
-                  className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition       peer-checked:border-accent-primary
+                  <span
+                    className=" px-4 rounded-full border border-gray-500 text-gray-300 select-none transition       peer-checked:border-accent-primary
     peer-checked:text-accent-text peer-checked:bg-accent-primary"
-                >
-                  Completed
-                </span>
-              </label>
-            </fieldset>
+                  >
+                    Completed
+                  </span>
+                </label>
+              </fieldset>
 
-            <fieldset className="flex gap-3 flex-wrap max-sm:pbs-4">
-              <h2 className="text-text-primary">Platform: </h2>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="platform"
-                  value="fitgirl"
-                  className="peer sr-only"
-                  checked={platform === "fitgirl"}
-                  onChange={(e) => setPlatform(e.target.value)}
-                />
+              <fieldset className="flex gap-3 flex-wrap max-sm:pbs-4">
+                <h2 className="text-text-primary">Platform: </h2>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="fitgirl"
+                    className="peer sr-only"
+                    checked={platform === "fitgirl"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -471,22 +482,22 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Fitgirl
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="platform"
-                  value="dodi"
-                  className="peer sr-only"
-                  checked={platform === "dodi"}
-                  onChange={(e) => setPlatform(e.target.value)}
-                />
+                  >
+                    Fitgirl
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="dodi"
+                    className="peer sr-only"
+                    checked={platform === "dodi"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -499,22 +510,22 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  dodi
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="platform"
-                  value="steamrip"
-                  className="peer sr-only"
-                  checked={platform === "steamrip"}
-                  onChange={(e) => setPlatform(e.target.value)}
-                />
+                  >
+                    dodi
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="steamrip"
+                    className="peer sr-only"
+                    checked={platform === "steamrip"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -527,22 +538,22 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  steamrip
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="platform"
-                  value="steamgg"
-                  className="peer sr-only"
-                  checked={platform === "steamgg"}
-                  onChange={(e) => setPlatform(e.target.value)}
-                />
+                  >
+                    steamrip
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="steamgg"
+                    className="peer sr-only"
+                    checked={platform === "steamgg"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -555,22 +566,22 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Steam GG
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="platform"
-                  value="steam"
-                  className="peer sr-only"
-                  checked={platform === "steam"}
-                  onChange={(e) => setPlatform(e.target.value)}
-                />
+                  >
+                    Steam GG
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="steam"
+                    className="peer sr-only"
+                    checked={platform === "steam"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -583,22 +594,22 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Steam
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="platform"
-                  value="goggames"
-                  className="peer sr-only"
-                  checked={platform === "goggames"}
-                  onChange={(e) => setPlatform(e.target.value)}
-                />
+                  >
+                    Steam
+                  </span>
+                </label>
+                <label className="cursor-pointer inline-flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="platform"
+                    value="goggames"
+                    className="peer sr-only"
+                    checked={platform === "goggames"}
+                    onChange={(e) => setPlatform(e.target.value)}
+                  />
 
-                <span
-                  className="
+                  <span
+                    className="
     px-4
     rounded-full
     border
@@ -611,24 +622,54 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  GoG Games
-                </span>
-              </label>
-            </fieldset>
-            <div className="flex pe-6 pbs-8 md:hidden w-full">
+                  >
+                    GoG Games
+                  </span>
+                </label>
+              </fieldset>
+              <div className="flex pe-6 pbs-8 md:hidden w-full">
+                {gameExists ? (
+                  <div className="flex gap-5 w-full">
+                    <button
+                      onClick={handleDelete}
+                      className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[40%] text-center rounded-xl text-lg text-black hover:bg-accent-hover"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={handleEdit}
+                      className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] text-center rounded-xl text-lg text-black hover:bg-accent-hover"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-5">
+                    <button
+                      type="submit"
+                      onClick={handleInsertion}
+                      className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full text-center rounded-xl text-lg text-black hover:bg-accent-hover"
+                    >
+                      Add
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex max-md:hidden">
               {gameExists ? (
-                <div className="flex gap-5 w-full">
+                <div className="flex gap-5">
                   <button
                     onClick={handleDelete}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[40%] text-center rounded-xl text-lg text-black hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-center text-lg text-black hover:bg-accent-hover"
                   >
                     Delete
                   </button>
                   <button
                     type="submit"
                     onClick={handleEdit}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] text-center rounded-xl text-lg text-black hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-center text-lg text-black hover:bg-accent-hover"
                   >
                     Edit
                   </button>
@@ -638,66 +679,37 @@ peer-checked:border-accent-primary
                   <button
                     type="submit"
                     onClick={handleInsertion}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full text-center rounded-xl text-lg text-black hover:bg-accent-hover"
+                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-center text-lg text-black hover:bg-accent-hover"
                   >
                     Add
                   </button>
                 </div>
               )}
             </div>
-          </div>
-          <div className="flex max-md:hidden">
-            {gameExists ? (
-              <div className="flex gap-5">
-                <button
-                  onClick={handleDelete}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-center text-lg text-black hover:bg-accent-hover"
-                >
-                  Delete
-                </button>
-                <button
-                  type="submit"
-                  onClick={handleEdit}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-center text-lg text-black hover:bg-accent-hover"
-                >
-                  Edit
-                </button>
-              </div>
+          </form>
+          <div className="relative w-full h-full bg-black">
+            {toast.length === 0 ? (
+              <></>
             ) : (
-              <div className="flex gap-5">
-                <button
-                  type="submit"
-                  onClick={handleInsertion}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-center text-lg text-black hover:bg-accent-hover"
-                >
-                  Add
-                </button>
-              </div>
-            )}
-          </div>
-        </form>
-        <div className="relative w-full h-full bg-black">
-          {toast.length === 0 ? (
-            <></>
-          ) : (
-            <>
-              <div className="absolute flex flex-col items-center justify-end w-full h-full z-40 bg-black ">
-                <div className="flex flex-col items-center justify-end w-full h-full bg-black">
-                  <h1
-                    className={`max-w-50 text-center px-4 py-2 rounded-xl text-text-primary border
+              <>
+                <div className="absolute flex flex-col items-center justify-end w-full h-full z-40 bg-black ">
+                  <div className="flex flex-col items-center justify-end w-full h-full bg-black">
+                    <h1
+                      className={`max-w-50 text-center px-4 py-2 rounded-xl text-text-primary border
   ${
     toastType === "error"
       ? "bg-red-500/10 border-red-500"
       : "bg-green-500/10 border-green-500"
   }
   shadow-2xl backdrop-blur-md mbe-8 shadow-[0_10px_30px_rgba(0,0,0,0.4)]`}
-                  >
-                    {toast}
-                  </h1>
+                    >
+                      {toast}
+                    </h1>
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
