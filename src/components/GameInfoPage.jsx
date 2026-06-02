@@ -339,7 +339,7 @@ function GameInfoPage() {
                 <img
                   src={game?.cover?.url?.replace("t_thumb", "t_cover_big")}
                   alt=""
-                  className="max-sm:w-full w-[90%] h-auto rounded-xl "
+                  className="max-sm:w-full w-[90%] h-auto rounded-xl border-1 border-black [box-shadow:0_2px_10px_rgba(0,0,0,1)]"
                 />
               </div>
               <div className="flex flex-col gap-3">
