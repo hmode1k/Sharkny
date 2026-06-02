@@ -188,7 +188,7 @@ function MovieInfoPage() {
 
         <div className="px-4 flex flex-col gap-5 ">
           <h2
-            className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
+            className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]"
             onClick={handleback}
           >
             ←

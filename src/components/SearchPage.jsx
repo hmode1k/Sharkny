@@ -78,7 +78,7 @@ function SearchPage() {
       const ranked = gamesRes.data.sort(
         (a, b) => (b.total_rating_count || 0) - (a.total_rating_count || 0),
       );
-      console.log(ranked);
+
       let totalPages;
       if (query) {
         totalPages = Math.ceil(ranked.length / 20);

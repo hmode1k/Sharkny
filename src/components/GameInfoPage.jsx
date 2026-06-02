@@ -261,7 +261,7 @@ function GameInfoPage() {
         <div className="relative z-10 ">
           <div className="px-4 flex flex-col gap-5 ">
             <h2
-              className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
+              className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]"
               onClick={handleback}
             >
               ←
@@ -355,15 +355,19 @@ function GameInfoPage() {
               </div>
 
               <div className="p-2 rounded-xl">
-                <iframe
-                  width="100%"
-                  src={`https://www.youtube.com/embed/${game?.videos[0]?.video_id}`}
-                  title="Game Trailer"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="rounded-xl h-[400px] max-sm:h-[200px] px-4 "
-                />
+                {game?.videos && (
+                  <>
+                    <iframe
+                      width="100%"
+                      src={`https://www.youtube.com/embed/${game?.videos[0]?.video_id}`}
+                      title="Game Trailer"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="rounded-xl h-[400px] max-sm:h-[200px] px-4 "
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

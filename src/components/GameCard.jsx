@@ -38,7 +38,16 @@ function GameCard({ name, img, id, platform, status, media_type, loading }) {
         }}
         onClick={handleClick}
       >
-        <div className="flex flex-col w-full h-full justify-between p-2">
+        <div className="flex flex-col w-full h-full justify-between p-2 relative">
+          {media_type !== "games" && (
+            <>
+              <div>
+                <h4 className="text-accent-text bg-accent-primary rounded-md text-xs absolute inset-0 w-fit h-fit m-2 px-1">
+                  {media_type === "tv" ? "Tv Show" : "Movie"}
+                </h4>
+              </div>
+            </>
+          )}
           {location.pathname.startsWith("/search") ? (
             <>
               <div className="w-full p-1 flex flex-col gap-1 items-end">
