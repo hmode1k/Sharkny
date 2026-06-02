@@ -35,7 +35,6 @@ export function AuthProvider({ children }) {
         console.error(error);
       }
       setUserId(data[0].id);
-      console.log("fetching ", data);
     };
 
     fetchId();

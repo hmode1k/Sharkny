@@ -1,17 +1,17 @@
-function SearchComponent({ width, autofocus, setQuery, query, handleClick }) {
+function SearchComponent({ width, setQuery, query, handleClick }) {
   const barStyles = {
     "--width": `${width}%`,
   };
 
   return (
     <div
-      className="flex flex-row w-[70%] max-sm:w-[60%] items-center rounded-2xl hover:cursor-pointer mbs-1 text-text-secondary max-sm:ps-8"
+      className="flex flex-row w-[70%] max-sm:w-[60%] items-center rounded-2xl hover:cursor-pointer mbs-1 text-text-secondary max-sm:ps-8 justify-end"
       style={barStyles}
     >
       <form
         action=""
         onSubmit={handleClick}
-        className="w-full h-full rounded-2xl hover:cursor-pointer focus:z-10 px-2 flex gap-2"
+        className="w-[90%] h-full rounded-2xl hover:cursor-pointer focus:z-10 flex gap-2"
       >
         <div className="relative w-full">
           <input
@@ -19,8 +19,7 @@ function SearchComponent({ width, autofocus, setQuery, query, handleClick }) {
             id="search"
             className="w-full h-full rounded-2xl focus:z-10 bg-search px-2 focus:outline-none focus:bg-search focus:text-text-primary text-text-muted border-1 border-white/5 focus:border-white/10"
             placeholder="Search..."
-            value={query}
-            autoFocus={autofocus}
+            value={query || ""}
             autoComplete="off"
             onChange={(e) => setQuery(e.target.value)}
           />

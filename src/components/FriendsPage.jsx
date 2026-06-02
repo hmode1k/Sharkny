@@ -23,7 +23,6 @@ function FriendsPage() {
         console.error(error);
         return;
       }
-      console.log(data);
       setUsers(data);
       setLoading(false);
     };
@@ -88,6 +87,7 @@ function FriendsPage() {
             {filteredItems.map((user) => {
               return (
                 <ProfileCard
+                  key={user.id}
                   name={user.full_name}
                   img={user.avatar_url}
                   id={user.id}
