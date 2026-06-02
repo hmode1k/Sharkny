@@ -9,7 +9,7 @@ function RequestsPage() {
   const [requests, setRequests] = useState(null);
   const [userId, setUserId] = useState(null);
   const [modalRequest, setModalRequest] = useState(null);
-  const [openSection, setOpenSection] = useState(null);
+  const [openSection, setOpenSection] = useState("requests");
   const [requester, setRequester] = useState(null);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("");
@@ -77,10 +77,16 @@ function RequestsPage() {
   `,
         )
         .or(`requester_id.eq.${userId[0].id},requested_id.eq.${userId[0].id}`);
-      const sortedRequests = [...data].sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at),
-      );
 
+      const sortedRequests = [...data].sort((a, b) => {
+        // Pending first
+        if (a.status !== b.status) {
+          return a.status === "pending" ? -1 : 1;
+        }
+
+        // Then newest first within each group
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
       setRequests(sortedRequests);
       setLoading(false);
     };
@@ -97,109 +103,6 @@ function RequestsPage() {
         <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
           <AsideWrapper></AsideWrapper>
           <div className="text-text-primary p-4 flex flex-col gap-5">
-            <div className="text-text-primary">
-              <div className="flex gap-10">
-                <h1 className="pbe-4"> Pending Requests</h1>
-                <h1
-                  onClick={() => toggleSection("pending")}
-                  className="cursor-pointer"
-                >
-                  {openSection === "pending" ? <>↑</> : <>↓</>}
-                </h1>
-              </div>
-              <div>
-                <ul
-                  className={`${openSection === "pending" ? "max-h-80" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-4 px-4`}
-                >
-                  {requests.map((req) => {
-                    return req.requested_id === userId ? (
-                      req.request_status === "pending" ? (
-                        <>
-                          <li className="w-full border-white border-1 rounded-xl flex items-center justify-between p-4">
-                            <div className="flex items-center gap-10 max-sm:gap-5">
-                              <img
-                                src={req.requester.avatar_url}
-                                alt=""
-                                className="w-20 h-20 object-cover rounded-[50%] max-sm:w-15 max-sm:h-15"
-                              />
-                              <div className="flex flex-col gap-2">
-                                <h1 className="max-sm:text-sm">
-                                  {req.requester.full_name}
-                                </h1>
-                                <h2 className="text-text-muted max-sm:text-xs">
-                                  {req.created_at?.slice(0, 10)}
-                                </h2>
-                              </div>
-                              <h2
-                                className={`${
-                                  req.request_status === "pending"
-                                    ? "text-yellow-500"
-                                    : req.request_status === "completed"
-                                      ? "text-green-500"
-                                      : req.request_status === "accepted"
-                                        ? "text-green-500"
-                                        : "text-red-500"
-                                } max-sm:text-sm`}
-                              >
-                                {req.request_status}
-                              </h2>
-                            </div>
-                            <div className="flex flex-col gap-5 max-sm:gap-3">
-                              <button
-                                onClick={() => {
-                                  setIsOpen(true);
-                                  setModalRequest(req);
-                                }}
-                                className="px-4 bg-accent-primary rounded-xl max-sm:text-xs max-sm:px-0"
-                              >
-                                See Request
-                              </button>
-                              {req.request_status === "pending" ? (
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() => {
-                                      handleUpdate("completed", req.id);
-                                    }}
-                                    className="px-4 bg-green-500 rounded-xl max-sm:text-xs max-sm:px-2"
-                                  >
-                                    Complete
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      handleUpdate("rejected", req.id);
-                                    }}
-                                    className="px-4 bg-red-500 rounded-xl max-sm:text-xs max-sm:px-2"
-                                  >
-                                    Reject
-                                  </button>
-                                </div>
-                              ) : req.request_status === "accepted" ? (
-                                <>
-                                  <button
-                                    onClick={() => {
-                                      handleUpdate("completed", req.id);
-                                    }}
-                                  >
-                                    completed
-                                  </button>
-                                </>
-                              ) : (
-                                <></>
-                              )}
-                            </div>
-                          </li>
-                        </>
-                      ) : (
-                        <></>
-                      )
-                    ) : (
-                      <></>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-
             <div>
               <div className="flex gap-10">
                 <h1 className="pbe-4">Requests</h1>
@@ -212,7 +115,7 @@ function RequestsPage() {
               </div>
               <div>
                 <ul
-                  className={`${openSection === "requests" ? "max-h-80" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-4 px-4`}
+                  className={`${openSection === "requests" ? "max-h-80" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-5 px-4`}
                 >
                   {requests.map((req) => {
                     return req.requested_id === userId ? (
@@ -222,29 +125,32 @@ function RequestsPage() {
                             <img
                               src={req.requester.avatar_url}
                               alt=""
-                              className="w-20 h-20 object-cover rounded-[50%] max-sm:w-15 max-sm:h-15"
+                              className="w-20 h-20  object-cover rounded-[50%] max-sm:w-10 max-sm:h-10"
                             />
-                            <div className="flex flex-col gap-2 ">
-                              <h1 className="max-sm:text-sm">
-                                {req.requester.full_name}
-                              </h1>
-                              <h2 className="text-text-muted max-sm:text-xs">
-                                {req.created_at?.slice(0, 10)}
+                            <div className="flex flex-col gap-1">
+                              <div className="flex flex-col gap-1">
+                                <h1 className="max-sm:text-xs">
+                                  {req.requester.full_name}
+                                </h1>
+
+                                <h2 className="text-text-muted max-sm:text-[8px]">
+                                  {req.created_at?.slice(0, 10)}
+                                </h2>
+                              </div>
+                              <h2
+                                className={`${
+                                  req.request_status === "pending"
+                                    ? "text-yellow-500"
+                                    : req.request_status === "completed"
+                                      ? "text-green-500"
+                                      : req.request_status === "accepted"
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                } max-sm:text-xs`}
+                              >
+                                {req.request_status}
                               </h2>
                             </div>
-                            <h2
-                              className={`${
-                                req.request_status === "pending"
-                                  ? "text-yellow-500"
-                                  : req.request_status === "completed"
-                                    ? "text-green-500"
-                                    : req.request_status === "accepted"
-                                      ? "text-green-500"
-                                      : "text-red-500"
-                              } max-sm:text-sm`}
-                            >
-                              {req.request_status}
-                            </h2>
                           </div>
                           <div className="flex flex-col gap-5 max-sm:gap-4">
                             <button
@@ -302,39 +208,42 @@ function RequestsPage() {
               </div>
               <div>
                 <ul
-                  className={`${openSection === "your-requests" ? "max-h-80" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-2 px-4`}
+                  className={`${openSection === "your-requests" ? "max-h-80" : "max-h-0"} overflow-scroll transition-all flex flex-col gap-5 px-4`}
                 >
                   {requests.map((req) => {
                     return req.requester_id === userId ? (
                       <>
-                        <li className="w-full h-40 border-white border-1 rounded-2xl flex items-center justify-between p-4">
+                        <li className="w-full border-white border-1 rounded-2xl flex items-center justify-between p-4">
                           <div className="flex gap-10 items-center max-sm:gap-5">
                             <img
                               src={req.requested.avatar_url}
                               alt=""
-                              className="w-20 h-20 object-cover rounded-[50%] max-sm:2-15 max-sm:h-15"
+                              className="w-20 h-20 object-cover rounded-[50%] max-sm:w-10 max-sm:h-10"
                             />
                             <div className="flex flex-col gap-2">
-                              <h1 className="max-sm:text-sm">
-                                {req.requested.full_name}
-                              </h1>
-                              <h2 className="text-text-muted max-sm:text-xs">
-                                {req.created_at?.slice(0, 10)}
+                              <div>
+                                <h1 className="max-sm:text-xs">
+                                  {req.requested.full_name}
+                                </h1>
+                                <h2 className="text-text-muted max-sm:text-[8px]">
+                                  {req.created_at?.slice(0, 10)}
+                                </h2>
+                              </div>
+
+                              <h2
+                                className={`${
+                                  req.request_status === "pending"
+                                    ? "text-yellow-500"
+                                    : req.request_status === "completed"
+                                      ? "text-green-500"
+                                      : req.request_status === "accepted"
+                                        ? "text-green-500"
+                                        : "text-red-500"
+                                } max-sm:text-xs`}
+                              >
+                                {req.request_status}
                               </h2>
                             </div>
-                            <h2
-                              className={`${
-                                req.request_status === "pending"
-                                  ? "text-yellow-500"
-                                  : req.request_status === "completed"
-                                    ? "text-green-500"
-                                    : req.request_status === "accepted"
-                                      ? "text-green-500"
-                                      : "text-red-500"
-                              } max-sm:text-sm`}
-                            >
-                              {req.request_status}
-                            </h2>
                           </div>
                           <div className="flex flex-col max-sm:gap-4 gap-5">
                             <button

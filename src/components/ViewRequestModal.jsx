@@ -33,7 +33,10 @@ function ViewRequestModal({
               X
             </button>
           </div>
-          <div className="flex gap-5 tab px-4">
+          <div
+            className="flex gap-5 tab px-4 max-sm:gap-2"
+            style={{ gap: "6rem" }}
+          >
             <button
               onClick={() => {
                 setTab("games");

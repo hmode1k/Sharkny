@@ -157,7 +157,7 @@ function RequestModal({ setModalOpen, requested_name }) {
                 X
               </button>
             </div>
-            <div className="flex gap-5 tab px-4">
+            <div className="flex gap-5 tab px-4" style={{ gap: "4rem" }}>
               <button
                 onClick={() => {
                   setTab("games");
