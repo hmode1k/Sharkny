@@ -10,22 +10,18 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Get initial session immediately
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user);
     });
 
-    // 2. Listen for changes (keep callback synchronous)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
       setLoading(false);
-      // Do NOT await async calls here (e.g., fetch user profile)
-    });
-
-    return () => subscription.unsubscribe();
+    };
+    fetchUser();
   }, []);
 
   useEffect(() => {

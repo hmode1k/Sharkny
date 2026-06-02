@@ -280,7 +280,7 @@ function SearchPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:justify-center max-sm:p-2">
+        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center justify-center max-sm:p-2">
           {visibleGames.map((game) => {
             return (
               <GameCard
@@ -382,7 +382,7 @@ function SearchPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center max-sm:justify-center max-sm:p-2">
+        <div className="flex flex-wrap gap-5 p-4 bg-main h-full items-center justify-center max-sm:p-2">
           {movies.map((movie) => {
             return (
               <GameCard

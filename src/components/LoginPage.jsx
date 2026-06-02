@@ -1,17 +1,33 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
-import { useAuth } from "../AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [session, setSession] = useState(null);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("");
-  const { session, loading } = useAuth();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // 1. Get initial session immediately
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // 2. Listen for changes (keep callback synchronous)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      // Do NOT await async calls here (e.g., fetch user profile)
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (session) {
@@ -59,14 +75,6 @@ export default function LoginPage() {
       navigate("/main");
     }
   };
-
-  if (loading) {
-    return (
-      <>
-        <h1>loading from login page</h1>
-      </>
-    );
-  }
 
   if (!isSignUp) {
     return (
