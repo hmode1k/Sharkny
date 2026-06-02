@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
 import ProfileCard from "./ProfileCard";
 import AsideWrapper from "./AsideWrapper";
+import { useAuth } from "../AuthContext";
 
 function FriendsPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [localSearch, setLocalSearch] = useState("");
+  const { user } = useAuth();
 
   const filteredItems = users.filter((item) => {
     const itemName = item?.full_name || "";
@@ -17,18 +19,35 @@ function FriendsPage() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { error, data } = await supabase.from("profiles").select("*");
+      const [profilesRes, favoritesRes] = await Promise.all([
+        supabase.from("profiles").select("*"),
+        supabase
+          .from("favorite_user")
+          .select("favorite_id")
+          .eq("user_id", user.id)
+          .eq("is_favorite", true),
+      ]);
 
-      if (error) {
-        console.error(error);
-        return;
-      }
-      setUsers(data);
+      const favoriteIds = new Set(favoritesRes.data.map((f) => f.favorite_id));
+      const users = profilesRes.data.map((profile) => ({
+        ...profile,
+        is_favorite: favoriteIds.has(profile.id),
+      }));
+
+      users.sort((a, b) => {
+        if (a.is_favorite !== b.is_favorite) {
+          return Number(b.is_favorite) - Number(a.is_favorite);
+        }
+
+        return a.full_name.localeCompare(b.full_name);
+      });
+
+      setUsers(users);
       setLoading(false);
     };
 
     fetchUsers();
-  }, []);
+  }, [user.id]);
 
   return loading ? (
     <>
@@ -91,6 +110,7 @@ function FriendsPage() {
                   name={user.full_name}
                   img={user.avatar_url}
                   id={user.id}
+                  favorite={user.is_favorite}
                 ></ProfileCard>
               );
             })}

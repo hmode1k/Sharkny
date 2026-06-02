@@ -1,9 +1,52 @@
 import { useNavigate } from "react-router";
+import { supabase } from "../supabase-client";
+import { useAuth } from "../AuthContext";
+import { useState } from "react";
+import { Heart } from "lucide-react";
 
-function ProfileCard({ name, img, id, loading }) {
+function ProfileCard({ name, img, id, loading, favorite }) {
+  const { user } = useAuth();
+  const [isFavorite, setIsFavorite] = useState(favorite || false);
+
   const navigate = useNavigate();
   function goToProfile() {
     navigate(`/profile/${id}/games`);
+  }
+
+  async function toggleFavorite() {
+    if (isFavorite) {
+      setIsFavorite(false);
+      const { error } = await supabase
+        .from("favorite_user")
+        .delete("")
+        .eq("user_id", user.id)
+        .eq("favorite_id", id);
+
+      if (error) {
+        console.error(error);
+        setIsFavorite(true);
+
+        return;
+      }
+
+      setIsFavorite(false);
+    } else {
+      setIsFavorite(true);
+
+      const { error } = await supabase.from("favorite_user").insert({
+        user_id: user.id,
+        favorite_id: id,
+        is_favorite: true,
+      });
+
+      if (error) {
+        console.error(error);
+        setIsFavorite(false);
+
+        return;
+      }
+      setIsFavorite(true);
+    }
   }
 
   if (loading) {
@@ -34,9 +77,25 @@ function ProfileCard({ name, img, id, loading }) {
       <img
         src={img || null}
         alt=""
-        className="rounded-[50%] w-15 h-15 object-cover"
+        className="rounded-[50%] w-15 h-15 object-cover max-sm:w-10 max-sm:h-10"
       />
-      <h1 className="text-xl">{name}</h1>
+      <div className="flex justify-between w-full">
+        <h1 className="text-xl max-sm:text-lg">{name}</h1>
+        <h2
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite();
+          }}
+        >
+          <Heart
+            className={
+              isFavorite
+                ? "fill-pink-500 text-pink-500"
+                : "fill-none text-white"
+            }
+          />
+        </h2>
+      </div>
     </div>
   );
 }
