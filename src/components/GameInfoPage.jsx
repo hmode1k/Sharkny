@@ -10,6 +10,8 @@ function GameInfoPage() {
   const { setGames } = useData();
   const { id } = useParams();
   const [game, setGame] = useState(null);
+  const [rawgData, setRawgData] = useState(null);
+  const [rawgLoading, setRawgLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [gameExists, setGameExists] = useState(false);
   const [toast, setToast] = useState("");
@@ -181,6 +183,28 @@ function GameInfoPage() {
   }, [id, user?.id]);
 
   useEffect(() => {
+    const loadRawg = async () => {
+      const res = await supabase.functions.invoke("rapid-api", {
+        body: {
+          id: id,
+          first_release_date: game?.first_release_date,
+          name: game?.name,
+        },
+      });
+
+      if (!res.data) {
+        return;
+      }
+
+      console.log(res.data);
+      setRawgData(res.data);
+      setRawgLoading(false);
+    };
+
+    loadRawg();
+  }, [game?.first_release_date, game?.name, id]);
+
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
@@ -252,7 +276,7 @@ function GameInfoPage() {
 
       <div className="relative">
         <img
-          src={game.background}
+          src={rawgData?.background}
           className="absolute inset-0 w-full h-full object-cover"
         />
 
@@ -366,6 +390,44 @@ function GameInfoPage() {
                       allowFullScreen
                       className="rounded-xl h-[400px] max-sm:h-[200px] px-4 "
                     />
+                  </>
+                )}
+              </div>
+
+              <div>
+                {rawgLoading ? (
+                  <></>
+                ) : (
+                  <>
+                    <div className="flex text-sm p-4 gap-2">
+                      <div className="space-y-2 w-[50%] ">
+                        {Object.entries(rawgData?.minimum_reqs).map(
+                          ([key, value]) => (
+                            <div key={key}>
+                              <h3 className="font-bold text-text-primary">
+                                {key}
+                              </h3>
+
+                              <p className="text-text-secondary">{value}</p>
+                            </div>
+                          ),
+                        )}
+                      </div>
+                      <br />
+                      <div className="space-y-3">
+                        {Object.entries(rawgData?.recommended_reqs).map(
+                          ([key, value]) => (
+                            <div key={key}>
+                              <h3 className="font-bold text-text-primary">
+                                {key}
+                              </h3>
+
+                              <p className="text-text-secondary">{value}</p>
+                            </div>
+                          ),
+                        )}
+                      </div>
+                    </div>
                   </>
                 )}
               </div>
