@@ -308,13 +308,14 @@ function GameInfoPage() {
     </>
   ) : (
     <div className="flex flex-col min-h-screen w-full bg-main">
-      <NavBar></NavBar>
-
+      <div className="z-10">
+        <NavBar></NavBar>
+      </div>
       <div className={`relative ${rawgData?.background ? "" : "bg-main"}`}>
         {rawgData?.background && (
           <img
             src={rawgData?.background}
-            className="absolute inset-0 w-full h-full object-cover "
+            className="fixed inset-0 w-full h-screen object-cover "
           />
         )}
 
