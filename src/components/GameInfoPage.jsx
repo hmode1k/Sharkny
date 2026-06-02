@@ -342,14 +342,14 @@ function GameInfoPage() {
                 {/* caclulate rating from out of 100 to out of 5 and fix it to just 2 numbers after the floatng point */}
                 <div className="flex gap-5">
                   <h3 className="text-md text-text-secondary ">
-                    Release Date: {game.first_release_date}
+                    Release Date: {game?.first_release_date}
                   </h3>
                   <h2 className="">
-                    ⭐: {((game.rating * 5) / 100).toFixed(2)}
+                    ⭐: {((game?.rating * 5) / 100).toFixed(2)}
                   </h2>
                 </div>
                 <div className="flex gap-2 p-2">
-                  {game.game_modes.map((mode) => {
+                  {game?.game_modes?.map((mode) => {
                     return (
                       <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs">
                         {mode.name}
@@ -359,7 +359,7 @@ function GameInfoPage() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <h1 className="text-lg max-sm:text-sm">Genres: </h1>
-                  {game.genres.map((genre) => {
+                  {game?.genres?.map((genre) => {
                     return (
                       <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
                         {genre.name}
@@ -369,7 +369,7 @@ function GameInfoPage() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <h1 className="text-lg max-sm:text-sm">Themes: </h1>
-                  {game.themes.map((theme) => {
+                  {game?.themes?.map((theme) => {
                     return (
                       <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
                         {theme.name}
@@ -379,7 +379,7 @@ function GameInfoPage() {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <h1 className="text-lg max-sm:text-sm">Platforms: </h1>
-                  {game.platforms.map((platform) => {
+                  {game?.platforms?.map((platform) => {
                     return (
                       <h1 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]">
                         {platform.abbreviation}
@@ -395,7 +395,7 @@ function GameInfoPage() {
               <div className="p-2">
                 <h1 className="text-lg max-sm:text-md">Game Description:</h1>
                 <h2 className="p-2 text-text-secondary max-sm:text-sm">
-                  {game.summary}
+                  {game?.summary}
                 </h2>
               </div>
 
@@ -463,7 +463,7 @@ function GameInfoPage() {
                     className="flex overflow-scroll gap-5 p-4"
                     ref={attachWheel}
                   >
-                    {game.similar_games?.map((item) => {
+                    {game?.similar_games?.map((item) => {
                       return (
                         <GameCard
                           key={item.id}
@@ -479,29 +479,35 @@ function GameInfoPage() {
               </div>
 
               <div>
-                <h1 className="px-4">DLCs:</h1>
-                <div className="flex gap-5 overflow-scroll px-6 p-2">
-                  {game?.dlcs?.map((dlc) => {
-                    return (
-                      <div className="relative w-[clamp(250px,40vw,400px)] h-auto rounded-xl overflow-hidden">
-                        <img
-                          src={dlc?.cover?.url?.replace(
-                            "t_thumb",
-                            "t_screenshot_med",
-                          )}
-                          className="w-full h-full object-cover"
-                        />
+                {game?.dlcs?.cover ? (
+                  <>
+                    <h1 className="px-4">DLCs:</h1>
+                    <div className="flex gap-5 overflow-scroll px-6 p-2">
+                      {game?.dlcs?.map((dlc) => {
+                        return (
+                          <div className="relative w-[clamp(250px,40vw,400px)] h-auto rounded-xl overflow-hidden">
+                            <img
+                              src={dlc?.cover?.url?.replace(
+                                "t_thumb",
+                                "t_screenshot_med",
+                              )}
+                              className="w-full h-full object-cover"
+                            />
 
-                        {/* dark overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            {/* dark overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                        <h1 className="absolute bottom-0 p-2 z-10 text-white font-medium">
-                          {dlc.name}
-                        </h1>
-                      </div>
-                    );
-                  })}
-                </div>
+                            <h1 className="absolute bottom-0 p-2 z-10 text-white font-medium">
+                              {dlc.name}
+                            </h1>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
 
               <div>
