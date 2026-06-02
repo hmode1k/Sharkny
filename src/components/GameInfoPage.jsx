@@ -310,13 +310,17 @@ function GameInfoPage() {
     <div className="flex flex-col min-h-screen w-full bg-main">
       <NavBar></NavBar>
 
-      <div className="relative">
-        <img
-          src={rawgData?.background}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+      <div className={`relative ${rawgData?.background ? "" : "bg-main"}`}>
+        {rawgData?.background && (
+          <img
+            src={rawgData?.background}
+            className="absolute inset-0 w-full h-full object-cover "
+          />
+        )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+        <div
+          className={`absolute inset-0 ${rawgData?.background && "bg-gradient-to-t from-black via-black/70 to-black/30"}`}
+        />
 
         <div className="relative z-10 ">
           <div className="px-4 flex flex-col gap-5 ">
