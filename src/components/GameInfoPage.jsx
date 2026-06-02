@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import { supabase } from "../supabase-client";
 import { useData } from "../DataContext";
 import { useAuth } from "../AuthContext";
+import GameCard from "./GameCard";
 
 function GameInfoPage() {
   const { user } = useAuth();
@@ -12,13 +13,15 @@ function GameInfoPage() {
   const [game, setGame] = useState(null);
   const [rawgData, setRawgData] = useState(null);
   const [rawgLoading, setRawgLoading] = useState(true);
+  const [collection, setCollection] = useState(null);
+  const [collectuinLoading, setCollectionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [gameExists, setGameExists] = useState(false);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState("");
   const [status, setStatus] = useState("library");
   const [platform, setPlatform] = useState("fitgirl");
-  const ref = useRef();
+  const scrollRefs = useRef([]);
 
   const navigate = useNavigate();
 
@@ -195,8 +198,6 @@ function GameInfoPage() {
       if (!res.data) {
         return;
       }
-
-      console.log(res.data);
       setRawgData(res.data);
       setRawgLoading(false);
     };
@@ -205,22 +206,57 @@ function GameInfoPage() {
   }, [game?.first_release_date, game?.name, id]);
 
   useEffect(() => {
-    const el = ref.current;
+    const loadCollection = async () => {
+      const res = await supabase.functions.invoke("fetch-collection", {
+        body: {
+          collectionId: game?.collections[0].id,
+          collectionGameId: id,
+        },
+      });
+
+      if (!res.data) {
+        return;
+      }
+      console.log("ressssssssss");
+      console.log(res.data);
+      setCollection(res.data);
+      setCollectionLoading(false);
+    };
+
+    loadCollection();
+  }, [game?.collections, id]);
+
+  const handleWheel = (e) => {
+    if (e.deltaY === 0) return;
+
+    e.preventDefault();
+    e.currentTarget.scrollLeft += e.deltaY;
+  };
+
+  const attachWheel = (el) => {
     if (!el) return;
 
-    const handleWheel = (e) => {
+    const handler = (e) => {
       if (e.deltaY === 0) return;
-
       e.preventDefault();
       el.scrollLeft += e.deltaY;
     };
 
-    el.addEventListener("wheel", handleWheel, { passive: false });
+    el.addEventListener("wheel", handler, { passive: false });
 
+    // store cleanup on element itself
+    el._wheelHandler = handler;
+  };
+
+  useEffect(() => {
     return () => {
-      el.removeEventListener("wheel", handleWheel);
+      document.querySelectorAll("[data-wheel]").forEach((el) => {
+        if (el._wheelHandler) {
+          el.removeEventListener("wheel", el._wheelHandler);
+        }
+      });
     };
-  }, [ref.current]);
+  }, []);
 
   return loading ? (
     <>
@@ -364,8 +400,8 @@ function GameInfoPage() {
               </div>
 
               <div
-                className="flex flex-row gap-4 w-full overflow-scroll hover-scroll pb-2 min-w-0"
-                ref={ref}
+                className="flex flex-row gap-5 w-full overflow-scroll hover-scroll pb-2 min-w-0"
+                ref={attachWheel}
               >
                 {game?.screenshots?.map((screen) => {
                   return (
@@ -392,6 +428,80 @@ function GameInfoPage() {
                     />
                   </>
                 )}
+              </div>
+
+              <div>
+                {collectuinLoading ? (
+                  <></>
+                ) : (
+                  <>
+                    <h1 className="px-4  ">More Games From The Series:</h1>
+                    <div
+                      className="flex overflow-scroll gap-5 p-4"
+                      ref={attachWheel}
+                    >
+                      {collection?.map((item) => {
+                        return (
+                          <GameCard
+                            key={item.id}
+                            id={item?.id}
+                            name={item?.name}
+                            img={item?.cover?.url}
+                            media_type={"games"}
+                          ></GameCard>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div>
+                <div>
+                  <h1 className="px-4  ">Similar Games:</h1>
+                  <div
+                    className="flex overflow-scroll gap-5 p-4"
+                    ref={attachWheel}
+                  >
+                    {game.similar_games?.map((item) => {
+                      return (
+                        <GameCard
+                          key={item.id}
+                          id={item?.id}
+                          name={item?.name}
+                          img={item?.cover?.url}
+                          media_type={"games"}
+                        ></GameCard>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h1 className="px-4">DLCs:</h1>
+                <div className="flex gap-5 overflow-scroll px-6 p-2">
+                  {game?.dlcs?.map((dlc) => {
+                    return (
+                      <div className="relative w-[clamp(250px,40vw,400px)] h-auto rounded-xl overflow-hidden">
+                        <img
+                          src={dlc?.cover?.url?.replace(
+                            "t_thumb",
+                            "t_screenshot_med",
+                          )}
+                          className="w-full h-full object-cover"
+                        />
+
+                        {/* dark overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                        <h1 className="absolute bottom-0 p-2 z-10 text-white font-medium">
+                          {dlc.name}
+                        </h1>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <div>
