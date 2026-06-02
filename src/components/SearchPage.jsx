@@ -108,7 +108,7 @@ function SearchPage() {
     return (
       <>
         <div>
-          <NavBar></NavBar>
+          <NavBar q={query}></NavBar>
           <div className="flex w-full items-center relative">
             <h1
               className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"
@@ -167,7 +167,7 @@ function SearchPage() {
       <>
         <div>
           <div>
-            <NavBar></NavBar>
+            <NavBar q={query}></NavBar>
             <div className="flex w-full items-center relative">
               <h1
                 className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"
@@ -211,7 +211,7 @@ function SearchPage() {
       <>
         <div>
           <div>
-            <NavBar></NavBar>
+            <NavBar q={query}></NavBar>
             <div className="flex w-full items-center relative text-text-primary">
               <h1
                 className="cursor-pointer max-sm:px-6 px-12 absolute text-[2rem] text-text-secondary hover:text-text-primary"

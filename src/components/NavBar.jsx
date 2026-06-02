@@ -8,7 +8,7 @@ function NavBar(q) {
   const [query, setQuery] = useState(q.q || "");
   const [selectedSearch, setSelectedSearch] = useState("Top");
   useEffect(() => {
-    setQuery(q.q);
+    setQuery(q.q || "");
   }, [q]);
 
   const handleClick = (e) => {
