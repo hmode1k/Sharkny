@@ -10,6 +10,7 @@ function SearchPage() {
   const navigate = useNavigate();
   const query = searchParams.get("q");
   const recent = searchParams.get("recent") || null;
+
   const [visibleGames, setVisibleGames] = useState(null);
   const [movies, setMovies] = useState([]);
   const [moviesToatlPages, setMoviesTotalPages] = useState(null);
@@ -297,7 +298,7 @@ function SearchPage() {
             );
           })}
         </div>
-        <div className="px-8 p-2 flex gap-2">
+        <div className="px-8 p-2 flex gap-2 items-center">
           {gamesTotalPages.map((p, i) =>
             p === "..." ? (
               <span key={i} className="px-2">

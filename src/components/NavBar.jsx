@@ -6,7 +6,7 @@ function NavBar(q) {
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = useState(q.q || "");
-  const [selectedSearch, setSelectedSearch] = useState("Top");
+  const [selectedSearch, setSelectedSearch] = useState("");
   useEffect(() => {
     setQuery(q.q || "");
   }, [q]);
