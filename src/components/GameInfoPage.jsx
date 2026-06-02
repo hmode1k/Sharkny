@@ -535,7 +535,7 @@ function GameInfoPage() {
                         )}
                       </div>
                       <br />
-                      <div className="space-y-3">
+                      <div className="space-y-2 w-[50%]">
                         {Object.entries(rawgData?.recommended_reqs).map(
                           ([key, value]) => (
                             <div key={key}>
