@@ -165,3 +165,12 @@ li {
 button {
   font-weight: 500;
 }
+
+.backdrop {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: darken;
+}

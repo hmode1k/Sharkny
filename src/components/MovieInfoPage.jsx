@@ -18,6 +18,15 @@ function MovieInfoPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  function formatRuntime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    if (!hours) return `${mins}m`;
+
+    return `${hours}h ${mins}m`;
+  }
+
   const handleDelete = async (e) => {
     e.preventDefault();
 
@@ -140,15 +149,11 @@ function MovieInfoPage() {
       }
 
       if (data.length !== 0) {
-        const res = await supabase.from("movies").select("*").eq("id", id);
-        setMovie(res.data[0]);
-
-        setLoading(false);
         setMovieExists(true);
         setStatus(data[0].status);
-        console.log("from db");
-        console.log(res.data);
-      } else if (location.pathname.startsWith("/tv")) {
+      }
+
+      if (location.pathname.startsWith("/tv")) {
         const res = await supabase.functions.invoke("movie-info", {
           body: {
             id: id,
@@ -159,7 +164,6 @@ function MovieInfoPage() {
         setMovie(res.data);
         console.log(res.data);
         setLoading(false);
-        console.log("from api");
       } else if (location.pathname.startsWith("/movie")) {
         const res = await supabase.functions.invoke("movie-info", {
           body: {
@@ -171,7 +175,6 @@ function MovieInfoPage() {
         setMovie(res.data);
         console.log(res.data);
         setLoading(false);
-        console.log("from api");
       }
     };
 
@@ -229,68 +232,153 @@ function MovieInfoPage() {
   ) : (
     <div className="w-full h-screen bg-main text-text-primary flex-col">
       <NavBar></NavBar>
-      <div className="p-4 py-2 flex flex-col gap-5 ">
-        <h2
-          className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
-          onClick={handleback}
-        >
-          ←
-        </h2>
-        <div
-          className="sm:grid
-            sm:grid-cols-[clamp(140px,17vw,240px)_1fr]
-            sm:gap-6
-            sm:items-start
-            flex gap-5
-            "
-        >
-          <div className="max-sm:w-[70%]">
-            <img
-              src={movie.poster}
-              alt=""
-              className="w-full
-                        h-auto
-                        rounded-3xl
-                        object-cover
-                        border-1
-                        border-white/5
-                        "
-            />
-          </div>
-          <div className="flex flex-col gap-4 min-w-0 w-full overflow-hidden">
-            <h1 className="text-[clamp(1.5rem,3vw,2rem)] fint-bold text-text-primary">
-              {movie.title}
-            </h1>
-            <h4 className="text-[clamp(0.5rem,0.9rem,1.5rem)] text-text-secondary leading-relaxed min-w-0 break-words max-sm:text-[0.65rem]">
-              {movie.description}
-            </h4>
-          </div>
-        </div>
 
-        <form
-          action=""
-          className="flex
+      <div className="relative">
+        <img
+          src={movie.backdrop}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+
+        <div className="relative z-10 ">
+          <div
+            className="p-4 py-2 flex flex-col gap-5 backdrop"
+            style={{
+              backgroundImage: `url(${movie?.backdrop})`,
+            }}
+          >
+            <h2
+              className="text-text-secondary m-0 ps-4 cursor-pointer text-[2rem] hover:text-text-primary"
+              onClick={handleback}
+            >
+              ←
+            </h2>
+            <div className="flex flex-col gap-5">
+              {/* image and stuff next to it(name rating etc...) div */}
+              <div className="text-white flex px-2 max-sm:flex-col gap-5 [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]">
+                <div className="w-[clamp(120px,25vw,300px)] max-sm:w-full">
+                  <img
+                    src={movie?.poster}
+                    alt=""
+                    className="max-sm:w-full w-full h-auto rounded-xl "
+                  />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <h1 className="text-4xl">{movie.title}</h1>
+                  {/* caclulate rating from out of 100 to out of 5 and fix it to just 2 numbers after the floatng point */}
+                  <div className="flex flex-col gap-3">
+                    <div className="flex gap-5">
+                      <h3 className="text-md text-text-secondary">
+                        Release Date: {movie.release_date}
+                      </h3>
+
+                      <h2 className="">⭐: {(movie.rating / 2).toFixed(2)}</h2>
+                    </div>
+                    <h2 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs w-fit">
+                      {movie.media_type === "tv" ? "Tv Show" : "Movie"}
+                    </h2>
+                    <h2 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs w-fit">
+                      Status: {movie.status}
+                    </h2>
+
+                    {location.pathname.includes("tv") ? (
+                      <>
+                        <div className="flex gap-2">
+                          <h2 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs w-fit">
+                            Seasons: {movie.seasons_number}
+                          </h2>
+                          <h2 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs w-fit">
+                            Episodes: {movie.episodes}
+                          </h2>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <h2 className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs w-fit">
+                          Length: {formatRuntime(movie.runtime)}
+                        </h2>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 flex-wrap">
+                    <h1 className="text-lg max-sm:text-sm">Genres: </h1>
+                    {movie.genres?.map((genre) => {
+                      return (
+                        <h1
+                          className="p-1 bg-accent-primary/50 border-1 border-accent-primary rounded-lg text-xs max-sm:text-[10px]"
+                          key={genre.id}
+                        >
+                          {genre.name}
+                        </h1>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-white flex flex-col gap-5 [text-shadow:0_2px_10px_rgba(0,0,0,0.9)]">
+                <div className="p-2">
+                  <h1 className="text-lg max-sm:text-md">Description:</h1>
+                  <h2 className="p-2 text-text-secondary max-sm:text-sm">
+                    {movie.description}
+                  </h2>
+                </div>
+                {movie.season ? (
+                  <>
+                    <div className="flex gap-5 overflow-scroll">
+                      {movie?.season?.map((seas) => {
+                        return (
+                          <>
+                            <div key={seas.id}>
+                              <div
+                                className="w-35 h-50 backdrop border-1 rounded-2xl"
+                                style={{
+                                  backgroundImage: `url(https://image.tmdb.org/t/p/w500${seas.poster_path})`,
+                                }}
+                              ></div>
+
+                              <div className="p-2">
+                                <h1>{seas.name}</h1>
+                                <h2>Episodes: {seas.episode_count}</h2>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+
+            <form
+              action=""
+              className="flex
                   gap-4
                   w-full
                   h-full
                   max-w-full
                   min-w-0"
-        >
-          <div className="w-full">
-            <h2 className="p-1 text-text-primary">Status: </h2>
-            <fieldset className="flex gap-3 flex-wrap">
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="library"
-                  className="peer sr-only"
-                  checked={status === "library"}
-                  onChange={(e) => setStatus(e.target.value)}
-                />
+            >
+              <div className="w-full">
+                <h2 className="p-1 text-text-primary">Status: </h2>
+                <fieldset className="flex gap-3 flex-wrap">
+                  <label className="cursor-pointer inline-flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="library"
+                      className="peer sr-only"
+                      checked={status === "library"}
+                      onChange={(e) => setStatus(e.target.value)}
+                    />
 
-                <span
-                  className="
+                    <span
+                      className="
     px-4
     rounded-full
     border
@@ -303,23 +391,23 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Library
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="wishlist"
-                  className="peer sr-only"
-                  checked={status === "wishlist"}
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                  }}
-                />
-                <span
-                  className="
+                    >
+                      Library
+                    </span>
+                  </label>
+                  <label className="cursor-pointer inline-flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="wishlist"
+                      className="peer sr-only"
+                      checked={status === "wishlist"}
+                      onChange={(e) => {
+                        setStatus(e.target.value);
+                      }}
+                    />
+                    <span
+                      className="
     px-4
     rounded-full
     border
@@ -331,23 +419,23 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Wishlist
-                </span>
-              </label>
-              <label className="cursor-pointer inline-flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="completed"
-                  className="peer sr-only"
-                  checked={status === "completed"}
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                  }}
-                />
-                <span
-                  className="
+                    >
+                      Wishlist
+                    </span>
+                  </label>
+                  <label className="cursor-pointer inline-flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="completed"
+                      className="peer sr-only"
+                      checked={status === "completed"}
+                      onChange={(e) => {
+                        setStatus(e.target.value);
+                      }}
+                    />
+                    <span
+                      className="
     px-4
     rounded-full
     border
@@ -360,86 +448,88 @@ peer-checked:border-accent-primary
     peer-checked:text-accent-text
     peer-checked:bg-accent-primary
   "
-                >
-                  Completed
-                </span>
-              </label>
-            </fieldset>
-            <div className="flex pe-6 pbs-8 md:hidden w-full">
-              {movieExists ? (
-                <div className="flex gap-5 w-full">
-                  <button
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={handleEdit}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
-                  >
-                    Edit
-                  </button>
+                    >
+                      Completed
+                    </span>
+                  </label>
+                </fieldset>
+                <div className="flex pe-6 pbs-8 md:hidden w-full">
+                  {movieExists ? (
+                    <div className="flex gap-5 w-full">
+                      <button
+                        className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 max-sm:w-[30%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
+                        onClick={handleDelete}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        type="submit"
+                        onClick={handleEdit}
+                        className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-[70%] rounded-xl text-lg text-accent-text hover:bg-accent-hover"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-5">
+                      <button
+                        type="submit"
+                        onClick={handleInsertion}
+                        className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full rounded-xl text-lg text-accent-text hover:bg-accent-hover"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  )}
                 </div>
+              </div>
+
+              <div className="flex pe-6 max-md:hidden">
+                {movieExists ? (
+                  <div className="flex gap-5 w-full">
+                    <button
+                      className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
+                      onClick={handleDelete}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      type="submit"
+                      onClick={handleEdit}
+                      className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-5">
+                    <button
+                      type="submit"
+                      onClick={handleInsertion}
+                      className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
+                    >
+                      Add
+                    </button>
+                  </div>
+                )}
+              </div>
+            </form>
+            <div className="relative w-full h-full">
+              {toast.length === 0 ? (
+                <></>
               ) : (
-                <div className="flex gap-5">
-                  <button
-                    type="submit"
-                    onClick={handleInsertion}
-                    className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 max-sm:w-full rounded-xl text-lg text-accent-text hover:bg-accent-hover"
-                  >
-                    Add
-                  </button>
-                </div>
+                <>
+                  <div className="absolute flex w-full h-full flex-col items-center justify-end">
+                    <h1
+                      className={`max-w-50 text-center border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
+                    >
+                      {toast}
+                    </h1>
+                  </div>
+                </>
               )}
             </div>
           </div>
-
-          <div className="flex pe-6 max-md:hidden">
-            {movieExists ? (
-              <div className="flex gap-5 w-full">
-                <button
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-8 rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </button>
-                <button
-                  type="submit"
-                  onClick={handleEdit}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24  rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
-                >
-                  Edit
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-5">
-                <button
-                  type="submit"
-                  onClick={handleInsertion}
-                  className="justify-self-end self-end bg-accent-primary border-border-main transition border-1 px-24 rounded-xl text-lg text-accent-text  hover:bg-accent-hover"
-                >
-                  Add
-                </button>
-              </div>
-            )}
-          </div>
-        </form>
-        <div className="relative w-full h-full">
-          {toast.length === 0 ? (
-            <></>
-          ) : (
-            <>
-              <div className="absolute flex w-full h-full flex-col items-center justify-end">
-                <h1
-                  className={`max-w-50 text-center border-1 px-4 rounded-xl text-text-primary ${toastType === "error" ? "bg-red-500/20 border-red-500" : "bg-green-500/20 border-green-500"}`}
-                >
-                  {toast}
-                </h1>
-              </div>
-            </>
-          )}
         </div>
       </div>
     </div>
