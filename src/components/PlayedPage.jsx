@@ -1,3 +1,4 @@
+import { TopBanner } from "./AdBanner";
 import NavBar from "./NavBar";
 import FullCardContainer from "./FullCardContainer";
 import { useLocation } from "react-router";
@@ -9,6 +10,7 @@ function PlayedPage() {
   return (
     <>
       <NavBar></NavBar>
+      <TopBanner></TopBanner>
       <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
         <AsideWrapper></AsideWrapper>
         <div>

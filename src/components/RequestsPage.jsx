@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
 import ViewRequestModal from "./ViewRequestModal";
 import AsideWrapper from "./AsideWrapper";
+import { TopBanner } from "./AdBanner";
 import NavBar from "./NavBar";
 import { useAuth } from "../AuthContext";
 
@@ -100,6 +101,7 @@ function RequestsPage() {
     <>
       <div>
         <NavBar></NavBar>
+        <TopBanner></TopBanner>
         <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
           <AsideWrapper></AsideWrapper>
           <div className="text-text-primary p-4 flex flex-col gap-5">

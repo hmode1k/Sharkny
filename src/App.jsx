@@ -1,4 +1,5 @@
 import "./App.css";
+import { TopBanner } from "./components/AdBanner";
 import NavBar from "./components/NavBar";
 import CardContainer from "./components/CardContainer";
 import { useNavigate, useParams } from "react-router";
@@ -11,6 +12,7 @@ function App() {
   return (
     <>
       <NavBar></NavBar>
+      <TopBanner></TopBanner>
       <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
         <AsideWrapper></AsideWrapper>
         <div className="bg-main text-text-primary">
