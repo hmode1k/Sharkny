@@ -3,6 +3,7 @@ import GameCard from "./GameCard";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { supabase } from "../supabase-client";
+import { TopBanner } from "./AdBanner";
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
