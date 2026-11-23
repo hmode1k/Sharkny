@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import CardContainer from "./CardContainer";
+import { TopBanner } from "./AdBanner";
 import NavBar from "./NavBar";
 import { supabase } from "../supabase-client";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -111,6 +112,7 @@ function Profile() {
       <>
         <div>
           <NavBar></NavBar>
+          <TopBanner></TopBanner>
           <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
             <AsideWrapper></AsideWrapper>
             <div>
@@ -150,6 +152,7 @@ function Profile() {
     ) : (
       <div>
         <NavBar></NavBar>
+        <TopBanner></TopBanner>
         <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
           <AsideWrapper></AsideWrapper>
           <div>
@@ -195,6 +198,7 @@ function Profile() {
       <>
         <div>
           <NavBar></NavBar>
+          <TopBanner></TopBanner>
           <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
             <AsideWrapper></AsideWrapper>
             <div>
@@ -239,6 +243,7 @@ function Profile() {
       <>
         <div className="text-text-primary">
           <NavBar></NavBar>
+          <TopBanner></TopBanner>
           <div className="h-full w-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)]">
             <AsideWrapper></AsideWrapper>
             <div>

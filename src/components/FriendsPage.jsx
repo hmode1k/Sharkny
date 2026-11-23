@@ -1,3 +1,4 @@
+import { TopBanner } from "./AdBanner";
 import NavBar from "./NavBar";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
@@ -53,6 +54,7 @@ function FriendsPage() {
     <>
       <div className="h-full overflow-hidden">
         <NavBar></NavBar>
+        <TopBanner></TopBanner>
         <div className="w-full h-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)] ">
           <AsideWrapper></AsideWrapper>
           <div className="p-4">
@@ -87,6 +89,7 @@ function FriendsPage() {
   ) : (
     <div className="h-full overflow-hidden">
       <NavBar></NavBar>
+      <TopBanner></TopBanner>
       <div className="w-full h-full sm:grid sm:grid-cols-[150px_minmax(200px,_1fr)] ">
         <AsideWrapper></AsideWrapper>
         <div className="p-4">
