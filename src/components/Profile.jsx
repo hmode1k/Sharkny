@@ -148,6 +148,7 @@ function Profile() {
             </div>
           </div>
         </div>
+        <TopBanner></TopBanner>
       </>
     ) : (
       <div>
@@ -191,6 +192,7 @@ function Profile() {
             ></FullCardContainer>
           </div>
         </div>
+        <TopBanner></TopBanner>
       </div>
     );
   } else {
@@ -238,6 +240,7 @@ function Profile() {
             </div>
           </div>
         </div>
+        <TopBanner></TopBanner>
       </>
     ) : (
       <>
@@ -394,6 +397,7 @@ function Profile() {
             </div>
           </div>
         </div>
+        <TopBanner></TopBanner>
       </>
     );
   }

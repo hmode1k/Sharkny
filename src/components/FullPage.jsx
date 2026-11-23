@@ -21,6 +21,7 @@ function FullPage() {
           ></FullCardContainer>
         </div>
       </div>
+      <TopBanner></TopBanner>
     </>
   );
 }

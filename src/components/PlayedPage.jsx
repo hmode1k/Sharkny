@@ -21,6 +21,7 @@ function PlayedPage() {
           ></FullCardContainer>
         </div>
       </div>
+      <TopBanner></TopBanner>
     </>
   );
 }

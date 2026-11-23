@@ -85,6 +85,7 @@ function FriendsPage() {
           </div>
         </div>
       </div>
+      <TopBanner></TopBanner>
     </>
   ) : (
     <div className="h-full overflow-hidden">
@@ -120,6 +121,7 @@ function FriendsPage() {
           </div>
         </div>
       </div>
+      <TopBanner></TopBanner>
     </div>
   );
 }

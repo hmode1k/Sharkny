@@ -45,6 +45,7 @@ function App() {
           ></CardContainer>
         </div>
       </div>
+      <TopBanner></TopBanner>
     </>
   );
 }

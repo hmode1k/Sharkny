@@ -21,6 +21,7 @@ function LibraryPage() {
           ></FullCardContainer>
         </div>
       </div>
+      <TopBanner></TopBanner>
     </>
   );
 }

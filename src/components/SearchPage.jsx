@@ -201,6 +201,7 @@ function SearchPage() {
             </div>
           </div>
         </div>
+        <TopBanner></TopBanner>
       </>
     );
   } else if (
@@ -245,6 +246,7 @@ function SearchPage() {
             </div>
           </div>
         </div>
+        <TopBanner></TopBanner>
       </>
     );
   }
@@ -349,6 +351,7 @@ function SearchPage() {
             )}
           </div>
         </div>
+        <TopBanner></TopBanner>
       </div>
     );
   } else {
@@ -417,6 +420,7 @@ function SearchPage() {
             ),
           )}
         </div>
+        <TopBanner></TopBanner>
       </div>
     );
   }
