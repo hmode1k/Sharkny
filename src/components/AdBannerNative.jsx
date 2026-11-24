@@ -59,7 +59,7 @@ function AdFrame({ html, width, height, className = "" }) {
   );
 }
 
-export function TopBanner() {
+export function AdBannerNative() {
   return (
     <AdFrame
       html={TOP_BANNER_HTML}

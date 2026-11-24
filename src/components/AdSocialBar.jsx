@@ -58,7 +58,7 @@ function AdFrame({ html, width, height, className = "" }) {
   );
 }
 
-export function TopBanner() {
+export function AdSocialBar() {
   return (
     <AdFrame
       html={TOP_BANNER_HTML}
